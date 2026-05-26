@@ -1,11 +1,28 @@
-# Nhom4_webThuocThayThe
+# Nhom4 Web Thuoc Thay The
 
-Web Thuoc Thay The project for the software engineering course.
+ASP.NET Core MVC framework for the "Web de xuat thuoc thay the khi thuoc chinh khong co san" software engineering course project.
 
 ## Links
 
 - Jira project: [Nhom4_WebThuocThayThe](https://nguyennamnhn125.atlassian.net/jira/software/c/projects/N4WTT/boards/36)
 - GitHub repository: [wom-sama/Nhom4_webThuocThayThe](https://github.com/wom-sama/Nhom4_webThuocThayThe)
+
+## Tech Stack
+
+- .NET 10
+- ASP.NET Core MVC
+- Razor Views
+- Bootstrap
+
+## Run Locally
+
+```powershell
+dotnet restore
+dotnet build
+dotnet run
+```
+
+Open the local URL printed by `dotnet run`.
 
 ## Jira Workflow
 
@@ -19,4 +36,6 @@ Examples:
 
 ## Current Setup
 
-This repository was initialized for Jira issue `N4WTT-1`.
+This repository currently contains the base ASP.NET Core MVC framework only. Business features will be implemented through Jira stories in project `N4WTT`.
+
+Initial framework setup issue: `N4WTT-1`.

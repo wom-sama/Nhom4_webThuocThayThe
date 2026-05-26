@@ -21,6 +21,9 @@ temp/
 !.env.example
 *.pem
 *.key
+appsettings.Local.json
+appsettings.*.local.json
+secrets.json
 
 # Node.js
 node_modules/
@@ -49,3 +52,24 @@ venv/
 # IDE/build metadata
 .gradle/
 .mvn/wrapper/maven-wrapper.jar
+
+# .NET
+bin/
+obj/
+TestResults/
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+*.nupkg
+packages/
+
+# Visual Studio
+.vs/
+*.VisualState.xml
+Generated\ Files/
+
+# Rider
+.idea/
+*.sln.iml
