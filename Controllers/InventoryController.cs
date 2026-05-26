@@ -10,7 +10,7 @@ public sealed class InventoryController(IInventoryService inventoryService) : Co
 {
     public IActionResult Index()
     {
-        ViewBag.Batches = inventoryService.GetBatches();
+        ViewBag.Batches = inventoryService.GetBatchList();
         return View(inventoryService.GetStockSummaries());
     }
 
@@ -26,7 +26,7 @@ public sealed class InventoryController(IInventoryService inventoryService) : Co
     {
         if (!ModelState.IsValid)
         {
-            return View(inventoryService.CreateBatchForm());
+            return View(inventoryService.CreateBatchForm(model));
         }
 
         inventoryService.AddBatch(model);

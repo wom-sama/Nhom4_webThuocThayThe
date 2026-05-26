@@ -2,6 +2,12 @@
     ViewData["Title"] = "Khong co quyen";
 }
 
-<h1 class="h3">Khong co quyen truy cap</h1>
-<p>Tai khoan hien tai khong co quyen thuc hien chuc nang nay.</p>
-<a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Ve trang chu</a>
+<section class="app-surface access-panel">
+    <div class="page-kicker">Phan quyen</div>
+    <h1 class="page-title">Khong co quyen truy cap</h1>
+    <p class="page-description">Tai khoan hien tai khong co vai tro phu hop cho chuc nang nay. Hay dung tai khoan duoc si hoac admin neu can quan ly danh muc va kho.</p>
+    <div class="d-flex flex-wrap gap-2">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Ve tong quan</a>
+        <a asp-controller="Drugs" asp-action="Index" class="btn btn-outline-primary">Mo tra cuu</a>
+    </div>
+</section>

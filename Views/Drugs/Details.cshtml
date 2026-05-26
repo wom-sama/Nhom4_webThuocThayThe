@@ -4,45 +4,103 @@
     ViewData["Title"] = Model.Name;
 }
 
-<div class="d-flex justify-content-between align-items-start mb-3">
+<section class="action-bar">
     <div>
-        <h1 class="h3">@Model.Name</h1>
-        <div class="text-muted">@Model.Strength - @Model.DosageForm - @Model.Manufacturer</div>
+        <div class="page-kicker">Ho so thuoc</div>
+        <h1 class="page-title">@Model.Name</h1>
+        <p class="page-description">@Model.Strength - @Model.DosageForm - @Model.Manufacturer</p>
     </div>
-    <a asp-action="Index" class="btn btn-outline-secondary">Quay lai</a>
-</div>
+    <a asp-action="Index" class="btn btn-outline-secondary">&lt; Quay lai</a>
+</section>
 
-<dl class="row">
-    <dt class="col-sm-3">Hoat chat</dt>
-    <dd class="col-sm-9">@Model.ActiveIngredient</dd>
+<section class="detail-grid">
+    <div class="app-surface">
+        <div class="section-heading">
+            <h2 class="h4">Thong tin duoc ly</h2>
+            @if (Model.PrescriptionRequired)
+            {
+                <span class="status-badge is-warning">Can ke don</span>
+            }
+            else
+            {
+                <span class="status-badge is-info">Khong ke don</span>
+            }
+        </div>
 
-    <dt class="col-sm-3">Danh muc</dt>
-    <dd class="col-sm-9">@Model.Category</dd>
+        <dl class="detail-list">
+            <div class="detail-row">
+                <dt>Hoat chat</dt>
+                <dd>
+                    <strong>@Model.ActiveIngredient</strong>
+                    @if (!string.IsNullOrWhiteSpace(Model.ActiveIngredientWarning))
+                    {
+                        <div class="muted-copy">@Model.ActiveIngredientWarning</div>
+                    }
+                </dd>
+            </div>
+            <div class="detail-row">
+                <dt>Danh muc</dt>
+                <dd>@Model.Category</dd>
+            </div>
+            <div class="detail-row">
+                <dt>Gia ban</dt>
+                <dd>@Model.Price.ToString("N0") VND / @Model.Unit</dd>
+            </div>
+            <div class="detail-row">
+                <dt>Mo ta</dt>
+                <dd>@Model.Description</dd>
+            </div>
+            <div class="detail-row">
+                <dt>Cach dung</dt>
+                <dd>@Model.Usage</dd>
+            </div>
+            <div class="detail-row">
+                <dt>Chong chi dinh</dt>
+                <dd>@Model.Contraindications</dd>
+            </div>
+        </dl>
+    </div>
 
-    <dt class="col-sm-3">Gia ban</dt>
-    <dd class="col-sm-9">@Model.Price.ToString("N0") VND / @Model.Unit</dd>
+    <aside class="app-surface">
+        <div class="section-heading">
+            <h2 class="h4">Ton kho</h2>
+            @if (Model.StockQuantity <= 0)
+            {
+                <span class="status-badge is-danger">Het hang</span>
+            }
+            else
+            {
+                <span class="status-badge is-success">@Model.StockQuantity kha dung</span>
+            }
+        </div>
+        <p class="muted-copy">Trang thai nay tinh theo cac lo con so luong va chua qua han.</p>
 
-    <dt class="col-sm-3">Ton kho</dt>
-    <dd class="col-sm-9">
-        @if (Model.StockQuantity <= 0)
+        <h3 class="h5 mt-4">Thuoc thay the cung hoat chat</h3>
+        @if (!Model.Alternatives.Any())
         {
-            <span class="badge text-bg-danger">Het hang</span>
+            <div class="empty-state">Chua co thuoc thay the phu hop trong du lieu hien tai.</div>
         }
         else
         {
-            <span class="badge text-bg-success">@Model.StockQuantity</span>
+            <div class="stack-list">
+                @foreach (var item in Model.Alternatives)
+                {
+                    <a asp-action="Details" asp-route-id="@item.Id" class="stack-item">
+                        <span>
+                            <strong>@item.Name</strong>
+                            <span>@item.Strength - @item.Manufacturer</span>
+                        </span>
+                        @if (item.StockQuantity <= 0)
+                        {
+                            <span class="status-badge is-danger">Het hang</span>
+                        }
+                        else
+                        {
+                            <span class="status-badge is-success">@item.StockQuantity</span>
+                        }
+                    </a>
+                }
+            </div>
         }
-    </dd>
-
-    <dt class="col-sm-3">Thuoc ke don</dt>
-    <dd class="col-sm-9">@(Model.PrescriptionRequired ? "Co" : "Khong")</dd>
-
-    <dt class="col-sm-3">Mo ta</dt>
-    <dd class="col-sm-9">@Model.Description</dd>
-
-    <dt class="col-sm-3">Cach dung</dt>
-    <dd class="col-sm-9">@Model.Usage</dd>
-
-    <dt class="col-sm-3">Chong chi dinh</dt>
-    <dd class="col-sm-9">@Model.Contraindications</dd>
-</dl>
+    </aside>
+</section>

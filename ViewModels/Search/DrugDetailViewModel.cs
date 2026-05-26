@@ -1,5 +1,7 @@
 namespace Nhom4WebThuocThayThe.ViewModels.Search;
 
+using Nhom4WebThuocThayThe.ViewModels.Catalog;
+
 public sealed class DrugDetailViewModel
 {
     public int Id { get; set; }
@@ -18,6 +20,8 @@ public sealed class DrugDetailViewModel
 
     public required string ActiveIngredient { get; set; }
 
+    public string? ActiveIngredientWarning { get; set; }
+
     public decimal Price { get; set; }
 
     public int StockQuantity { get; set; }
@@ -29,4 +33,6 @@ public sealed class DrugDetailViewModel
     public string? Usage { get; set; }
 
     public string? Contraindications { get; set; }
+
+    public IReadOnlyCollection<DrugListItemViewModel> Alternatives { get; set; } = [];
 }
