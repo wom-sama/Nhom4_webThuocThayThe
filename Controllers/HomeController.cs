@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Nhom4WebThuocThayThe.Models;
 
@@ -6,11 +7,13 @@ namespace Nhom4WebThuocThayThe.Controllers;
 
 public class HomeController : Controller
 {
+    [AllowAnonymous]
     public IActionResult Index()
     {
         return View();
     }
 
+    [Authorize]
     public IActionResult Privacy()
     {
         return View();

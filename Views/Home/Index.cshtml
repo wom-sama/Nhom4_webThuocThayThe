@@ -3,6 +3,14 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-5">Web de xuat thuoc thay the</h1>
+    <p class="lead">Nen tang MVC cho tra cuu thuoc, kiem tra ton kho va de xuat thuoc thay the an toan.</p>
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <p>Dang nhap voi tai khoan <strong>@User.Identity.Name</strong>.</p>
+    }
+    else
+    {
+        <a asp-controller="Auth" asp-action="Login" class="btn btn-primary">Dang nhap</a>
+    }
 </div>
