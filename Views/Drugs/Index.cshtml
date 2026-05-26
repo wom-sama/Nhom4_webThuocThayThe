@@ -4,70 +4,77 @@
     ViewData["Title"] = "Tra cuu thuoc";
 }
 
-<h1 class="h3 mb-3">Tra cuu thuoc</h1>
+<section class="mb-4">
+    <div class="page-kicker">Tra cuu cong khai</div>
+    <h1 class="page-title">Tra cuu thuoc va tinh trang san co</h1>
+    <p class="page-description">Nhap ten thuoc, hoat chat hoac danh muc de xem thuoc phu hop, ton kho va canh bao ke don.</p>
+</section>
 
-<form method="get" class="row g-2 mb-4">
-    <div class="col-md-6">
+<form method="get" class="app-surface filter-panel mb-4">
+    <div>
+        <label asp-for="Keyword" class="form-label">Tu khoa</label>
         <input asp-for="Keyword" class="form-control" placeholder="Nhap ten thuoc, hoat chat, danh muc..." />
     </div>
-    <div class="col-md-4">
+    <div>
+        <label asp-for="CategoryId" class="form-label">Danh muc</label>
         <select asp-for="CategoryId" asp-items="Model.Categories" class="form-select">
             <option value="">Tat ca danh muc</option>
         </select>
     </div>
-    <div class="col-md-2">
-        <button type="submit" class="btn btn-primary w-100">Tim kiem</button>
+    <div>
+        <button type="submit" class="btn btn-primary w-100">Tim</button>
     </div>
 </form>
 
 @if (!Model.Results.Any())
 {
-    <div class="alert alert-info">Khong tim thay thuoc phu hop. Hay thu tim theo hoat chat.</div>
+    <div class="empty-state">Khong tim thay thuoc phu hop. Hay thu tim theo hoat chat hoac danh muc dieu tri.</div>
 }
 else
 {
-    <table class="table table-striped align-middle">
-        <thead>
-            <tr>
-                <th>Thuoc</th>
-                <th>Danh muc</th>
-                <th>Nha san xuat</th>
-                <th>Ton kho</th>
-                <th>Canh bao</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Results)
-            {
-                <tr>
-                    <td>
-                        <strong>@item.Name</strong>
-                        <div class="text-muted small">@item.Strength - @item.DosageForm</div>
-                    </td>
-                    <td>@item.Category</td>
-                    <td>@item.Manufacturer</td>
-                    <td>
-                        @if (item.StockQuantity <= 0)
-                        {
-                            <span class="badge text-bg-danger">Het hang</span>
-                        }
-                        else
-                        {
-                            <span class="badge text-bg-success">@item.StockQuantity</span>
-                        }
-                    </td>
-                    <td>
-                        @if (item.PrescriptionRequired)
-                        {
-                            <span class="badge text-bg-warning">Can ke don</span>
-                        }
-                    </td>
-                    <td class="text-end">
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Chi tiet</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="section-heading">
+        <h2 class="h4">Ket qua phu hop</h2>
+        <span class="muted-copy">@Model.Results.Count thuoc</span>
+    </div>
+
+    <div class="result-grid">
+        @foreach (var item in Model.Results)
+        {
+            <article class="drug-card">
+                <div class="drug-card-header">
+                    <div>
+                        <h2 class="drug-title">@item.Name</h2>
+                        <div class="drug-meta">
+                            <span>@item.Strength</span>
+                            <span>@item.DosageForm</span>
+                            <span>@item.Manufacturer</span>
+                        </div>
+                    </div>
+                    @if (item.StockQuantity <= 0)
+                    {
+                        <span class="status-badge is-danger">Het hang</span>
+                    }
+                    else
+                    {
+                        <span class="status-badge is-success">@item.StockQuantity trong kho</span>
+                    }
+                </div>
+                <div class="drug-meta">
+                    <span>@item.Category</span>
+                    @if (item.PrescriptionRequired)
+                    {
+                        <span class="status-badge is-warning">Can ke don</span>
+                    }
+                    else
+                    {
+                        <span class="status-badge is-info">Khong ke don</span>
+                    }
+                </div>
+                <div class="d-flex justify-content-between align-items-center gap-2">
+                    <span class="muted-copy">@item.Price.ToString("N0") VND</span>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Chi tiet</a>
+                </div>
+            </article>
+        }
+    </div>
 }

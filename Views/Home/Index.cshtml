@@ -1,16 +1,68 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "Tong quan";
 }
 
-<div class="text-center">
-    <h1 class="display-5">Web de xuat thuoc thay the</h1>
-    <p class="lead">Nen tang MVC cho tra cuu thuoc, kiem tra ton kho va de xuat thuoc thay the an toan.</p>
-    @if (User.Identity?.IsAuthenticated == true)
-    {
-        <p>Dang nhap voi tai khoan <strong>@User.Identity.Name</strong>.</p>
-    }
-    else
-    {
-        <a asp-controller="Auth" asp-action="Login" class="btn btn-primary">Dang nhap</a>
-    }
-</div>
+<section class="mb-4">
+    <div class="page-kicker">He thong de xuat thuoc thay the</div>
+    <h1 class="page-title">Bang dieu khien tra cuu va quan ly thuoc</h1>
+    <p class="page-description">
+        Tap trung vao tra cuu thuoc, tinh trang ton kho va cac du lieu nen tang can cho quy trinh de xuat thuoc thay the khi thuoc chinh khong co san.
+    </p>
+</section>
+
+<section class="app-surface mb-4">
+    <form asp-controller="Drugs" asp-action="Index" method="get" class="quick-search">
+        <div>
+            <label for="homeKeyword" class="form-label">Tu khoa tra cuu</label>
+            <input id="homeKeyword" name="keyword" class="form-control form-control-lg" placeholder="Panadol, Paracetamol, khang sinh..." />
+        </div>
+        <div>
+            <label for="homeCategory" class="form-label">Pham vi</label>
+            <select id="homeCategory" class="form-select form-select-lg" disabled>
+                <option>Ten thuoc, hoat chat, danh muc</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg">Tim</button>
+    </form>
+</section>
+
+<section class="metric-grid mb-4" aria-label="Chi so mau">
+    <div class="metric-card">
+        <span>Thuoc mau</span>
+        <strong>4</strong>
+        <span>Da seed trong kho tam</span>
+    </div>
+    <div class="metric-card">
+        <span>Danh muc</span>
+        <strong>3</strong>
+        <span>Giam dau, khang sinh, tieu hoa</span>
+    </div>
+    <div class="metric-card">
+        <span>Lo thuoc</span>
+        <strong>4</strong>
+        <span>Co theo doi han su dung</span>
+    </div>
+    <div class="metric-card">
+        <span>Vai tro</span>
+        <strong>4</strong>
+        <span>Admin, duoc si, chuyen gia, user</span>
+    </div>
+</section>
+
+<section class="workflow-grid">
+    <article class="workflow-card">
+        <h2 class="h5">Tra cuu</h2>
+        <p>Tim thuoc theo ten, hoat chat hoac danh muc va kiem tra ton kho hien tai.</p>
+        <a asp-controller="Drugs" asp-action="Index" class="btn btn-outline-primary btn-sm">Mo tra cuu</a>
+    </article>
+    <article class="workflow-card">
+        <h2 class="h5">Danh muc</h2>
+        <p>Quan ly du lieu thuoc, hoat chat, dang bao che va thong tin canh bao.</p>
+        <a asp-controller="DrugCatalog" asp-action="Index" class="btn btn-outline-primary btn-sm">Mo danh muc</a>
+    </article>
+    <article class="workflow-card">
+        <h2 class="h5">Kho thuoc</h2>
+        <p>Theo doi lo thuoc kha dung, so luong ton va trang thai het hang.</p>
+        <a asp-controller="Inventory" asp-action="Index" class="btn btn-outline-primary btn-sm">Mo kho</a>
+    </article>
+</section>

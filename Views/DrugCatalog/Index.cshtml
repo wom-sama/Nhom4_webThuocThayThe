@@ -4,40 +4,64 @@
     ViewData["Title"] = "Danh muc thuoc";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="h3">Danh muc thuoc</h1>
-    <a asp-action="Create" class="btn btn-primary">Them thuoc</a>
-</div>
+<section class="action-bar">
+    <div>
+        <div class="page-kicker">Quan tri du lieu</div>
+        <h1 class="page-title">Danh muc thuoc</h1>
+        <p class="page-description">Cap nhat thong tin thuoc, ham luong, nha san xuat, canh bao ke don va trang thai kinh doanh.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">+ Them thuoc</a>
+</section>
 
-<table class="table table-striped align-middle">
-    <thead>
-        <tr>
-            <th>Ten thuoc</th>
-            <th>Danh muc</th>
-            <th>Nha san xuat</th>
-            <th>Gia</th>
-            <th>Ton kho</th>
-            <th>Trang thai</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+<div class="table-shell">
+    <table class="table align-middle">
+        <thead>
             <tr>
-                <td>
-                    <strong>@item.Name</strong>
-                    <div class="text-muted small">@item.Strength - @item.DosageForm</div>
-                </td>
-                <td>@item.Category</td>
-                <td>@item.Manufacturer</td>
-                <td>@item.Price.ToString("N0")</td>
-                <td>@item.StockQuantity</td>
-                <td>@(item.IsActive ? "Dang ban" : "Ngung ban")</td>
-                <td class="text-end">
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Sua</a>
-                </td>
+                <th>Ten thuoc</th>
+                <th>Danh muc</th>
+                <th>Nha san xuat</th>
+                <th>Gia</th>
+                <th>Ton kho</th>
+                <th>Trang thai</th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <strong>@item.Name</strong>
+                        <div class="drug-meta">@item.Strength - @item.DosageForm</div>
+                    </td>
+                    <td>@item.Category</td>
+                    <td>@item.Manufacturer</td>
+                    <td>@item.Price.ToString("N0")</td>
+                    <td>
+                        @if (item.StockQuantity <= 0)
+                        {
+                            <span class="status-badge is-danger">Het hang</span>
+                        }
+                        else
+                        {
+                            <span class="status-badge is-success">@item.StockQuantity</span>
+                        }
+                    </td>
+                    <td>
+                        @if (item.IsActive)
+                        {
+                            <span class="status-badge is-info">Dang ban</span>
+                        }
+                        else
+                        {
+                            <span class="status-badge is-warning">Ngung ban</span>
+                        }
+                    </td>
+                    <td class="text-end">
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Sua</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

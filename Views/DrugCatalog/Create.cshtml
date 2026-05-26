@@ -4,8 +4,14 @@
     ViewData["Title"] = "Them thuoc";
 }
 
-<h1 class="h3 mb-3">Them thuoc</h1>
-<form asp-action="Create" method="post">
+<section class="action-bar">
+    <div>
+        <div class="page-kicker">Danh muc thuoc</div>
+        <h1 class="page-title">Them thuoc</h1>
+    </div>
+</section>
+
+<form asp-action="Create" method="post" class="app-surface">
     <partial name="_DrugForm" model="Model" />
     <div class="mt-3">
         <button type="submit" class="btn btn-primary">Luu</button>
