@@ -24,6 +24,16 @@ dotnet run
 
 Open the local URL printed by `dotnet run`.
 
+## Test Locally
+
+```powershell
+dotnet restore .\CMPM.sln
+dotnet build .\CMPM.sln --no-restore
+dotnet run --project .\tests\Nhom4WebThuocThayThe.AcceptanceTests\Nhom4WebThuocThayThe.AcceptanceTests.csproj --no-build
+```
+
+The acceptance runner starts the MVC app on a free local port and writes a JSON result file to `TestResults/acceptance-report.json`.
+
 ## Jira Workflow
 
 Use Jira issue keys in branch names, commit messages, and pull request titles.
@@ -36,6 +46,6 @@ Examples:
 
 ## Current Setup
 
-This repository currently contains the base ASP.NET Core MVC framework only. Business features will be implemented through Jira stories in project `N4WTT`.
+This repository contains the ASP.NET Core MVC framework, seed in-memory pharmacy data, role-based login, drug search, catalog administration, inventory screens and an automated acceptance test runner.
 
-Initial framework setup issue: `N4WTT-1`.
+Key sprint references: `N4WTT-1`, `N4WTT-10` to `N4WTT-14`, `N4WTT-24` to `N4WTT-52`.
