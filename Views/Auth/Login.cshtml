@@ -1,0 +1,43 @@
+@model Nhom4WebThuocThayThe.ViewModels.Auth.LoginViewModel
+
+@{
+    ViewData["Title"] = "Dang nhap";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <h1 class="h3 mb-3">Dang nhap he thong</h1>
+        <form asp-action="Login" method="post" class="card card-body">
+            <input type="hidden" asp-for="ReturnUrl" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" autocomplete="username" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" autocomplete="current-password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Dang nhap</button>
+        </form>
+
+        <div class="mt-4">
+            <h2 class="h6">Tai khoan mau</h2>
+            <ul class="small">
+                <li>admin@nhom4.local / Admin@123</li>
+                <li>duocsi@nhom4.local / Duocsi@123</li>
+                <li>chuyengia@nhom4.local / Chuyengia@123</li>
+                <li>user@nhom4.local / User@123</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
