@@ -1,0 +1,48 @@
+@model Nhom4WebThuocThayThe.ViewModels.Search.DrugDetailViewModel
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="d-flex justify-content-between align-items-start mb-3">
+    <div>
+        <h1 class="h3">@Model.Name</h1>
+        <div class="text-muted">@Model.Strength - @Model.DosageForm - @Model.Manufacturer</div>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">Quay lai</a>
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">Hoat chat</dt>
+    <dd class="col-sm-9">@Model.ActiveIngredient</dd>
+
+    <dt class="col-sm-3">Danh muc</dt>
+    <dd class="col-sm-9">@Model.Category</dd>
+
+    <dt class="col-sm-3">Gia ban</dt>
+    <dd class="col-sm-9">@Model.Price.ToString("N0") VND / @Model.Unit</dd>
+
+    <dt class="col-sm-3">Ton kho</dt>
+    <dd class="col-sm-9">
+        @if (Model.StockQuantity <= 0)
+        {
+            <span class="badge text-bg-danger">Het hang</span>
+        }
+        else
+        {
+            <span class="badge text-bg-success">@Model.StockQuantity</span>
+        }
+    </dd>
+
+    <dt class="col-sm-3">Thuoc ke don</dt>
+    <dd class="col-sm-9">@(Model.PrescriptionRequired ? "Co" : "Khong")</dd>
+
+    <dt class="col-sm-3">Mo ta</dt>
+    <dd class="col-sm-9">@Model.Description</dd>
+
+    <dt class="col-sm-3">Cach dung</dt>
+    <dd class="col-sm-9">@Model.Usage</dd>
+
+    <dt class="col-sm-3">Chong chi dinh</dt>
+    <dd class="col-sm-9">@Model.Contraindications</dd>
+</dl>
