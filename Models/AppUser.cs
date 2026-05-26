@@ -8,7 +8,9 @@ public sealed class AppUser
 
     public required string Role { get; init; }
 
-    public required string Password { get; init; }
+    public required string PasswordHash { get; init; }
+
+    public required string PasswordSalt { get; init; }
 
     public bool IsLocked { get; init; }
 }
