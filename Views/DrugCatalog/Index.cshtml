@@ -1,0 +1,43 @@
+@model IReadOnlyCollection<Nhom4WebThuocThayThe.ViewModels.Catalog.DrugListItemViewModel>
+
+@{
+    ViewData["Title"] = "Danh muc thuoc";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3">Danh muc thuoc</h1>
+    <a asp-action="Create" class="btn btn-primary">Them thuoc</a>
+</div>
+
+<table class="table table-striped align-middle">
+    <thead>
+        <tr>
+            <th>Ten thuoc</th>
+            <th>Danh muc</th>
+            <th>Nha san xuat</th>
+            <th>Gia</th>
+            <th>Ton kho</th>
+            <th>Trang thai</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <strong>@item.Name</strong>
+                    <div class="text-muted small">@item.Strength - @item.DosageForm</div>
+                </td>
+                <td>@item.Category</td>
+                <td>@item.Manufacturer</td>
+                <td>@item.Price.ToString("N0")</td>
+                <td>@item.StockQuantity</td>
+                <td>@(item.IsActive ? "Dang ban" : "Ngung ban")</td>
+                <td class="text-end">
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Sua</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

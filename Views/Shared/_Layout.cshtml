@@ -26,6 +26,18 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Drugs" asp-action="Index">Tra cuu thuoc</a>
+                        </li>
+                        @if (User.IsInRole("Admin") || User.IsInRole("Pharmacist"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="DrugCatalog" asp-action="Index">Danh muc thuoc</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Inventory" asp-action="Index">Kho thuoc</a>
+                            </li>
+                        }
                     </ul>
                     <ul class="navbar-nav">
                         @if (User.Identity?.IsAuthenticated == true)

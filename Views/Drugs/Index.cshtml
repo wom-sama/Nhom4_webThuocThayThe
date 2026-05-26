@@ -1,0 +1,73 @@
+@model Nhom4WebThuocThayThe.ViewModels.Search.DrugSearchPageViewModel
+
+@{
+    ViewData["Title"] = "Tra cuu thuoc";
+}
+
+<h1 class="h3 mb-3">Tra cuu thuoc</h1>
+
+<form method="get" class="row g-2 mb-4">
+    <div class="col-md-6">
+        <input asp-for="Keyword" class="form-control" placeholder="Nhap ten thuoc, hoat chat, danh muc..." />
+    </div>
+    <div class="col-md-4">
+        <select asp-for="CategoryId" asp-items="Model.Categories" class="form-select">
+            <option value="">Tat ca danh muc</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">Tim kiem</button>
+    </div>
+</form>
+
+@if (!Model.Results.Any())
+{
+    <div class="alert alert-info">Khong tim thay thuoc phu hop. Hay thu tim theo hoat chat.</div>
+}
+else
+{
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Thuoc</th>
+                <th>Danh muc</th>
+                <th>Nha san xuat</th>
+                <th>Ton kho</th>
+                <th>Canh bao</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Results)
+            {
+                <tr>
+                    <td>
+                        <strong>@item.Name</strong>
+                        <div class="text-muted small">@item.Strength - @item.DosageForm</div>
+                    </td>
+                    <td>@item.Category</td>
+                    <td>@item.Manufacturer</td>
+                    <td>
+                        @if (item.StockQuantity <= 0)
+                        {
+                            <span class="badge text-bg-danger">Het hang</span>
+                        }
+                        else
+                        {
+                            <span class="badge text-bg-success">@item.StockQuantity</span>
+                        }
+                    </td>
+                    <td>
+                        @if (item.PrescriptionRequired)
+                        {
+                            <span class="badge text-bg-warning">Can ke don</span>
+                        }
+                    </td>
+                    <td class="text-end">
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Chi tiet</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

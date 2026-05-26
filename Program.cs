@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Nhom4WebThuocThayThe.Data;
 using Nhom4WebThuocThayThe.Models;
 using Nhom4WebThuocThayThe.Services;
 
@@ -22,6 +23,10 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("ExpertReviewer", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Expert, AppRoles.Pharmacist));
 });
 builder.Services.AddSingleton<IUserAccountService, InMemoryUserAccountService>();
+builder.Services.AddSingleton<InMemoryPharmacyStore>();
+builder.Services.AddScoped<IInventoryService, InventoryService>();
+builder.Services.AddScoped<IDrugCatalogService, DrugCatalogService>();
+builder.Services.AddScoped<IDrugSearchService, DrugSearchService>();
 
 var app = builder.Build();
 

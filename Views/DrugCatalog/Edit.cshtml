@@ -1,0 +1,18 @@
+@model Nhom4WebThuocThayThe.ViewModels.Catalog.DrugFormViewModel
+
+@{
+    ViewData["Title"] = "Sua thuoc";
+}
+
+<h1 class="h3 mb-3">Sua thuoc</h1>
+<form asp-action="Edit" method="post">
+    <partial name="_DrugForm" model="Model" />
+    <div class="mt-3">
+        <button type="submit" class="btn btn-primary">Cap nhat</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Huy</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
