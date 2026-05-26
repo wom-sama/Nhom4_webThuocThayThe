@@ -1,0 +1,461 @@
+using System.Diagnostics;
+using System.Net;
+using System.Net.Http.Headers;
+using System.Net.Sockets;
+using System.Text.Json;
+using System.Text.RegularExpressions;
+
+var repoRoot = FindRepoRoot();
+var runtime = await WebAppRuntime.StartAsync(repoRoot);
+var results = new List<TestResult>();
+
+try
+{
+    var tests = AcceptanceTests.CreateAll(runtime);
+    foreach (var test in tests)
+    {
+        var stopwatch = Stopwatch.StartNew();
+        try
+        {
+            await test.Execute();
+            stopwatch.Stop();
+            results.Add(new TestResult(test.Id, test.Area, test.Title, "Pass", stopwatch.ElapsedMilliseconds, null));
+            Console.WriteLine($"PASS {test.Id} {test.Title} ({stopwatch.ElapsedMilliseconds} ms)");
+        }
+        catch (Exception ex)
+        {
+            stopwatch.Stop();
+            results.Add(new TestResult(test.Id, test.Area, test.Title, "Fail", stopwatch.ElapsedMilliseconds, ex.Message));
+            Console.WriteLine($"FAIL {test.Id} {test.Title}: {ex.Message}");
+        }
+    }
+}
+finally
+{
+    await runtime.DisposeAsync();
+}
+
+var reportDirectory = Path.Combine(repoRoot.FullName, "TestResults");
+Directory.CreateDirectory(reportDirectory);
+var reportPath = Path.Combine(reportDirectory, "acceptance-report.json");
+await File.WriteAllTextAsync(reportPath, JsonSerializer.Serialize(results, new JsonSerializerOptions { WriteIndented = true }));
+
+var failed = results.Count(item => item.Status == "Fail");
+Console.WriteLine();
+Console.WriteLine($"Acceptance summary: {results.Count - failed}/{results.Count} passed");
+Console.WriteLine($"Report: {reportPath}");
+
+return failed == 0 ? 0 : 1;
+
+static DirectoryInfo FindRepoRoot()
+{
+    var current = new DirectoryInfo(AppContext.BaseDirectory);
+    while (current is not null)
+    {
+        if (File.Exists(Path.Combine(current.FullName, "Nhom4WebThuocThayThe.csproj")))
+        {
+            return current;
+        }
+
+        current = current.Parent;
+    }
+
+    throw new InvalidOperationException("Cannot locate repository root.");
+}
+
+internal sealed record AcceptanceTest(string Id, string Area, string Title, Func<Task> Execute);
+
+internal sealed record TestResult(string Id, string Area, string Title, string Status, long ElapsedMilliseconds, string? Error);
+
+internal sealed class WebAppRuntime : IAsyncDisposable
+{
+    private readonly Process _process;
+
+    private WebAppRuntime(DirectoryInfo repoRoot, Process process, Uri baseUri)
+    {
+        RepoRoot = repoRoot;
+        _process = process;
+        BaseUri = baseUri;
+    }
+
+    public DirectoryInfo RepoRoot { get; }
+
+    public Uri BaseUri { get; }
+
+    public long WorkingSetBytes => _process.HasExited ? 0 : _process.WorkingSet64;
+
+    public static async Task<WebAppRuntime> StartAsync(DirectoryInfo repoRoot)
+    {
+        var port = GetFreePort();
+        var baseUri = new Uri($"http://127.0.0.1:{port}");
+        var projectPath = Path.Combine(repoRoot.FullName, "Nhom4WebThuocThayThe.csproj");
+        var output = new List<string>();
+
+        var process = new Process
+        {
+            StartInfo = new ProcessStartInfo
+            {
+                FileName = "dotnet",
+                Arguments = $"run --no-build --project \"{projectPath}\" --urls {baseUri}",
+                WorkingDirectory = repoRoot.FullName,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            },
+            EnableRaisingEvents = true
+        };
+
+        process.OutputDataReceived += (_, args) =>
+        {
+            if (args.Data is not null)
+            {
+                output.Add(args.Data);
+            }
+        };
+        process.ErrorDataReceived += (_, args) =>
+        {
+            if (args.Data is not null)
+            {
+                output.Add(args.Data);
+            }
+        };
+
+        process.Start();
+        process.BeginOutputReadLine();
+        process.BeginErrorReadLine();
+
+        var runtime = new WebAppRuntime(repoRoot, process, baseUri);
+        using var client = runtime.CreateClient();
+        var deadline = DateTimeOffset.UtcNow.AddSeconds(30);
+        while (DateTimeOffset.UtcNow < deadline)
+        {
+            if (process.HasExited)
+            {
+                throw new InvalidOperationException("Web app exited before readiness. " + string.Join(Environment.NewLine, output.TakeLast(20)));
+            }
+
+            try
+            {
+                using var response = await client.GetAsync("/");
+                if (response.IsSuccessStatusCode)
+                {
+                    return runtime;
+                }
+            }
+            catch
+            {
+                await Task.Delay(300);
+            }
+        }
+
+        throw new TimeoutException("Web app did not become ready. " + string.Join(Environment.NewLine, output.TakeLast(20)));
+    }
+
+    public HttpClient CreateClient(bool allowAutoRedirect = true)
+    {
+        var handler = new HttpClientHandler
+        {
+            AllowAutoRedirect = allowAutoRedirect,
+            CookieContainer = new CookieContainer()
+        };
+
+        return new HttpClient(handler)
+        {
+            BaseAddress = BaseUri,
+            Timeout = TimeSpan.FromSeconds(10)
+        };
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (!_process.HasExited)
+        {
+            _process.Kill(entireProcessTree: true);
+            await _process.WaitForExitAsync();
+        }
+
+        _process.Dispose();
+    }
+
+    private static int GetFreePort()
+    {
+        using var listener = new TcpListener(IPAddress.Loopback, 0);
+        listener.Start();
+        return ((IPEndPoint)listener.LocalEndpoint).Port;
+    }
+}
+
+internal static class AcceptanceTests
+{
+    public static IReadOnlyCollection<AcceptanceTest> CreateAll(WebAppRuntime runtime)
+    {
+        return
+        [
+            new("TC01", "Smoke", "Home page renders app dashboard", async () =>
+            {
+                using var client = runtime.CreateClient();
+                var html = await GetStringAsync(client, "/");
+                Expect(html.Contains("Bang dieu khien tra cuu va quan ly thuoc"), "dashboard title missing");
+                Expect(html.Contains("skip-link"), "skip link missing");
+            }),
+            new("TC02", "Search", "Search finds medicine by active ingredient", async () =>
+            {
+                using var client = runtime.CreateClient();
+                var html = await GetStringAsync(client, "/Drugs?keyword=para");
+                Expect(html.Contains("Paracetamol DHG 500mg"), "expected paracetamol result missing");
+                Expect(html.Contains("trong kho"), "stock status missing from result card");
+            }),
+            new("TC03", "Search", "Search handles empty result state", async () =>
+            {
+                using var client = runtime.CreateClient();
+                var html = await GetStringAsync(client, "/Drugs?keyword=zzzz-not-found");
+                Expect(html.Contains("Khong tim thay thuoc phu hop"), "empty state missing");
+            }),
+            new("TC04", "Search", "Category filter narrows results", async () =>
+            {
+                using var client = runtime.CreateClient();
+                var html = await GetStringAsync(client, "/Drugs?categoryId=2");
+                Expect(html.Contains("Amoxicillin 500mg"), "antibiotic result missing");
+                Expect(!html.Contains("Panadol 500mg"), "category filter leaked analgesic item");
+            }),
+            new("TC05", "Drug detail", "Drug detail shows same-active-ingredient alternatives", async () =>
+            {
+                using var client = runtime.CreateClient();
+                var html = await GetStringAsync(client, "/Drugs/Details/1");
+                Expect(html.Contains("Thuoc thay the cung hoat chat"), "alternative section missing");
+                Expect(html.Contains("Paracetamol DHG 500mg"), "same-active-ingredient alternative missing");
+            }),
+            new("TC06", "Error handling", "Invalid drug detail returns clean 404", async () =>
+            {
+                using var client = runtime.CreateClient();
+                using var response = await client.GetAsync("/Drugs/Details/9999");
+                var body = await response.Content.ReadAsStringAsync();
+                Expect(response.StatusCode == HttpStatusCode.NotFound, "expected 404");
+                Expect(!body.Contains("Exception", StringComparison.OrdinalIgnoreCase), "404 leaked exception text");
+            }),
+            new("TC07", "RBAC", "Anonymous user is redirected from catalog admin", async () =>
+            {
+                using var client = runtime.CreateClient(allowAutoRedirect: false);
+                using var response = await client.GetAsync("/DrugCatalog");
+                Expect(response.StatusCode == HttpStatusCode.Redirect, "anonymous catalog access should redirect");
+                Expect(response.Headers.Location?.ToString().Contains("/Auth/Login") == true, "redirect should target login");
+            }),
+            new("TC08", "Auth", "Invalid login returns validation error", async () =>
+            {
+                using var client = runtime.CreateClient();
+                var html = await LoginAsync(client, "admin@nhom4.local", "WrongPassword", followRedirects: true);
+                Expect(html.Contains("Email hoac mat khau khong hop le"), "invalid login error missing");
+            }),
+            new("TC09", "Auth", "Pharmacist login can open inventory", async () =>
+            {
+                using var client = runtime.CreateClient();
+                await LoginAsync(client, "duocsi@nhom4.local", "Duocsi@123", followRedirects: true);
+                var html = await GetStringAsync(client, "/Inventory");
+                Expect(html.Contains("Ton kho va lo thuoc"), "inventory page missing");
+            }),
+            new("TC10", "RBAC", "Normal user is denied from catalog admin", async () =>
+            {
+                using var client = runtime.CreateClient(allowAutoRedirect: false);
+                await LoginAsync(client, "user@nhom4.local", "User@123", followRedirects: false);
+                using var response = await client.GetAsync("/DrugCatalog");
+                Expect(response.StatusCode == HttpStatusCode.Redirect, "user should be redirected away from catalog");
+                Expect(response.Headers.Location?.ToString().Contains("/Auth/AccessDenied") == true, "redirect should target access denied");
+            }),
+            new("TC11", "Session", "Logout clears protected access", async () =>
+            {
+                using var client = runtime.CreateClient(allowAutoRedirect: false);
+                await LoginAsync(client, "admin@nhom4.local", "Admin@123", followRedirects: false);
+                var home = await GetStringAsync(client, "/");
+                var token = ExtractAntiforgeryToken(home);
+                using var logout = await client.PostAsync("/Auth/Logout", new FormUrlEncodedContent(new Dictionary<string, string>
+                {
+                    ["__RequestVerificationToken"] = token
+                }));
+                Expect(logout.StatusCode == HttpStatusCode.Redirect, "logout should redirect");
+                using var inventory = await client.GetAsync("/Inventory");
+                Expect(inventory.StatusCode == HttpStatusCode.Redirect, "protected access should redirect after logout");
+            }),
+            new("TC12", "Catalog", "Catalog create validation remains on form", async () =>
+            {
+                using var client = runtime.CreateClient();
+                await LoginAsync(client, "admin@nhom4.local", "Admin@123", followRedirects: true);
+                var form = await GetStringAsync(client, "/DrugCatalog/Create");
+                var token = ExtractAntiforgeryToken(form);
+                var html = await PostFormStringAsync(client, "/DrugCatalog/Create", new Dictionary<string, string>
+                {
+                    ["__RequestVerificationToken"] = token,
+                    ["Name"] = "",
+                    ["Strength"] = "500mg",
+                    ["Price"] = "1000",
+                    ["CategoryId"] = "1",
+                    ["DosageFormId"] = "1",
+                    ["UnitId"] = "1",
+                    ["ManufacturerId"] = "1",
+                    ["ActiveIngredientId"] = "1",
+                    ["ActiveIngredientStrength"] = "500mg",
+                    ["IsActive"] = "true"
+                });
+                Expect(html.Contains("Them thuoc"), "create form did not stay open");
+                Expect(html.Contains("field-validation-error"), "validation message missing");
+            }),
+            new("TC13", "Security", "Anti-forgery rejects inventory post without token", async () =>
+            {
+                using var client = runtime.CreateClient(allowAutoRedirect: false);
+                await LoginAsync(client, "admin@nhom4.local", "Admin@123", followRedirects: false);
+                using var response = await client.PostAsync("/Inventory/CreateBatch", new FormUrlEncodedContent(new Dictionary<string, string>
+                {
+                    ["DrugId"] = "2",
+                    ["WarehouseId"] = "1",
+                    ["BatchNumber"] = "NO-TOKEN",
+                    ["Quantity"] = "1",
+                    ["ImportedDate"] = "2026-05-26",
+                    ["ExpiryDate"] = "2027-05-26"
+                }));
+                Expect(response.StatusCode == HttpStatusCode.BadRequest, "missing anti-forgery token should be rejected");
+            }),
+            new("TC14", "Cache", "Static stylesheet is served with revalidation metadata", async () =>
+            {
+                using var client = runtime.CreateClient();
+                using var response = await client.GetAsync("/css/site.css");
+                var css = await response.Content.ReadAsStringAsync();
+                Expect(response.IsSuccessStatusCode, "site.css did not load");
+                Expect(css.Contains(".app-header"), "stylesheet template class missing");
+                Expect(response.Headers.ETag is not null || response.Content.Headers.LastModified is not null, "static asset lacks cache revalidation metadata");
+            }),
+            new("TC15", "Responsive", "CSS includes responsive collapse rules", async () =>
+            {
+                using var client = runtime.CreateClient();
+                var css = await GetStringAsync(client, "/css/site.css");
+                Expect(css.Contains("@media (max-width: 991.98px)"), "tablet breakpoint missing");
+                Expect(css.Contains("grid-template-columns: 1fr"), "single-column collapse rule missing");
+            }),
+            new("TC16", "Accessibility", "Login form has labels and autocomplete", async () =>
+            {
+                using var client = runtime.CreateClient();
+                var html = await GetStringAsync(client, "/Auth/Login");
+                Expect(html.Contains("autocomplete=\"username\""), "username autocomplete missing");
+                Expect(html.Contains("autocomplete=\"current-password\""), "password autocomplete missing");
+                Expect(html.Contains("<label"), "form labels missing");
+            }),
+            new("TC17", "Performance", "Search endpoint responds within local threshold", async () =>
+            {
+                using var client = runtime.CreateClient();
+                var timings = new List<long>();
+                for (var i = 0; i < 20; i++)
+                {
+                    var stopwatch = Stopwatch.StartNew();
+                    using var response = await client.GetAsync("/Drugs?keyword=para");
+                    stopwatch.Stop();
+                    Expect(response.IsSuccessStatusCode, "search request failed");
+                    timings.Add(stopwatch.ElapsedMilliseconds);
+                }
+
+                Expect(timings.Average() < 650, $"average search time too high: {timings.Average():N0} ms");
+                Expect(timings.Max() < 2000, $"max search time too high: {timings.Max()} ms");
+            }),
+            new("TC18", "Memory", "Repeated requests stay within memory budget", async () =>
+            {
+                using var client = runtime.CreateClient();
+                for (var i = 0; i < 50; i++)
+                {
+                    using var response = await client.GetAsync(i % 2 == 0 ? "/" : "/Drugs?keyword=para");
+                    Expect(response.IsSuccessStatusCode, "request failed during memory loop");
+                }
+
+                var megabytes = runtime.WorkingSetBytes / 1024 / 1024;
+                Expect(megabytes < 350, $"working set too high: {megabytes} MB");
+            }),
+            new("TC19", "Debug", "Unknown route does not expose stack trace", async () =>
+            {
+                using var client = runtime.CreateClient();
+                using var response = await client.GetAsync("/not-real-route");
+                var body = await response.Content.ReadAsStringAsync();
+                Expect(response.StatusCode == HttpStatusCode.NotFound, "unknown route should be 404");
+                Expect(!body.Contains("StackTrace", StringComparison.OrdinalIgnoreCase), "stack trace leaked");
+            }),
+            new("TC20", "Concurrency", "Parallel public reads remain stable", async () =>
+            {
+                using var client = runtime.CreateClient();
+                var requests = Enumerable.Range(0, 12)
+                    .Select(index => client.GetAsync(index % 2 == 0 ? "/Drugs?keyword=para" : "/Drugs/Details/2"))
+                    .ToArray();
+                var responses = await Task.WhenAll(requests);
+                try
+                {
+                    Expect(responses.All(item => item.IsSuccessStatusCode), "one or more parallel requests failed");
+                }
+                finally
+                {
+                    foreach (var response in responses)
+                    {
+                        response.Dispose();
+                    }
+                }
+            })
+        ];
+    }
+
+    private static async Task<string> LoginAsync(HttpClient client, string email, string password, bool followRedirects)
+    {
+        var loginHtml = await GetStringAsync(client, "/Auth/Login");
+        var token = ExtractAntiforgeryToken(loginHtml);
+        var response = await client.PostAsync("/Auth/Login", new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            ["Email"] = email,
+            ["Password"] = password,
+            ["ReturnUrl"] = "",
+            ["__RequestVerificationToken"] = token
+        }));
+
+        if (!followRedirects || !IsRedirect(response.StatusCode))
+        {
+            return await response.Content.ReadAsStringAsync();
+        }
+
+        var location = response.Headers.Location?.ToString() ?? "/";
+        return await GetStringAsync(client, location);
+    }
+
+    private static async Task<string> GetStringAsync(HttpClient client, string path)
+    {
+        using var response = await client.GetAsync(path);
+        var body = await response.Content.ReadAsStringAsync();
+        Expect(response.IsSuccessStatusCode, $"{path} returned {(int)response.StatusCode}");
+        return body;
+    }
+
+    private static async Task<string> PostFormStringAsync(HttpClient client, string path, Dictionary<string, string> form)
+    {
+        using var response = await client.PostAsync(path, new FormUrlEncodedContent(form));
+        var body = await response.Content.ReadAsStringAsync();
+        Expect(response.IsSuccessStatusCode, $"{path} returned {(int)response.StatusCode}");
+        return body;
+    }
+
+    private static string ExtractAntiforgeryToken(string html)
+    {
+        var input = Regex.Match(html, "<input[^>]*name=\"__RequestVerificationToken\"[^>]*>", RegexOptions.IgnoreCase);
+        Expect(input.Success, "anti-forgery token input missing");
+        var value = Regex.Match(input.Value, "value=\"([^\"]+)\"", RegexOptions.IgnoreCase);
+        Expect(value.Success, "anti-forgery token value missing");
+        return WebUtility.HtmlDecode(value.Groups[1].Value);
+    }
+
+    private static bool IsRedirect(HttpStatusCode statusCode)
+    {
+        return statusCode is HttpStatusCode.Redirect
+            or HttpStatusCode.Moved
+            or HttpStatusCode.RedirectMethod
+            or HttpStatusCode.TemporaryRedirect
+            or HttpStatusCode.PermanentRedirect;
+    }
+
+    private static void Expect(bool condition, string message)
+    {
+        if (!condition)
+        {
+            throw new InvalidOperationException(message);
+        }
+    }
+}
