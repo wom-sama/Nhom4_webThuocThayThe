@@ -30,9 +30,10 @@ Open the local URL printed by `dotnet run`.
 dotnet restore .\CMPM.sln
 dotnet build .\CMPM.sln --no-restore
 dotnet run --project .\tests\Nhom4WebThuocThayThe.AcceptanceTests\Nhom4WebThuocThayThe.AcceptanceTests.csproj --no-build
+dotnet run --project .\tests\Nhom4WebThuocThayThe.SecurityTests\Nhom4WebThuocThayThe.SecurityTests.csproj --no-build
 ```
 
-The acceptance runner starts the MVC app on a free local port and writes a JSON result file to `TestResults/acceptance-report.json`.
+Each runner starts the MVC app on a free local port and writes JSON result files under `TestResults/`.
 
 ## Jira Workflow
 
