@@ -1,4 +1,3 @@
-using Nhom4WebThuocThayThe.ViewModels.Catalog;
 using Nhom4WebThuocThayThe.ViewModels.Search;
 
 namespace Nhom4WebThuocThayThe.Services;

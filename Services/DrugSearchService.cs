@@ -53,6 +53,13 @@ public sealed class DrugSearchService(
         var ingredient = ingredientLink is null
             ? null
             : store.ActiveIngredients.FirstOrDefault(item => item.Id == ingredientLink.ActiveIngredientId);
+        var alternatives = ingredientLink is null
+            ? []
+            : catalogService.GetDrugs()
+                .Where(item => IsSameActiveIngredient(item.Id, ingredientLink.ActiveIngredientId) && item.Id != drug.Id)
+                .OrderByDescending(item => item.StockQuantity)
+                .ThenBy(item => item.Name)
+                .ToList();
 
         return new DrugDetailViewModel
         {
@@ -65,11 +72,13 @@ public sealed class DrugSearchService(
             Unit = store.Units.First(unit => unit.Id == drug.UnitId).Name,
             Manufacturer = store.Manufacturers.First(manufacturer => manufacturer.Id == drug.ManufacturerId).Name,
             ActiveIngredient = ingredient?.Name ?? "Chua khai bao",
+            ActiveIngredientWarning = ingredient?.Warning,
             StockQuantity = inventoryService.GetAvailableQuantity(drug.Id),
             PrescriptionRequired = drug.PrescriptionRequired,
             Description = drug.Description,
             Usage = drug.Usage,
-            Contraindications = drug.Contraindications
+            Contraindications = drug.Contraindications,
+            Alternatives = alternatives
         };
     }
 
@@ -93,5 +102,11 @@ public sealed class DrugSearchService(
     private static bool Contains(string value, string keyword)
     {
         return value.Contains(keyword, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private bool IsSameActiveIngredient(int drugId, int activeIngredientId)
+    {
+        return store.DrugActiveIngredients.Any(item =>
+            item.DrugId == drugId && item.ActiveIngredientId == activeIngredientId);
     }
 }

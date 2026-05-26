@@ -11,7 +11,11 @@ public interface IInventoryService
 
     IReadOnlyCollection<DrugBatch> GetBatches();
 
+    IReadOnlyCollection<BatchListItemViewModel> GetBatchList();
+
     BatchFormViewModel CreateBatchForm();
+
+    BatchFormViewModel CreateBatchForm(BatchFormViewModel model);
 
     void AddBatch(BatchFormViewModel model);
 }

@@ -37,9 +37,45 @@ public sealed class InventoryService(InMemoryPharmacyStore store) : IInventorySe
             .ToList();
     }
 
+    public IReadOnlyCollection<BatchListItemViewModel> GetBatchList()
+    {
+        var today = DateOnly.FromDateTime(DateTime.Today);
+        var nearExpiryLimit = today.AddDays(90);
+
+        return store.Batches
+            .OrderBy(batch => batch.ExpiryDate)
+            .ThenBy(batch => batch.BatchNumber)
+            .Select(batch =>
+            {
+                var drug = store.Drugs.First(item => item.Id == batch.DrugId);
+                var warehouse = store.Warehouses.First(item => item.Id == batch.WarehouseId);
+
+                return new BatchListItemViewModel
+                {
+                    Id = batch.Id,
+                    DrugName = drug.Name,
+                    Strength = drug.Strength,
+                    WarehouseName = warehouse.Name,
+                    BatchNumber = batch.BatchNumber,
+                    Quantity = batch.Quantity,
+                    ImportedDate = batch.ImportedDate,
+                    ExpiryDate = batch.ExpiryDate,
+                    IsExpired = batch.ExpiryDate < today,
+                    IsNearExpiry = batch.ExpiryDate >= today && batch.ExpiryDate <= nearExpiryLimit,
+                    IsUsable = batch.IsUsable(today)
+                };
+            })
+            .ToList();
+    }
+
     public BatchFormViewModel CreateBatchForm()
     {
         return Populate(new BatchFormViewModel());
+    }
+
+    public BatchFormViewModel CreateBatchForm(BatchFormViewModel model)
+    {
+        return Populate(model);
     }
 
     public void AddBatch(BatchFormViewModel model)
