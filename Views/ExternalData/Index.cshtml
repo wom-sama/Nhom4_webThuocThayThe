@@ -1,0 +1,39 @@
+@model IReadOnlyCollection<Nhom4WebThuocThayThe.Models.ExternalDataSource>
+
+@{
+    ViewData["Title"] = "Nguon du lieu ngoai";
+}
+
+<section class="mb-4">
+    <div class="page-kicker">Tich hop du lieu</div>
+    <h1 class="page-title">Quan ly nguon du lieu duoc ngoai</h1>
+    <p class="page-description">Theo doi muc dich, mapping va lan dong bo metadata cua tung nguon tham chieu.</p>
+</section>
+
+@if (TempData["SuccessMessage"] is string successMessage)
+{
+    <div class="alert alert-success">@successMessage</div>
+}
+
+<div class="source-grid">
+    @foreach (var source in Model)
+    {
+        <article class="app-surface source-admin-card">
+            <div class="section-heading">
+                <div>
+                    <h2 class="h5">@source.Name</h2>
+                    <a href="@source.SourceUrl" target="_blank" rel="noopener noreferrer">@source.SourceUrl</a>
+                </div>
+                <span class="status-badge is-info">@source.MappingStatus</span>
+            </div>
+            <p>@source.Purpose</p>
+            <div class="action-bar mb-0">
+                <span class="muted-copy">Lan dong bo: @(source.LastSyncDate?.ToString("dd/MM/yyyy") ?? "Chua co")</span>
+                <form asp-action="MarkSynced" method="post">
+                    <input type="hidden" name="id" value="@source.Id" />
+                    <button type="submit" class="btn btn-sm btn-primary">Danh dau da dong bo</button>
+                </form>
+            </div>
+        </article>
+    }
+</div>
