@@ -198,7 +198,8 @@ a:hover {
 
 .metric-grid,
 .workflow-grid,
-.result-grid {
+.result-grid,
+.source-grid {
   display: grid;
   gap: 1rem;
 }
@@ -213,6 +214,10 @@ a:hover {
 
 .result-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.source-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .metric-card,
@@ -528,6 +533,85 @@ a:hover {
   background: #eaf4fb;
 }
 
+.report-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(18rem, 0.7fr);
+  gap: 1rem;
+}
+
+.source-card {
+  display: grid;
+  align-content: start;
+  gap: 0.55rem;
+  min-width: 0;
+  padding: 0.85rem;
+  background: #f8fbfa;
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius);
+}
+
+.source-card span:not(.status-badge),
+.source-card small {
+  color: var(--app-muted);
+}
+
+.timeline-list {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.timeline-list article {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--app-border);
+}
+
+.timeline-list article:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.timeline-list span,
+.timeline-list small {
+  display: block;
+  color: var(--app-muted);
+}
+
+.review-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.review-card,
+.review-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.review-summary,
+.review-actions {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.review-form {
+  grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr);
+}
+
+.review-actions {
+  grid-column: 1 / -1;
+  align-items: center;
+}
+
+.source-admin-card {
+  box-shadow: none;
+}
+
 .auth-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(18rem, 26rem);
@@ -564,6 +648,8 @@ a:hover {
   .metric-grid,
   .workflow-grid,
   .result-grid,
+  .source-grid,
+  .report-grid,
   .detail-grid,
   .auth-layout {
     grid-template-columns: 1fr;
@@ -600,8 +686,19 @@ a:hover {
   .action-bar,
   .drug-card-header,
   .stack-item,
-  .recommendation-topline {
+  .recommendation-topline,
+  .timeline-list article,
+  .review-summary,
+  .review-actions {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .review-form {
+    grid-template-columns: 1fr;
+  }
+
+  .review-actions {
+    grid-column: auto;
   }
 }
