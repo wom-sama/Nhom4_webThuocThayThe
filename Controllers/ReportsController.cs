@@ -1,14 +1,18 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Nhom4WebThuocThayThe.Data;
 using Nhom4WebThuocThayThe.Services;
+using Nhom4WebThuocThayThe.ViewModels.Reports;
 
 namespace Nhom4WebThuocThayThe.Controllers;
 
 [Authorize(Policy = "ExpertReviewer")]
 public sealed class ReportsController(
     IReportingService reportingService,
-    IAuditLogService auditLogService) : Controller
+    IAuditLogService auditLogService,
+    PharmacyDbContext dbContext) : Controller
 {
     public IActionResult Index()
     {
@@ -20,14 +24,32 @@ public sealed class ReportsController(
     [ValidateAntiForgeryToken]
     public IActionResult DownloadBackup()
     {
-        var snapshot = auditLogService.CreateSnapshot();
         auditLogService.Add(
             User.Identity?.Name ?? "Unknown",
             "Backup",
-            "System snapshot",
-            $"Generated backup metadata at {snapshot.GeneratedAt:O}.");
+            "SQL Server database",
+            $"Generated JSON backup at {DateTimeOffset.Now:O}.");
 
-        var bytes = JsonSerializer.SerializeToUtf8Bytes(snapshot, new JsonSerializerOptions
+        var backup = new DatabaseBackupViewModel
+        {
+            Version = "1.0",
+            GeneratedAt = DateTimeOffset.Now,
+            Categories = dbContext.Categories.AsNoTracking().ToList(),
+            DosageForms = dbContext.DosageForms.AsNoTracking().ToList(),
+            Units = dbContext.Units.AsNoTracking().ToList(),
+            Manufacturers = dbContext.Manufacturers.AsNoTracking().ToList(),
+            ActiveIngredients = dbContext.ActiveIngredients.AsNoTracking().ToList(),
+            Drugs = dbContext.Drugs.AsNoTracking().ToList(),
+            DrugActiveIngredients = dbContext.DrugActiveIngredients.AsNoTracking().ToList(),
+            Warehouses = dbContext.Warehouses.AsNoTracking().ToList(),
+            Batches = dbContext.Batches.AsNoTracking().ToList(),
+            PatientSafetyProfiles = dbContext.PatientSafetyProfiles.AsNoTracking().ToList(),
+            ExternalDataSources = dbContext.ExternalDataSources.AsNoTracking().ToList(),
+            AuditLogs = dbContext.AuditLogs.AsNoTracking().ToList(),
+            ExpertReviews = dbContext.ExpertReviews.AsNoTracking().ToList()
+        };
+
+        var bytes = JsonSerializer.SerializeToUtf8Bytes(backup, new JsonSerializerOptions
         {
             WriteIndented = true
         });

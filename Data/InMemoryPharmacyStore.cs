@@ -184,14 +184,14 @@ public sealed class InMemoryPharmacyStore
         {
             Email = "user@nhom4.local",
             DisplayName = "Nguoi dung mac dinh",
-            AllergyActiveIngredientIds = [2],
+            AllergyActiveIngredientIdsCsv = "2",
             ClinicalNote = "Di ung voi nhom NSAID, uu tien canh bao ibuprofen."
         },
         new()
         {
             Email = "duocsi@nhom4.local",
             DisplayName = "Ho so kiem thu duoc si",
-            AllergyActiveIngredientIds = [1],
+            AllergyActiveIngredientIdsCsv = "1",
             ClinicalNote = "Ho so mau dung de kiem tra canh bao paracetamol."
         }
     ];

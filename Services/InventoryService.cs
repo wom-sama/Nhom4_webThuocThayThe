@@ -1,37 +1,54 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Nhom4WebThuocThayThe.Data;
 using Nhom4WebThuocThayThe.Models;
 using Nhom4WebThuocThayThe.ViewModels.Inventory;
 
 namespace Nhom4WebThuocThayThe.Services;
 
-public sealed class InventoryService(InMemoryPharmacyStore store) : IInventoryService
+public sealed class InventoryService(PharmacyDbContext dbContext) : IInventoryService
 {
     public int GetAvailableQuantity(int drugId)
     {
         var today = DateOnly.FromDateTime(DateTime.Today);
-        return store.Batches
-            .Where(batch => batch.DrugId == drugId && batch.IsUsable(today))
+        return dbContext.Batches
+            .AsNoTracking()
+            .Where(batch => batch.DrugId == drugId && batch.Quantity > 0 && batch.ExpiryDate >= today)
             .Sum(batch => batch.Quantity);
     }
 
     public IReadOnlyCollection<StockSummaryViewModel> GetStockSummaries()
     {
-        return store.Drugs
+        var today = DateOnly.FromDateTime(DateTime.Today);
+        var availableQuantities = dbContext.Batches
+            .AsNoTracking()
+            .Where(batch => batch.Quantity > 0 && batch.ExpiryDate >= today)
+            .GroupBy(batch => batch.DrugId)
+            .Select(group => new
+            {
+                DrugId = group.Key,
+                Quantity = group.Sum(batch => batch.Quantity)
+            })
+            .ToDictionary(item => item.DrugId, item => item.Quantity);
+
+        return dbContext.Drugs
+            .AsNoTracking()
             .OrderBy(drug => drug.Name)
+            .AsEnumerable()
             .Select(drug => new StockSummaryViewModel
             {
                 DrugId = drug.Id,
                 DrugName = drug.Name,
                 Strength = drug.Strength,
-                Quantity = GetAvailableQuantity(drug.Id)
+                Quantity = availableQuantities.GetValueOrDefault(drug.Id)
             })
             .ToList();
     }
 
     public IReadOnlyCollection<DrugBatch> GetBatches()
     {
-        return store.Batches
+        return dbContext.Batches
+            .AsNoTracking()
             .OrderBy(batch => batch.ExpiryDate)
             .ThenBy(batch => batch.BatchNumber)
             .ToList();
@@ -42,13 +59,18 @@ public sealed class InventoryService(InMemoryPharmacyStore store) : IInventorySe
         var today = DateOnly.FromDateTime(DateTime.Today);
         var nearExpiryLimit = today.AddDays(90);
 
-        return store.Batches
+        var drugs = dbContext.Drugs.AsNoTracking().ToDictionary(item => item.Id);
+        var warehouses = dbContext.Warehouses.AsNoTracking().ToDictionary(item => item.Id);
+
+        return dbContext.Batches
+            .AsNoTracking()
             .OrderBy(batch => batch.ExpiryDate)
             .ThenBy(batch => batch.BatchNumber)
+            .AsEnumerable()
             .Select(batch =>
             {
-                var drug = store.Drugs.First(item => item.Id == batch.DrugId);
-                var warehouse = store.Warehouses.First(item => item.Id == batch.WarehouseId);
+                var drug = drugs[batch.DrugId];
+                var warehouse = warehouses[batch.WarehouseId];
 
                 return new BatchListItemViewModel
                 {
@@ -80,9 +102,10 @@ public sealed class InventoryService(InMemoryPharmacyStore store) : IInventorySe
 
     public void AddBatch(BatchFormViewModel model)
     {
-        store.Batches.Add(new DrugBatch
+        var nextId = dbContext.Batches.Any() ? dbContext.Batches.Max(item => item.Id) + 1 : 1;
+        dbContext.Batches.Add(new DrugBatch
         {
-            Id = store.GetNextBatchId(),
+            Id = nextId,
             DrugId = model.DrugId,
             WarehouseId = model.WarehouseId,
             BatchNumber = model.BatchNumber.Trim(),
@@ -90,16 +113,19 @@ public sealed class InventoryService(InMemoryPharmacyStore store) : IInventorySe
             ImportedDate = model.ImportedDate,
             ExpiryDate = model.ExpiryDate
         });
+        dbContext.SaveChanges();
     }
 
     private BatchFormViewModel Populate(BatchFormViewModel model)
     {
-        model.Drugs = store.Drugs
+        model.Drugs = dbContext.Drugs
+            .AsNoTracking()
             .OrderBy(drug => drug.Name)
             .Select(drug => new SelectListItem($"{drug.Name} - {drug.Strength}", drug.Id.ToString(), drug.Id == model.DrugId))
             .ToList();
 
-        model.Warehouses = store.Warehouses
+        model.Warehouses = dbContext.Warehouses
+            .AsNoTracking()
             .OrderBy(warehouse => warehouse.Name)
             .Select(warehouse => new SelectListItem(warehouse.Name, warehouse.Id.ToString(), warehouse.Id == model.WarehouseId))
             .ToList();
