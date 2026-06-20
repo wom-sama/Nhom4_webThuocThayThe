@@ -13,12 +13,15 @@ ASP.NET Core MVC framework for the "Web de xuat thuoc thay the khi thuoc chinh k
 - ASP.NET Core MVC
 - Razor Views
 - Bootstrap
-- In-memory product data for the current classroom increment
+- EF Core 10.0.9
+- SQL Server / LocalDB
 
 ## Run Locally
 
 ```powershell
 dotnet restore
+dotnet tool restore
+dotnet ef database update
 dotnet build
 dotnet run
 ```
@@ -56,12 +59,15 @@ Examples:
 - Prescription, active ingredient, allergy and contraindication warnings.
 - Expert review workflow for recommendation results.
 - Dashboard for stock risk, external sources, audit logs and backup metadata.
+- SQL Server persistence with EF Core migration and JSON database backup.
 - Automated acceptance, security and realtime performance test runners.
 
 Current automated baseline:
 
-- Acceptance: 28 cases.
+- Acceptance: 30 cases.
 - Security: 10 cases.
 - Performance: 8 scenarios.
 
 Scrum continuity documents are under `docs/scrum/`.
+
+Database documentation and the idempotent schema script are under `database/`.
