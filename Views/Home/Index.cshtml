@@ -28,24 +28,24 @@
 
 <section class="metric-grid mb-4" aria-label="Chi so mau">
     <div class="metric-card">
-        <span>Thuoc mau</span>
-        <strong>4</strong>
-        <span>Da seed trong kho tam</span>
+        <span>Thuoc dang quan ly</span>
+        <strong>@ViewBag.DrugCount</strong>
+        <span>Co hoat chat va thong tin duoc ly</span>
     </div>
     <div class="metric-card">
         <span>Danh muc</span>
-        <strong>3</strong>
-        <span>Giam dau, khang sinh, tieu hoa</span>
+        <strong>@ViewBag.CategoryCount</strong>
+        <span>Phan loai phuc vu tra cuu</span>
     </div>
     <div class="metric-card">
         <span>Lo thuoc</span>
-        <strong>4</strong>
+        <strong>@ViewBag.BatchCount</strong>
         <span>Co theo doi han su dung</span>
     </div>
     <div class="metric-card">
-        <span>Vai tro</span>
-        <strong>4</strong>
-        <span>Admin, duoc si, chuyen gia, user</span>
+        <span>Thuoc het hang</span>
+        <strong>@ViewBag.StockoutCount</strong>
+        <span>Can kich hoat de xuat thay the</span>
     </div>
 </section>
 
@@ -64,5 +64,15 @@
         <h2 class="h5">Kho thuoc</h2>
         <p>Theo doi lo thuoc kha dung, so luong ton va trang thai het hang.</p>
         <a asp-controller="Inventory" asp-action="Index" class="btn btn-outline-primary btn-sm">Mo kho</a>
+    </article>
+    <article class="workflow-card">
+        <h2 class="h5">Danh gia AI</h2>
+        <p>Chuyen gia xem score, ly do va xac nhan de xuat truoc khi tu van.</p>
+        <a asp-controller="ExpertReviews" asp-action="Index" class="btn btn-outline-primary btn-sm">Mo danh gia</a>
+    </article>
+    <article class="workflow-card">
+        <h2 class="h5">Bao cao</h2>
+        <p>Theo doi rui ro ton kho, audit log, nguon du lieu va backup metadata.</p>
+        <a asp-controller="Reports" asp-action="Index" class="btn btn-outline-primary btn-sm">Mo bao cao</a>
     </article>
 </section>

@@ -1,0 +1,132 @@
+@model Nhom4WebThuocThayThe.ViewModels.Reports.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard bao cao";
+}
+
+<section class="action-bar">
+    <div>
+        <div class="page-kicker">Van hanh va bao cao</div>
+        <h1 class="page-title">Dashboard thuoc thay the</h1>
+        <p class="page-description">Theo doi ton kho, nguon du lieu, canh bao va lich su thao tac cua he thong.</p>
+    </div>
+    @if (User.IsInRole("Admin"))
+    {
+        <form asp-action="DownloadBackup" method="post">
+            <button type="submit" class="btn btn-outline-primary">Tai backup JSON</button>
+        </form>
+    }
+</section>
+
+<section class="metric-grid mb-4" aria-label="Chi so dashboard">
+    @foreach (var metric in Model.Metrics)
+    {
+        <article class="metric-card">
+            <span>@metric.Label</span>
+            <strong>@metric.Value</strong>
+            <span>@metric.Hint</span>
+        </article>
+    }
+</section>
+
+<section class="report-grid mb-4">
+    <div class="app-surface">
+        <div class="section-heading">
+            <h2 class="h4">Rui ro ton kho</h2>
+            <span class="muted-copy">@Model.StockRisks.Count thuoc</span>
+        </div>
+        <div class="table-shell">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Thuoc</th>
+                        <th>Ham luong</th>
+                        <th>So luong</th>
+                        <th>Trang thai</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.StockRisks)
+                    {
+                        var statusClass = item.RiskLevel == "Het hang" ? "is-danger" : item.RiskLevel == "Can nhap them" ? "is-warning" : "is-success";
+                        <tr>
+                            <td><strong>@item.DrugName</strong></td>
+                            <td>@item.Strength</td>
+                            <td>@item.Quantity</td>
+                            <td><span class="status-badge @statusClass">@item.RiskLevel</span></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <aside class="app-surface">
+        <div class="section-heading">
+            <h2 class="h4">Backup snapshot</h2>
+            <span class="status-badge is-info">Metadata</span>
+        </div>
+        <dl class="detail-list">
+            <div class="detail-row">
+                <dt>Thoi diem</dt>
+                <dd>@Model.BackupSnapshot.GeneratedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss")</dd>
+            </div>
+            <div class="detail-row">
+                <dt>Thuoc</dt>
+                <dd>@Model.BackupSnapshot.DrugCount</dd>
+            </div>
+            <div class="detail-row">
+                <dt>Lo thuoc</dt>
+                <dd>@Model.BackupSnapshot.BatchCount</dd>
+            </div>
+            <div class="detail-row">
+                <dt>Audit log</dt>
+                <dd>@Model.BackupSnapshot.AuditLogCount</dd>
+            </div>
+            <div class="detail-row">
+                <dt>Nguon ngoai</dt>
+                <dd>@Model.BackupSnapshot.ExternalSourceCount</dd>
+            </div>
+        </dl>
+    </aside>
+</section>
+
+<section class="app-surface mb-4">
+    <div class="section-heading">
+        <h2 class="h4">Nguon du lieu ngoai</h2>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-controller="ExternalData" asp-action="Index" class="btn btn-sm btn-outline-primary">Quan ly nguon</a>
+        }
+    </div>
+    <div class="source-grid">
+        @foreach (var source in Model.ExternalSources)
+        {
+            <article class="source-card">
+                <strong>@source.Name</strong>
+                <span>@source.Purpose</span>
+                <span class="status-badge is-info">@source.MappingStatus</span>
+                <small>Dong bo: @(source.LastSyncDate?.ToString("dd/MM/yyyy") ?? "Chua co")</small>
+            </article>
+        }
+    </div>
+</section>
+
+<section class="app-surface">
+    <div class="section-heading">
+        <h2 class="h4">Audit log gan day</h2>
+        <span class="muted-copy">@Model.AuditLogs.Count ban ghi</span>
+    </div>
+    <div class="timeline-list">
+        @foreach (var log in Model.AuditLogs)
+        {
+            <article>
+                <div>
+                    <strong>@log.Action - @log.Entity</strong>
+                    <span>@log.Detail</span>
+                </div>
+                <small>@log.Actor · @log.CreatedAt.ToLocalTime().ToString("dd/MM HH:mm")</small>
+            </article>
+        }
+    </div>
+</section>

@@ -7,7 +7,6 @@
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Nhom4WebThuocThayThe.styles.css" asp-append-version="true" />
 </head>
 <body>
     <a class="skip-link" href="#main-content">Bo qua dieu huong</a>
@@ -40,6 +39,21 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Inventory" asp-action="Index">Kho thuoc</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Admin") || User.IsInRole("Pharmacist") || User.IsInRole("Expert"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="ExpertReviews" asp-action="Index">Danh gia AI</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Reports" asp-action="Index">Bao cao</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="ExternalData" asp-action="Index">Nguon du lieu</a>
                             </li>
                         }
                     </ul>

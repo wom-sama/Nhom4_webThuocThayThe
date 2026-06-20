@@ -57,6 +57,7 @@ venv/
 bin/
 obj/
 TestResults/
+artifacts/
 *.user
 *.rsuser
 *.suo

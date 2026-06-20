@@ -6,7 +6,9 @@ using Nhom4WebThuocThayThe.ViewModels.Inventory;
 namespace Nhom4WebThuocThayThe.Controllers;
 
 [Authorize(Policy = "InventoryManager")]
-public sealed class InventoryController(IInventoryService inventoryService) : Controller
+public sealed class InventoryController(
+    IInventoryService inventoryService,
+    IAuditLogService auditLogService) : Controller
 {
     public IActionResult Index()
     {
@@ -30,6 +32,11 @@ public sealed class InventoryController(IInventoryService inventoryService) : Co
         }
 
         inventoryService.AddBatch(model);
+        auditLogService.Add(
+            User.Identity?.Name ?? "Unknown",
+            "Create",
+            "Drug batch",
+            $"Added batch {model.BatchNumber} with quantity {model.Quantity}.");
         return RedirectToAction(nameof(Index));
     }
 }

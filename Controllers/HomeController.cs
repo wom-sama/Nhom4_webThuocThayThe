@@ -1,15 +1,25 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Nhom4WebThuocThayThe.Data;
 using Nhom4WebThuocThayThe.Models;
+using Nhom4WebThuocThayThe.Services;
 
 namespace Nhom4WebThuocThayThe.Controllers;
 
-public class HomeController : Controller
+public class HomeController(
+    PharmacyDbContext dbContext,
+    IInventoryService inventoryService) : Controller
 {
     [AllowAnonymous]
     public IActionResult Index()
     {
+        var drugs = dbContext.Drugs.AsNoTracking().ToList();
+        ViewBag.DrugCount = drugs.Count;
+        ViewBag.CategoryCount = dbContext.Categories.Count();
+        ViewBag.BatchCount = dbContext.Batches.Count();
+        ViewBag.StockoutCount = drugs.Count(drug => inventoryService.GetAvailableQuantity(drug.Id) == 0);
         return View();
     }
 

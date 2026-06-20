@@ -1,0 +1,55 @@
+@model IReadOnlyCollection<Nhom4WebThuocThayThe.ViewModels.ExpertReviews.ExpertReviewListItemViewModel>
+
+@{
+    ViewData["Title"] = "Danh gia chuyen gia";
+}
+
+<section class="mb-4">
+    <div class="page-kicker">Kiem soat AI</div>
+    <h1 class="page-title">Danh gia de xuat thuoc thay the</h1>
+    <p class="page-description">Duoc si/chuyen gia xac nhan ket qua xep hang truoc khi su dung trong tu van thuc te.</p>
+</section>
+
+@if (TempData["SuccessMessage"] is string successMessage)
+{
+    <div class="alert alert-success">@successMessage</div>
+}
+
+<div class="review-list">
+    @foreach (var item in Model)
+    {
+        <article class="app-surface review-card">
+            <div class="review-summary">
+                <div>
+                    <span class="page-kicker">Review #@item.Id</span>
+                    <h2 class="h5">@item.SourceDrug</h2>
+                    <p class="mb-0">De xuat: <strong>@item.RecommendedDrug</strong></p>
+                </div>
+                <div class="score-chip">
+                    <strong>@item.Score</strong>
+                    <span>AI score</span>
+                </div>
+            </div>
+            <form asp-action="Update" method="post" class="review-form">
+                <input type="hidden" name="id" value="@item.Id" />
+                <div>
+                    <label class="form-label" for="status-@item.Id">Trang thai</label>
+                    <select id="status-@item.Id" name="status" class="form-select">
+                        <option selected="@(item.Status == "Cho danh gia")">Cho danh gia</option>
+                        <option selected="@(item.Status == "Chap nhan")">Chap nhan</option>
+                        <option selected="@(item.Status == "Can xem xet")">Can xem xet</option>
+                        <option selected="@(item.Status == "Tu choi")">Tu choi</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="form-label" for="note-@item.Id">Nhan xet chuyen mon</label>
+                    <textarea id="note-@item.Id" name="note" class="form-control" rows="3">@item.Note</textarea>
+                </div>
+                <div class="review-actions">
+                    <span class="muted-copy">Cap nhat: @item.UpdatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm") · @item.Reviewer</span>
+                    <button type="submit" class="btn btn-primary">Luu danh gia</button>
+                </div>
+            </form>
+        </article>
+    }
+</div>
