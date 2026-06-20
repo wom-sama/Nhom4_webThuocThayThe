@@ -6,6 +6,7 @@ public sealed class InMemoryPharmacyStore
 {
     private int _nextDrugId = 8;
     private int _nextBatchId = 8;
+    private int _nextAuditLogId = 4;
 
     public List<DrugCategory> Categories { get; } =
     [
@@ -195,6 +196,93 @@ public sealed class InMemoryPharmacyStore
         }
     ];
 
+    public List<ExternalDataSource> ExternalDataSources { get; } =
+    [
+        new()
+        {
+            Id = 1,
+            Name = "DrugBank",
+            SourceUrl = "https://go.drugbank.com/",
+            MappingStatus = "San sang mapping",
+            LastSyncDate = new DateOnly(2026, 5, 20),
+            Purpose = "Thong tin thuoc, hoat chat, chi dinh va tuong tac."
+        },
+        new()
+        {
+            Id = 2,
+            Name = "PubChem",
+            SourceUrl = "https://pubchem.ncbi.nlm.nih.gov/",
+            MappingStatus = "Dang danh gia",
+            Purpose = "Doi chieu compound, CID va cau truc hoa hoc."
+        },
+        new()
+        {
+            Id = 3,
+            Name = "ATC Index",
+            SourceUrl = "https://www.whocc.no/atc_ddd_index/",
+            MappingStatus = "Da mapping mau",
+            LastSyncDate = new DateOnly(2026, 5, 25),
+            Purpose = "Phan loai nhom dieu tri va ho tro loc ung vien thay the."
+        }
+    ];
+
+    public List<AuditLogEntry> AuditLogs { get; } =
+    [
+        new()
+        {
+            Id = 1,
+            CreatedAt = new DateTimeOffset(2026, 5, 26, 9, 10, 0, TimeSpan.FromHours(7)),
+            Actor = "System",
+            Action = "Seed data",
+            Entity = "Catalog",
+            Detail = "Khoi tao du lieu thuoc, lo thuoc va hoat chat."
+        },
+        new()
+        {
+            Id = 2,
+            CreatedAt = new DateTimeOffset(2026, 5, 26, 11, 30, 0, TimeSpan.FromHours(7)),
+            Actor = "QC",
+            Action = "Regression",
+            Entity = "Search",
+            Detail = "Bo acceptance test nen tang dat 20/20."
+        },
+        new()
+        {
+            Id = 3,
+            CreatedAt = new DateTimeOffset(2026, 5, 26, 14, 5, 0, TimeSpan.FromHours(7)),
+            Actor = "System",
+            Action = "Performance test",
+            Entity = "Application",
+            Detail = "Bo performance realtime dat 8/8."
+        }
+    ];
+
+    public List<ExpertReviewItem> ExpertReviews { get; } =
+    [
+        new()
+        {
+            Id = 1,
+            SourceDrugId = 1,
+            RecommendedDrugId = 2,
+            Score = 100,
+            Status = "Cho danh gia",
+            Reviewer = "Chua gan",
+            Note = "Cung hoat chat, cung ham luong, con hang.",
+            UpdatedAt = new DateTimeOffset(2026, 6, 20, 10, 0, 0, TimeSpan.FromHours(7))
+        },
+        new()
+        {
+            Id = 2,
+            SourceDrugId = 1,
+            RecommendedDrugId = 5,
+            Score = 80,
+            Status = "Can xem xet",
+            Reviewer = "Chuyen gia mau",
+            Note = "Cung hoat chat va ham luong nhung khac dang bao che.",
+            UpdatedAt = new DateTimeOffset(2026, 6, 20, 10, 10, 0, TimeSpan.FromHours(7))
+        }
+    ];
+
     public int GetNextDrugId()
     {
         return _nextDrugId++;
@@ -203,5 +291,10 @@ public sealed class InMemoryPharmacyStore
     public int GetNextBatchId()
     {
         return _nextBatchId++;
+    }
+
+    public int GetNextAuditLogId()
+    {
+        return _nextAuditLogId++;
     }
 }

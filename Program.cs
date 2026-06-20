@@ -28,6 +28,9 @@ builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddScoped<IDrugCatalogService, DrugCatalogService>();
 builder.Services.AddScoped<IDrugSearchService, DrugSearchService>();
 builder.Services.AddScoped<IRecommendationService, RecommendationService>();
+builder.Services.AddScoped<IAuditLogService, AuditLogService>();
+builder.Services.AddScoped<IReportingService, ReportingService>();
+builder.Services.AddScoped<IExpertReviewService, ExpertReviewService>();
 
 var app = builder.Build();
 
