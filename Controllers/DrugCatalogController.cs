@@ -6,7 +6,9 @@ using Nhom4WebThuocThayThe.ViewModels.Catalog;
 namespace Nhom4WebThuocThayThe.Controllers;
 
 [Authorize(Policy = "CatalogManager")]
-public sealed class DrugCatalogController(IDrugCatalogService drugCatalogService) : Controller
+public sealed class DrugCatalogController(
+    IDrugCatalogService drugCatalogService,
+    IAuditLogService auditLogService) : Controller
 {
     public IActionResult Index()
     {
@@ -29,6 +31,11 @@ public sealed class DrugCatalogController(IDrugCatalogService drugCatalogService
         }
 
         drugCatalogService.CreateDrug(model);
+        auditLogService.Add(
+            User.Identity?.Name ?? "Unknown",
+            "Create",
+            "Drug",
+            $"Created drug {model.Name} - {model.Strength}.");
         return RedirectToAction(nameof(Index));
     }
 
@@ -78,6 +85,11 @@ public sealed class DrugCatalogController(IDrugCatalogService drugCatalogService
             return NotFound();
         }
 
+        auditLogService.Add(
+            User.Identity?.Name ?? "Unknown",
+            "Update",
+            "Drug",
+            $"Updated drug #{model.Id}: {model.Name} - {model.Strength}.");
         return RedirectToAction(nameof(Index));
     }
 }

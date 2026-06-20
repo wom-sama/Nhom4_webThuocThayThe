@@ -8,7 +8,8 @@ namespace Nhom4WebThuocThayThe.Services;
 public sealed class DrugSearchService(
     InMemoryPharmacyStore store,
     IDrugCatalogService catalogService,
-    IInventoryService inventoryService) : IDrugSearchService
+    IInventoryService inventoryService,
+    IRecommendationService recommendationService) : IDrugSearchService
 {
     public DrugSearchPageViewModel Search(string? keyword, int? categoryId)
     {
@@ -41,7 +42,7 @@ public sealed class DrugSearchService(
         };
     }
 
-    public DrugDetailViewModel? GetDetail(int id)
+    public DrugDetailViewModel? GetDetail(int id, string? userEmail)
     {
         var drug = store.Drugs.FirstOrDefault(item => item.Id == id);
         if (drug is null)
@@ -53,13 +54,9 @@ public sealed class DrugSearchService(
         var ingredient = ingredientLink is null
             ? null
             : store.ActiveIngredients.FirstOrDefault(item => item.Id == ingredientLink.ActiveIngredientId);
-        var alternatives = ingredientLink is null
-            ? []
-            : catalogService.GetDrugs()
-                .Where(item => IsSameActiveIngredient(item.Id, ingredientLink.ActiveIngredientId) && item.Id != drug.Id)
-                .OrderByDescending(item => item.StockQuantity)
-                .ThenBy(item => item.Name)
-                .ToList();
+        var profile = string.IsNullOrWhiteSpace(userEmail)
+            ? null
+            : store.PatientSafetyProfiles.FirstOrDefault(item => string.Equals(item.Email, userEmail, StringComparison.OrdinalIgnoreCase));
 
         return new DrugDetailViewModel
         {
@@ -78,7 +75,9 @@ public sealed class DrugSearchService(
             Description = drug.Description,
             Usage = drug.Usage,
             Contraindications = drug.Contraindications,
-            Alternatives = alternatives
+            SafetyProfileName = profile?.DisplayName,
+            SafetyProfileNote = profile?.ClinicalNote,
+            Alternatives = recommendationService.GetRecommendations(drug.Id, userEmail)
         };
     }
 
@@ -104,9 +103,4 @@ public sealed class DrugSearchService(
         return value.Contains(keyword, StringComparison.OrdinalIgnoreCase);
     }
 
-    private bool IsSameActiveIngredient(int drugId, int activeIngredientId)
-    {
-        return store.DrugActiveIngredients.Any(item =>
-            item.DrugId == drugId && item.ActiveIngredientId == activeIngredientId);
-    }
 }

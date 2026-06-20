@@ -223,7 +223,7 @@ internal static class AcceptanceTests
             {
                 using var client = runtime.CreateClient();
                 var html = await GetStringAsync(client, "/Drugs/Details/1");
-                Expect(html.Contains("Thuoc thay the cung hoat chat"), "alternative section missing");
+                Expect(html.Contains("Thuoc thay the de xuat"), "recommendation section missing");
                 Expect(html.Contains("Paracetamol DHG 500mg"), "same-active-ingredient alternative missing");
             }),
             new("TC06", "Error handling", "Invalid drug detail returns clean 404", async () =>
@@ -392,6 +392,88 @@ internal static class AcceptanceTests
                         response.Dispose();
                     }
                 }
+            }),
+            new("TC21", "Recommendation", "Out-of-stock drug shows ranked recommendations", async () =>
+            {
+                using var client = runtime.CreateClient();
+                var html = await GetStringAsync(client, "/Drugs/Details/1");
+                Expect(html.Contains("Thuoc thay the de xuat"), "recommendation section missing");
+                Expect(html.Contains("Paracetamol DHG 500mg"), "primary substitute missing");
+                Expect(html.Contains("AI score") || html.Contains("Rat phu hop"), "recommendation score missing");
+                Expect(html.Contains("Cung hoat chat"), "recommendation reasons missing");
+            }),
+            new("TC22", "Safety", "Signed-in safety profile produces allergy warning", async () =>
+            {
+                using var client = runtime.CreateClient();
+                await LoginAsync(client, "duocsi@nhom4.local", "Duocsi@123", followRedirects: true);
+                var html = await GetStringAsync(client, "/Drugs/Details/1");
+                Expect(html.Contains("Ho so an toan"), "safety profile context missing");
+                Expect(html.Contains("Di ung hoat chat"), "allergy warning missing");
+            }),
+            new("TC23", "Expert review", "Expert can open recommendation review workflow", async () =>
+            {
+                using var client = runtime.CreateClient();
+                await LoginAsync(client, "chuyengia@nhom4.local", "Chuyengia@123", followRedirects: true);
+                var html = await GetStringAsync(client, "/ExpertReviews");
+                Expect(html.Contains("Danh gia de xuat thuoc thay the"), "expert review page missing");
+                Expect(html.Contains("Panadol 500mg"), "review source drug missing");
+            }),
+            new("TC24", "RBAC", "Normal user cannot open reports dashboard", async () =>
+            {
+                using var client = runtime.CreateClient(allowAutoRedirect: false);
+                await LoginAsync(client, "user@nhom4.local", "User@123", followRedirects: false);
+                using var response = await client.GetAsync("/Reports");
+                Expect(response.StatusCode == HttpStatusCode.Redirect, "normal user should be redirected from reports");
+                Expect(response.Headers.Location?.ToString().Contains("/Auth/AccessDenied") == true, "reports denial should target access denied");
+            }),
+            new("TC25", "Reporting", "Admin dashboard exposes stock and audit metrics", async () =>
+            {
+                using var client = runtime.CreateClient();
+                await LoginAsync(client, "admin@nhom4.local", "Admin@123", followRedirects: true);
+                var html = await GetStringAsync(client, "/Reports");
+                Expect(html.Contains("Dashboard thuoc thay the"), "dashboard title missing");
+                Expect(html.Contains("Rui ro ton kho"), "stock risk table missing");
+                Expect(html.Contains("Audit log gan day"), "audit log section missing");
+            }),
+            new("TC26", "External data", "Admin can inspect external data registry", async () =>
+            {
+                using var client = runtime.CreateClient();
+                await LoginAsync(client, "admin@nhom4.local", "Admin@123", followRedirects: true);
+                var html = await GetStringAsync(client, "/ExternalData");
+                Expect(html.Contains("DrugBank"), "DrugBank source missing");
+                Expect(html.Contains("PubChem"), "PubChem source missing");
+                Expect(html.Contains("Danh dau da dong bo"), "sync action missing");
+            }),
+            new("TC27", "Backup", "Admin can download backup metadata", async () =>
+            {
+                using var client = runtime.CreateClient();
+                await LoginAsync(client, "admin@nhom4.local", "Admin@123", followRedirects: true);
+                var dashboard = await GetStringAsync(client, "/Reports");
+                var token = ExtractAntiforgeryToken(dashboard);
+                using var response = await client.PostAsync("/Reports/DownloadBackup", new FormUrlEncodedContent(new Dictionary<string, string>
+                {
+                    ["__RequestVerificationToken"] = token
+                }));
+                var json = await response.Content.ReadAsStringAsync();
+                Expect(response.IsSuccessStatusCode, "backup download failed");
+                Expect(response.Content.Headers.ContentType?.MediaType == "application/json", "backup should be JSON");
+                Expect(json.Contains("DrugCount"), "backup metadata missing drug count");
+            }),
+            new("TC28", "Expert review", "Expert review update creates visible audit evidence", async () =>
+            {
+                using var client = runtime.CreateClient();
+                await LoginAsync(client, "chuyengia@nhom4.local", "Chuyengia@123", followRedirects: true);
+                var reviewPage = await GetStringAsync(client, "/ExpertReviews");
+                var token = ExtractAntiforgeryToken(reviewPage);
+                var updated = await PostFormStringAsync(client, "/ExpertReviews/Update", new Dictionary<string, string>
+                {
+                    ["__RequestVerificationToken"] = token,
+                    ["id"] = "1",
+                    ["status"] = "Chap nhan",
+                    ["note"] = "Da kiem tra cung hoat chat va ham luong."
+                });
+                Expect(updated.Contains("Da cap nhat danh gia chuyen gia"), "review success evidence missing");
+                Expect(updated.Contains("Chap nhan"), "updated review status missing");
             })
         ];
     }

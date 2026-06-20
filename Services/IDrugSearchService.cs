@@ -6,5 +6,5 @@ public interface IDrugSearchService
 {
     DrugSearchPageViewModel Search(string? keyword, int? categoryId);
 
-    DrugDetailViewModel? GetDetail(int id);
+    DrugDetailViewModel? GetDetail(int id, string? userEmail);
 }
