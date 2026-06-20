@@ -64,7 +64,7 @@ Examples:
 
 Current automated baseline:
 
-- Acceptance: 30 cases.
+- Acceptance: 31 cases.
 - Security: 10 cases.
 - Performance: 8 scenarios.
 

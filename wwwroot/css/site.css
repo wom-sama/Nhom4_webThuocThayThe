@@ -252,6 +252,9 @@ a:hover {
 }
 
 .table-shell {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
   overflow-x: auto;
   background: var(--app-surface);
   border: 1px solid var(--app-border);
