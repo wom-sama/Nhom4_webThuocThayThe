@@ -13,6 +13,7 @@ ASP.NET Core MVC framework for the "Web de xuat thuoc thay the khi thuoc chinh k
 - ASP.NET Core MVC
 - Razor Views
 - Bootstrap
+- In-memory product data for the current classroom increment
 
 ## Run Locally
 
@@ -46,8 +47,21 @@ Examples:
 - Commit: `N4WTT-1 Initialize repository`
 - Pull request: `N4WTT-1 Initialize repository`
 
-## Current Setup
+## Product Features
 
-This repository contains the ASP.NET Core MVC framework, seed in-memory pharmacy data, role-based login, drug search, catalog administration, inventory screens and an automated acceptance test runner.
+- Role-based login for Admin, Pharmacist, Expert and User.
+- Drug search by name, active ingredient and category.
+- Drug catalog and inventory/batch administration.
+- Stock-aware substitute recommendation with score and explanation.
+- Prescription, active ingredient, allergy and contraindication warnings.
+- Expert review workflow for recommendation results.
+- Dashboard for stock risk, external sources, audit logs and backup metadata.
+- Automated acceptance, security and realtime performance test runners.
 
-Key sprint references: `N4WTT-1`, `N4WTT-10` to `N4WTT-14`, `N4WTT-24` to `N4WTT-52`.
+Current automated baseline:
+
+- Acceptance: 28 cases.
+- Security: 10 cases.
+- Performance: 8 scenarios.
+
+Scrum continuity documents are under `docs/scrum/`.
