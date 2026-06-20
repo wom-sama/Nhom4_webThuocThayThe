@@ -1,14 +1,16 @@
 using Nhom4WebThuocThayThe.Data;
+using Microsoft.EntityFrameworkCore;
 using Nhom4WebThuocThayThe.Models;
 using Nhom4WebThuocThayThe.ViewModels.Reports;
 
 namespace Nhom4WebThuocThayThe.Services;
 
-public sealed class AuditLogService(InMemoryPharmacyStore store) : IAuditLogService
+public sealed class AuditLogService(PharmacyDbContext dbContext) : IAuditLogService
 {
     public IReadOnlyCollection<AuditLogEntry> GetRecent(int count)
     {
-        return store.AuditLogs
+        return dbContext.AuditLogs
+            .AsNoTracking()
             .OrderByDescending(item => item.CreatedAt)
             .Take(count)
             .ToList();
@@ -16,15 +18,17 @@ public sealed class AuditLogService(InMemoryPharmacyStore store) : IAuditLogServ
 
     public void Add(string actor, string action, string entity, string detail)
     {
-        store.AuditLogs.Add(new AuditLogEntry
+        var nextId = dbContext.AuditLogs.Any() ? dbContext.AuditLogs.Max(item => item.Id) + 1 : 1;
+        dbContext.AuditLogs.Add(new AuditLogEntry
         {
-            Id = store.GetNextAuditLogId(),
+            Id = nextId,
             CreatedAt = DateTimeOffset.Now,
             Actor = actor,
             Action = action,
             Entity = entity,
             Detail = detail
         });
+        dbContext.SaveChanges();
     }
 
     public BackupSnapshotViewModel CreateSnapshot()
@@ -32,10 +36,10 @@ public sealed class AuditLogService(InMemoryPharmacyStore store) : IAuditLogServ
         return new BackupSnapshotViewModel
         {
             GeneratedAt = DateTimeOffset.Now,
-            DrugCount = store.Drugs.Count,
-            BatchCount = store.Batches.Count,
-            AuditLogCount = store.AuditLogs.Count,
-            ExternalSourceCount = store.ExternalDataSources.Count
+            DrugCount = dbContext.Drugs.Count(),
+            BatchCount = dbContext.Batches.Count(),
+            AuditLogCount = dbContext.AuditLogs.Count(),
+            ExternalSourceCount = dbContext.ExternalDataSources.Count()
         };
     }
 }

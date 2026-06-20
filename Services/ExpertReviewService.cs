@@ -1,20 +1,25 @@
 using Nhom4WebThuocThayThe.Data;
+using Microsoft.EntityFrameworkCore;
 using Nhom4WebThuocThayThe.ViewModels.ExpertReviews;
 
 namespace Nhom4WebThuocThayThe.Services;
 
 public sealed class ExpertReviewService(
-    InMemoryPharmacyStore store,
+    PharmacyDbContext dbContext,
     IAuditLogService auditLogService) : IExpertReviewService
 {
     public IReadOnlyCollection<ExpertReviewListItemViewModel> GetReviews()
     {
-        return store.ExpertReviews
+        var drugs = dbContext.Drugs.AsNoTracking().ToDictionary(item => item.Id);
+
+        return dbContext.ExpertReviews
+            .AsNoTracking()
             .OrderByDescending(item => item.UpdatedAt)
+            .AsEnumerable()
             .Select(item =>
             {
-                var source = store.Drugs.First(drug => drug.Id == item.SourceDrugId);
-                var recommendation = store.Drugs.First(drug => drug.Id == item.RecommendedDrugId);
+                var source = drugs[item.SourceDrugId];
+                var recommendation = drugs[item.RecommendedDrugId];
                 return new ExpertReviewListItemViewModel
                 {
                     Id = item.Id,
@@ -32,7 +37,7 @@ public sealed class ExpertReviewService(
 
     public bool UpdateReview(int id, string status, string reviewer, string note)
     {
-        var item = store.ExpertReviews.FirstOrDefault(review => review.Id == id);
+        var item = dbContext.ExpertReviews.FirstOrDefault(review => review.Id == id);
         if (item is null)
         {
             return false;
@@ -42,6 +47,7 @@ public sealed class ExpertReviewService(
         item.Reviewer = string.IsNullOrWhiteSpace(reviewer) ? "Chuyen gia" : reviewer.Trim();
         item.Note = string.IsNullOrWhiteSpace(note) ? item.Note : note.Trim();
         item.UpdatedAt = DateTimeOffset.Now;
+        dbContext.SaveChanges();
         auditLogService.Add(item.Reviewer, "Expert review", "AI recommendation", $"Review #{id} moved to {item.Status}.");
         return true;
     }

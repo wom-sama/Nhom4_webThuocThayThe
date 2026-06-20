@@ -35,6 +35,44 @@ finally
     await runtime.DisposeAsync();
 }
 
+var restartStopwatch = Stopwatch.StartNew();
+var restartRuntime = await WebAppRuntime.StartAsync(repoRoot);
+try
+{
+    using var restartClient = restartRuntime.CreateClient();
+    var persistedHtml = await restartClient.GetStringAsync("/Drugs?keyword=Persistence%20QA");
+    restartStopwatch.Stop();
+    if (!persistedHtml.Contains("Persistence QA 123mg"))
+    {
+        throw new InvalidOperationException("drug created before restart was not persisted");
+    }
+
+    results.Add(new TestResult(
+        "TC30",
+        "Persistence",
+        "Created drug survives application restart",
+        "Pass",
+        restartStopwatch.ElapsedMilliseconds,
+        null));
+    Console.WriteLine($"PASS TC30 Created drug survives application restart ({restartStopwatch.ElapsedMilliseconds} ms)");
+}
+catch (Exception ex)
+{
+    restartStopwatch.Stop();
+    results.Add(new TestResult(
+        "TC30",
+        "Persistence",
+        "Created drug survives application restart",
+        "Fail",
+        restartStopwatch.ElapsedMilliseconds,
+        ex.Message));
+    Console.WriteLine($"FAIL TC30 Created drug survives application restart: {ex.Message}");
+}
+finally
+{
+    await restartRuntime.DisposeAsync();
+}
+
 var reportDirectory = Path.Combine(repoRoot.FullName, "TestResults");
 Directory.CreateDirectory(reportDirectory);
 var reportPath = Path.Combine(reportDirectory, "acceptance-report.json");
@@ -474,6 +512,37 @@ internal static class AcceptanceTests
                 });
                 Expect(updated.Contains("Da cap nhat danh gia chuyen gia"), "review success evidence missing");
                 Expect(updated.Contains("Chap nhan"), "updated review status missing");
+            }),
+            new("TC29", "Persistence", "Admin creates a drug in SQL Server", async () =>
+            {
+                using var client = runtime.CreateClient();
+                var existing = await GetStringAsync(client, "/Drugs?keyword=Persistence%20QA");
+                if (existing.Contains("Persistence QA 123mg"))
+                {
+                    return;
+                }
+
+                await LoginAsync(client, "admin@nhom4.local", "Admin@123", followRedirects: true);
+                var form = await GetStringAsync(client, "/DrugCatalog/Create");
+                var token = ExtractAntiforgeryToken(form);
+                var catalog = await PostFormStringAsync(client, "/DrugCatalog/Create", new Dictionary<string, string>
+                {
+                    ["__RequestVerificationToken"] = token,
+                    ["Name"] = "Persistence QA 123mg",
+                    ["Strength"] = "123mg",
+                    ["Price"] = "1234",
+                    ["CategoryId"] = "1",
+                    ["DosageFormId"] = "1",
+                    ["UnitId"] = "1",
+                    ["ManufacturerId"] = "1",
+                    ["ActiveIngredientId"] = "1",
+                    ["ActiveIngredientStrength"] = "123mg",
+                    ["IsActive"] = "true",
+                    ["Description"] = "Integration test record for SQL persistence.",
+                    ["Usage"] = "Test only.",
+                    ["Contraindications"] = "Test only."
+                });
+                Expect(catalog.Contains("Persistence QA 123mg"), "created drug missing from catalog");
             })
         ];
     }
