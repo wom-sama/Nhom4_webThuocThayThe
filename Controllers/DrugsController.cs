@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Nhom4WebThuocThayThe.Services;
 
 namespace Nhom4WebThuocThayThe.Controllers;
@@ -15,7 +16,8 @@ public sealed class DrugsController(IDrugSearchService drugSearchService) : Cont
     [AllowAnonymous]
     public IActionResult Details(int id)
     {
-        var model = drugSearchService.GetDetail(id);
+        var userEmail = User.FindFirstValue(ClaimTypes.Email);
+        var model = drugSearchService.GetDetail(id, userEmail);
         if (model is null)
         {
             return NotFound();

@@ -1,7 +1,5 @@
 namespace Nhom4WebThuocThayThe.ViewModels.Search;
 
-using Nhom4WebThuocThayThe.ViewModels.Catalog;
-
 public sealed class DrugDetailViewModel
 {
     public int Id { get; set; }
@@ -34,5 +32,9 @@ public sealed class DrugDetailViewModel
 
     public string? Contraindications { get; set; }
 
-    public IReadOnlyCollection<DrugListItemViewModel> Alternatives { get; set; } = [];
+    public string? SafetyProfileName { get; set; }
+
+    public string? SafetyProfileNote { get; set; }
+
+    public IReadOnlyCollection<DrugRecommendationViewModel> Alternatives { get; set; } = [];
 }

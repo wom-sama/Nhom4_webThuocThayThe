@@ -27,6 +27,7 @@ builder.Services.AddSingleton<InMemoryPharmacyStore>();
 builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddScoped<IDrugCatalogService, DrugCatalogService>();
 builder.Services.AddScoped<IDrugSearchService, DrugSearchService>();
+builder.Services.AddScoped<IRecommendationService, RecommendationService>();
 
 var app = builder.Build();
 
