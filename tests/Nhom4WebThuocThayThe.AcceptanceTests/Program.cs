@@ -35,38 +35,86 @@ finally
     await runtime.DisposeAsync();
 }
 
-var restartStopwatch = Stopwatch.StartNew();
 var restartRuntime = await WebAppRuntime.StartAsync(repoRoot);
 try
 {
-    using var restartClient = restartRuntime.CreateClient();
-    var persistedHtml = await restartClient.GetStringAsync("/Drugs?keyword=Persistence%20QA");
-    restartStopwatch.Stop();
-    if (!persistedHtml.Contains("Persistence QA 123mg"))
+    var restartStopwatch = Stopwatch.StartNew();
+    try
     {
-        throw new InvalidOperationException("drug created before restart was not persisted");
+        using var restartClient = restartRuntime.CreateClient();
+        var persistedHtml = await restartClient.GetStringAsync("/Drugs?keyword=Persistence%20QA");
+        restartStopwatch.Stop();
+        if (!persistedHtml.Contains("Persistence QA 123mg"))
+        {
+            throw new InvalidOperationException("drug created before restart was not persisted");
+        }
+
+        results.Add(new TestResult(
+            "TC30",
+            "Persistence",
+            "Created drug survives application restart",
+            "Pass",
+            restartStopwatch.ElapsedMilliseconds,
+            null));
+        Console.WriteLine($"PASS TC30 Created drug survives application restart ({restartStopwatch.ElapsedMilliseconds} ms)");
+    }
+    catch (Exception ex)
+    {
+        restartStopwatch.Stop();
+        results.Add(new TestResult(
+            "TC30",
+            "Persistence",
+            "Created drug survives application restart",
+            "Fail",
+            restartStopwatch.ElapsedMilliseconds,
+            ex.Message));
+        Console.WriteLine($"FAIL TC30 Created drug survives application restart: {ex.Message}");
     }
 
-    results.Add(new TestResult(
-        "TC30",
-        "Persistence",
-        "Created drug survives application restart",
-        "Pass",
-        restartStopwatch.ElapsedMilliseconds,
-        null));
-    Console.WriteLine($"PASS TC30 Created drug survives application restart ({restartStopwatch.ElapsedMilliseconds} ms)");
-}
-catch (Exception ex)
-{
-    restartStopwatch.Stop();
-    results.Add(new TestResult(
-        "TC30",
-        "Persistence",
-        "Created drug survives application restart",
-        "Fail",
-        restartStopwatch.ElapsedMilliseconds,
-        ex.Message));
-    Console.WriteLine($"FAIL TC30 Created drug survives application restart: {ex.Message}");
+    var assetStopwatch = Stopwatch.StartNew();
+    try
+    {
+        using var assetClient = restartRuntime.CreateClient();
+        assetClient.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("br"));
+        using var response = await assetClient.GetAsync("/css/site.css");
+        var bytes = await response.Content.ReadAsByteArrayAsync();
+        assetStopwatch.Stop();
+
+        if (!response.IsSuccessStatusCode ||
+            response.Content.Headers.ContentType?.MediaType != "text/css" ||
+            bytes.Length < 1_000)
+        {
+            throw new InvalidOperationException("browser-like stylesheet response was empty or invalid");
+        }
+
+        assetClient.DefaultRequestHeaders.AcceptEncoding.Clear();
+        var homeHtml = await assetClient.GetStringAsync("/");
+        if (homeHtml.Contains("Nhom4WebThuocThayThe.styles.css"))
+        {
+            throw new InvalidOperationException("layout still references the removed scoped stylesheet");
+        }
+
+        results.Add(new TestResult(
+            "TC31",
+            "Static assets",
+            "Browser-like CSS request returns complete stylesheet",
+            "Pass",
+            assetStopwatch.ElapsedMilliseconds,
+            null));
+        Console.WriteLine($"PASS TC31 Browser-like CSS request returns complete stylesheet ({assetStopwatch.ElapsedMilliseconds} ms)");
+    }
+    catch (Exception ex)
+    {
+        assetStopwatch.Stop();
+        results.Add(new TestResult(
+            "TC31",
+            "Static assets",
+            "Browser-like CSS request returns complete stylesheet",
+            "Fail",
+            assetStopwatch.ElapsedMilliseconds,
+            ex.Message));
+        Console.WriteLine($"FAIL TC31 Browser-like CSS request returns complete stylesheet: {ex.Message}");
+    }
 }
 finally
 {
