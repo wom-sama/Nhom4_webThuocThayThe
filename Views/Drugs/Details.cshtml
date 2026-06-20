@@ -75,7 +75,15 @@
         </div>
         <p class="muted-copy">Trang thai nay tinh theo cac lo con so luong va chua qua han.</p>
 
-        <h3 class="h5 mt-4">Thuoc thay the cung hoat chat</h3>
+        @if (!string.IsNullOrWhiteSpace(Model.SafetyProfileName))
+        {
+            <div class="safety-profile">
+                <strong>Ho so an toan: @Model.SafetyProfileName</strong>
+                <span>@Model.SafetyProfileNote</span>
+            </div>
+        }
+
+        <h3 class="h5 mt-4">Thuoc thay the de xuat</h3>
         @if (!Model.Alternatives.Any())
         {
             <div class="empty-state">Chua co thuoc thay the phu hop trong du lieu hien tai.</div>
@@ -85,20 +93,52 @@
             <div class="stack-list">
                 @foreach (var item in Model.Alternatives)
                 {
-                    <a asp-action="Details" asp-route-id="@item.Id" class="stack-item">
-                        <span>
-                            <strong>@item.Name</strong>
-                            <span>@item.Strength - @item.Manufacturer</span>
-                        </span>
-                        @if (item.StockQuantity <= 0)
+                    <article class="recommendation-card">
+                        <div class="recommendation-topline">
+                            <div>
+                                <a asp-action="Details" asp-route-id="@item.Id"><strong>@item.Name</strong></a>
+                                <span>@item.Strength - @item.DosageForm - @item.Manufacturer</span>
+                            </div>
+                            <div class="score-chip">
+                                <strong>@item.Score</strong>
+                                <span>@item.ScoreLabel</span>
+                            </div>
+                        </div>
+                        <div class="drug-meta">
+                            <span>@item.ActiveIngredient</span>
+                            @if (item.StockQuantity <= 0)
+                            {
+                                <span class="status-badge is-danger">Het hang</span>
+                            }
+                            else
+                            {
+                                <span class="status-badge is-success">@item.StockQuantity kha dung</span>
+                            }
+                            @if (item.PrescriptionRequired)
+                            {
+                                <span class="status-badge is-warning">Can ke don</span>
+                            }
+                        </div>
+                        <ul class="reason-list">
+                            @foreach (var reason in item.Reasons)
+                            {
+                                <li>@reason</li>
+                            }
+                        </ul>
+                        @if (item.Alerts.Any())
                         {
-                            <span class="status-badge is-danger">Het hang</span>
+                            <div class="alert-stack">
+                                @foreach (var alert in item.Alerts)
+                                {
+                                    var alertClass = alert.Severity == "High" ? "is-danger" : alert.Severity == "Medium" ? "is-warning" : "is-info";
+                                    <div class="safety-alert @alertClass">
+                                        <strong>@alert.Title</strong>
+                                        <span>@alert.Message</span>
+                                    </div>
+                                }
+                            </div>
                         }
-                        else
-                        {
-                            <span class="status-badge is-success">@item.StockQuantity</span>
-                        }
-                    </a>
+                    </article>
                 }
             </div>
         }
