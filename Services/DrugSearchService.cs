@@ -11,13 +11,13 @@ public sealed class DrugSearchService(
     IInventoryService inventoryService,
     IRecommendationService recommendationService) : IDrugSearchService
 {
-    public DrugSearchPageViewModel Search(string? keyword, int? categoryId)
+    public async Task<DrugSearchPageViewModel> SearchAsync(string? keyword, int? categoryId)
     {
         var normalizedKeyword = keyword?.Trim();
-        var categories = dbContext.Categories
+        var categories = await dbContext.Categories
             .AsNoTracking()
             .OrderBy(category => category.Name)
-            .ToList();
+            .ToListAsync();
         var query = dbContext.Drugs.AsNoTracking().AsQueryable();
 
         if (categoryId is not null && categories.Any(item => item.Id == categoryId.Value))
@@ -36,17 +36,17 @@ public sealed class DrugSearchService(
                     dbContext.ActiveIngredients.Any(ingredient => ingredient.Id == link.ActiveIngredientId && ingredient.Name.Contains(normalizedKeyword))));
         }
 
-        var drugs = query.OrderBy(drug => drug.Name).ToList();
+        var drugs = await query.OrderBy(drug => drug.Name).ToListAsync();
         var categoryNames = categories.ToDictionary(item => item.Id, item => item.Name);
-        var dosageForms = dbContext.DosageForms.AsNoTracking().ToDictionary(item => item.Id, item => item.Name);
-        var manufacturers = dbContext.Manufacturers.AsNoTracking().ToDictionary(item => item.Id, item => item.Name);
+        var dosageForms = await dbContext.DosageForms.AsNoTracking().ToDictionaryAsync(item => item.Id, item => item.Name);
+        var manufacturers = await dbContext.Manufacturers.AsNoTracking().ToDictionaryAsync(item => item.Id, item => item.Name);
         var today = DateOnly.FromDateTime(DateTime.Today);
-        var stockByDrug = dbContext.Batches
+        var stockByDrug = await dbContext.Batches
             .AsNoTracking()
             .Where(batch => batch.Quantity > 0 && batch.ExpiryDate >= today)
             .GroupBy(batch => batch.DrugId)
             .Select(group => new { DrugId = group.Key, Quantity = group.Sum(batch => batch.Quantity) })
-            .ToDictionary(item => item.DrugId, item => item.Quantity);
+            .ToDictionaryAsync(item => item.DrugId, item => item.Quantity);
         var results = drugs.Select(drug => new DrugListItemViewModel
         {
             Id = drug.Id,
@@ -72,23 +72,29 @@ public sealed class DrugSearchService(
         };
     }
 
-    public DrugDetailViewModel? GetDetail(int id, string? userEmail)
+    public async Task<DrugDetailViewModel?> GetDetailAsync(int id, string? userEmail)
     {
-        var drug = dbContext.Drugs.AsNoTracking().FirstOrDefault(item => item.Id == id);
+        var drug = await dbContext.Drugs.AsNoTracking().FirstOrDefaultAsync(item => item.Id == id);
         if (drug is null)
         {
             return null;
         }
 
-        var ingredientLink = dbContext.DrugActiveIngredients
+        var ingredientLink = await dbContext.DrugActiveIngredients
             .AsNoTracking()
-            .FirstOrDefault(item => item.DrugId == drug.Id);
+            .FirstOrDefaultAsync(item => item.DrugId == drug.Id);
         var ingredient = ingredientLink is null
             ? null
-            : dbContext.ActiveIngredients.AsNoTracking().FirstOrDefault(item => item.Id == ingredientLink.ActiveIngredientId);
+            : await dbContext.ActiveIngredients.AsNoTracking().FirstOrDefaultAsync(item => item.Id == ingredientLink.ActiveIngredientId);
         var profile = string.IsNullOrWhiteSpace(userEmail)
             ? null
-            : dbContext.PatientSafetyProfiles.AsNoTracking().FirstOrDefault(item => item.Email == userEmail);
+            : await dbContext.PatientSafetyProfiles.AsNoTracking().FirstOrDefaultAsync(item => item.Email == userEmail);
+        var category = await dbContext.Categories.AsNoTracking().FirstAsync(item => item.Id == drug.CategoryId);
+        var dosageForm = await dbContext.DosageForms.AsNoTracking().FirstAsync(item => item.Id == drug.DosageFormId);
+        var unit = await dbContext.Units.AsNoTracking().FirstAsync(item => item.Id == drug.UnitId);
+        var manufacturer = await dbContext.Manufacturers.AsNoTracking().FirstAsync(item => item.Id == drug.ManufacturerId);
+        var stockQuantity = await inventoryService.GetAvailableQuantityAsync(drug.Id);
+        var alternatives = await recommendationService.GetRecommendationsAsync(drug.Id, userEmail);
 
         return new DrugDetailViewModel
         {
@@ -96,20 +102,20 @@ public sealed class DrugSearchService(
             Name = drug.Name,
             Strength = drug.Strength,
             Price = drug.Price,
-            Category = dbContext.Categories.AsNoTracking().First(category => category.Id == drug.CategoryId).Name,
-            DosageForm = dbContext.DosageForms.AsNoTracking().First(form => form.Id == drug.DosageFormId).Name,
-            Unit = dbContext.Units.AsNoTracking().First(unit => unit.Id == drug.UnitId).Name,
-            Manufacturer = dbContext.Manufacturers.AsNoTracking().First(manufacturer => manufacturer.Id == drug.ManufacturerId).Name,
+            Category = category.Name,
+            DosageForm = dosageForm.Name,
+            Unit = unit.Name,
+            Manufacturer = manufacturer.Name,
             ActiveIngredient = ingredient?.Name ?? "Chua khai bao",
             ActiveIngredientWarning = ingredient?.Warning,
-            StockQuantity = inventoryService.GetAvailableQuantity(drug.Id),
+            StockQuantity = stockQuantity,
             PrescriptionRequired = drug.PrescriptionRequired,
             Description = drug.Description,
             Usage = drug.Usage,
             Contraindications = drug.Contraindications,
             SafetyProfileName = profile?.DisplayName,
             SafetyProfileNote = profile?.ClinicalNote,
-            Alternatives = recommendationService.GetRecommendations(drug.Id, userEmail)
+            Alternatives = alternatives
         };
     }
 

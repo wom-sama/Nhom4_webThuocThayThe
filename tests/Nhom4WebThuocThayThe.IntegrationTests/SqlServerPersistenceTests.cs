@@ -51,14 +51,14 @@ public sealed class SqlServerPersistenceTests : IClassFixture<SqlServerFixture>
     }
 
     [Fact]
-    public void SearchService_ExecutesAgainstSqlServer()
+    public async Task SearchService_ExecutesAgainstSqlServer()
     {
         using var db = _fixture.CreateContext();
         var inventory = new InventoryService(db);
         var recommendation = new RecommendationService(db);
         var search = new DrugSearchService(db, inventory, recommendation);
 
-        var result = search.Search("paracetamol", categoryId: null);
+        var result = await search.SearchAsync("paracetamol", categoryId: null);
 
         Assert.NotEmpty(result.Results);
         Assert.Contains(result.Results, item => item.Name.Contains("Para", StringComparison.OrdinalIgnoreCase));

@@ -4,7 +4,7 @@ namespace Nhom4WebThuocThayThe.Services;
 
 public interface IDrugSearchService
 {
-    DrugSearchPageViewModel Search(string? keyword, int? categoryId);
+    Task<DrugSearchPageViewModel> SearchAsync(string? keyword, int? categoryId);
 
-    DrugDetailViewModel? GetDetail(int id, string? userEmail);
+    Task<DrugDetailViewModel?> GetDetailAsync(int id, string? userEmail);
 }

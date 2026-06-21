@@ -9,42 +9,47 @@ public sealed class RecommendationService(PharmacyDbContext dbContext) : IRecomm
 {
     public IReadOnlyCollection<DrugRecommendationViewModel> GetRecommendations(int drugId, string? userEmail)
     {
-        var source = dbContext.Drugs
+        return GetRecommendationsAsync(drugId, userEmail).GetAwaiter().GetResult();
+    }
+
+    public async Task<IReadOnlyCollection<DrugRecommendationViewModel>> GetRecommendationsAsync(int drugId, string? userEmail)
+    {
+        var source = await dbContext.Drugs
             .AsNoTracking()
-            .FirstOrDefault(drug => drug.Id == drugId && drug.IsActive);
+            .FirstOrDefaultAsync(drug => drug.Id == drugId && drug.IsActive);
         if (source is null)
         {
             return [];
         }
 
-        var candidates = dbContext.Drugs
+        var candidates = await dbContext.Drugs
             .AsNoTracking()
             .Where(candidate => candidate.Id != source.Id && candidate.IsActive)
-            .ToList();
+            .ToListAsync();
         var drugIds = candidates.Select(item => item.Id).Append(source.Id).ToArray();
-        var ingredientLinks = dbContext.DrugActiveIngredients
+        var ingredientLinks = (await dbContext.DrugActiveIngredients
             .AsNoTracking()
             .Where(item => drugIds.Contains(item.DrugId))
-            .ToList()
+            .ToListAsync())
             .GroupBy(item => item.DrugId)
             .ToDictionary(group => group.Key, group => group.First());
         ingredientLinks.TryGetValue(source.Id, out var sourceIngredient);
         var sourceIngredientId = sourceIngredient?.ActiveIngredientId;
-        var sourceProfile = GetProfile(userEmail);
+        var sourceProfile = await GetProfileAsync(userEmail);
         var ingredientIds = ingredientLinks.Values.Select(item => item.ActiveIngredientId).Distinct().ToArray();
-        var ingredients = dbContext.ActiveIngredients
+        var ingredients = await dbContext.ActiveIngredients
             .AsNoTracking()
             .Where(item => ingredientIds.Contains(item.Id))
-            .ToDictionary(item => item.Id);
+            .ToDictionaryAsync(item => item.Id);
         var today = DateOnly.FromDateTime(DateTime.Today);
-        var stockByDrug = dbContext.Batches
+        var stockByDrug = await dbContext.Batches
             .AsNoTracking()
             .Where(batch => drugIds.Contains(batch.DrugId) && batch.Quantity > 0 && batch.ExpiryDate >= today)
             .GroupBy(batch => batch.DrugId)
             .Select(group => new { DrugId = group.Key, Quantity = group.Sum(batch => batch.Quantity) })
-            .ToDictionary(item => item.DrugId, item => item.Quantity);
-        var dosageForms = dbContext.DosageForms.AsNoTracking().ToDictionary(item => item.Id, item => item.Name);
-        var manufacturers = dbContext.Manufacturers.AsNoTracking().ToDictionary(item => item.Id, item => item.Name);
+            .ToDictionaryAsync(item => item.DrugId, item => item.Quantity);
+        var dosageForms = await dbContext.DosageForms.AsNoTracking().ToDictionaryAsync(item => item.Id, item => item.Name);
+        var manufacturers = await dbContext.Manufacturers.AsNoTracking().ToDictionaryAsync(item => item.Id, item => item.Name);
 
         return candidates
             .Select(candidate =>
@@ -114,16 +119,16 @@ public sealed class RecommendationService(PharmacyDbContext dbContext) : IRecomm
         };
     }
 
-    private PatientSafetyProfile? GetProfile(string? userEmail)
+    private Task<PatientSafetyProfile?> GetProfileAsync(string? userEmail)
     {
         if (string.IsNullOrWhiteSpace(userEmail))
         {
-            return null;
+            return Task.FromResult<PatientSafetyProfile?>(null);
         }
 
         return dbContext.PatientSafetyProfiles
             .AsNoTracking()
-            .FirstOrDefault(profile => profile.Email == userEmail);
+            .FirstOrDefaultAsync(profile => profile.Email == userEmail);
     }
 
 }
