@@ -296,7 +296,7 @@ internal static class SecurityTests
                 Expect(!body.Contains("PasswordHash", StringComparison.OrdinalIgnoreCase), "sensitive model detail leaked");
                 Expect(!body.Contains(runtime.RepoRoot.FullName, StringComparison.OrdinalIgnoreCase), "local path leaked");
             }),
-            new("SEC10", "Security headers", "Sensitive pages are not cached by default middleware", async () =>
+            new("SEC10", "Anti-forgery", "Sensitive forms render a non-empty anti-forgery token", async () =>
             {
                 using var client = runtime.CreateClient();
                 await LoginAsync(client, "admin@nhom4.local", "Admin@123", followRedirects: true);
@@ -304,6 +304,37 @@ internal static class SecurityTests
                 Expect(response.IsSuccessStatusCode, "inventory should load for admin");
                 var body = await response.Content.ReadAsStringAsync();
                 Expect(!body.Contains("__RequestVerificationToken\" value=\"\"", StringComparison.OrdinalIgnoreCase), "blank anti-forgery token rendered");
+            }),
+            new("SEC11", "Brute force", "Login endpoint rate limits repeated attempts", async () =>
+            {
+                using var client = runtime.CreateClient();
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("N4WTT-Security-Rate-Limit-Probe/1.0");
+                var throttled = false;
+                for (var attempt = 0; attempt < 22; attempt++)
+                {
+                    var login = await GetStringAsync(client, "/Auth/Login");
+                    var token = ExtractAntiforgeryToken(login);
+                    using var response = await client.PostAsync("/Auth/Login", new FormUrlEncodedContent(new Dictionary<string, string>
+                    {
+                        ["Email"] = "admin@nhom4.local",
+                        ["Password"] = $"Wrong-{attempt}",
+                        ["ReturnUrl"] = "",
+                        ["__RequestVerificationToken"] = token
+                    }));
+                    throttled = throttled || response.StatusCode == HttpStatusCode.TooManyRequests;
+                }
+
+                Expect(throttled, "repeated login attempts were not rate limited");
+            }),
+            new("SEC12", "Security headers", "Dynamic responses include browser hardening headers", async () =>
+            {
+                using var client = runtime.CreateClient();
+                using var response = await client.GetAsync("/");
+                response.EnsureSuccessStatusCode();
+                Expect(response.Headers.TryGetValues("X-Content-Type-Options", out var contentTypes) && contentTypes.Contains("nosniff"), "X-Content-Type-Options missing");
+                Expect(response.Headers.TryGetValues("X-Frame-Options", out var frames) && frames.Contains("DENY"), "X-Frame-Options missing");
+                Expect(response.Headers.TryGetValues("Content-Security-Policy", out var policies) && policies.Any(value => value.Contains("frame-ancestors 'none'")), "Content-Security-Policy missing");
+                Expect(response.Headers.TryGetValues("Referrer-Policy", out var referrers) && referrers.Contains("no-referrer"), "Referrer-Policy missing");
             })
         ];
     }

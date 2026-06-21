@@ -485,7 +485,7 @@ internal static class AcceptanceTests
                 var html = await GetStringAsync(client, "/Drugs/Details/1");
                 Expect(html.Contains("Thuoc thay the de xuat"), "recommendation section missing");
                 Expect(html.Contains("Paracetamol DHG 500mg"), "primary substitute missing");
-                Expect(html.Contains("AI score") || html.Contains("Rat phu hop"), "recommendation score missing");
+                Expect(html.Contains("Diem quy tac") || html.Contains("Rat phu hop"), "recommendation score missing");
                 Expect(html.Contains("Cung hoat chat"), "recommendation reasons missing");
             }),
             new("TC22", "Safety", "Signed-in safety profile produces allergy warning", async () =>
