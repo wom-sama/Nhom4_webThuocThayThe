@@ -257,10 +257,21 @@ static async Task<PerfResult> MeasureHundredVirtualUsersAsync(WebAppRuntime runt
 
 static async Task<double> MeasureOneAsync(HttpClient client, string route)
 {
-    var stopwatch = Stopwatch.StartNew();
-    using var response = await client.GetAsync(route);
-    stopwatch.Stop();
-    return response.IsSuccessStatusCode ? stopwatch.Elapsed.TotalMilliseconds : -1;
+    try
+    {
+        var stopwatch = Stopwatch.StartNew();
+        using var response = await client.GetAsync(route);
+        stopwatch.Stop();
+        return response.IsSuccessStatusCode ? stopwatch.Elapsed.TotalMilliseconds : -1;
+    }
+    catch (HttpRequestException)
+    {
+        return -1;
+    }
+    catch (TaskCanceledException)
+    {
+        return -1;
+    }
 }
 
 static async Task LoginAsync(HttpClient client, string email, string password)

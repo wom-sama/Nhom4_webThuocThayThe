@@ -8,16 +8,16 @@ namespace Nhom4WebThuocThayThe.Controllers;
 public sealed class DrugsController(IDrugSearchService drugSearchService) : Controller
 {
     [AllowAnonymous]
-    public IActionResult Index(string? keyword, int? categoryId)
+    public async Task<IActionResult> Index(string? keyword, int? categoryId)
     {
-        return View(drugSearchService.Search(keyword, categoryId));
+        return View(await drugSearchService.SearchAsync(keyword, categoryId));
     }
 
     [AllowAnonymous]
-    public IActionResult Details(int id)
+    public async Task<IActionResult> Details(int id)
     {
         var userEmail = User.FindFirstValue(ClaimTypes.Email);
-        var model = drugSearchService.GetDetail(id, userEmail);
+        var model = await drugSearchService.GetDetailAsync(id, userEmail);
         if (model is null)
         {
             return NotFound();

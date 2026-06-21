@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
 using Nhom4WebThuocThayThe.Data;
 using Nhom4WebThuocThayThe.Models;
 using Nhom4WebThuocThayThe.Services;
@@ -50,15 +51,14 @@ public sealed class SqlServerPersistenceTests : IClassFixture<SqlServerFixture>
     }
 
     [Fact]
-    public void SearchService_ExecutesAgainstSqlServer()
+    public async Task SearchService_ExecutesAgainstSqlServer()
     {
         using var db = _fixture.CreateContext();
         var inventory = new InventoryService(db);
-        var catalog = new DrugCatalogService(db, inventory);
-        var recommendation = new RecommendationService(db, inventory);
-        var search = new DrugSearchService(db, catalog, inventory, recommendation);
+        var recommendation = new RecommendationService(db);
+        var search = new DrugSearchService(db, inventory, recommendation);
 
-        var result = search.Search("paracetamol", categoryId: null);
+        var result = await search.SearchAsync("paracetamol", categoryId: null);
 
         Assert.NotEmpty(result.Results);
         Assert.Contains(result.Results, item => item.Name.Contains("Para", StringComparison.OrdinalIgnoreCase));
@@ -68,10 +68,18 @@ public sealed class SqlServerPersistenceTests : IClassFixture<SqlServerFixture>
 public sealed class SqlServerFixture : IAsyncLifetime
 {
     private readonly string _databaseName = $"N4WTT_Integration_{Guid.NewGuid():N}";
+    private readonly string _serverConnectionString =
+        Environment.GetEnvironmentVariable("N4WTT_TEST_SQLSERVER") ??
+        "Server=(localdb)\\MSSQLLocalDB;Database=master;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True";
 
     public PharmacyDbContext CreateContext()
     {
-        var connectionString = $"Server=(localdb)\\MSSQLLocalDB;Database={_databaseName};Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True";
+        var connectionString = new SqlConnectionStringBuilder(_serverConnectionString)
+        {
+            InitialCatalog = _databaseName,
+            TrustServerCertificate = true,
+            MultipleActiveResultSets = true
+        }.ConnectionString;
         var options = new DbContextOptionsBuilder<PharmacyDbContext>()
             .UseSqlServer(connectionString)
             .Options;

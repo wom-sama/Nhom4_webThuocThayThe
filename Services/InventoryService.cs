@@ -17,6 +17,15 @@ public sealed class InventoryService(PharmacyDbContext dbContext) : IInventorySe
             .Sum(batch => batch.Quantity);
     }
 
+    public Task<int> GetAvailableQuantityAsync(int drugId)
+    {
+        var today = DateOnly.FromDateTime(DateTime.Today);
+        return dbContext.Batches
+            .AsNoTracking()
+            .Where(batch => batch.DrugId == drugId && batch.Quantity > 0 && batch.ExpiryDate >= today)
+            .SumAsync(batch => batch.Quantity);
+    }
+
     public IReadOnlyCollection<StockSummaryViewModel> GetStockSummaries()
     {
         var today = DateOnly.FromDateTime(DateTime.Today);

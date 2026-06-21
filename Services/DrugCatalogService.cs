@@ -6,17 +6,38 @@ using Nhom4WebThuocThayThe.ViewModels.Catalog;
 
 namespace Nhom4WebThuocThayThe.Services;
 
-public sealed class DrugCatalogService(
-    PharmacyDbContext dbContext,
-    IInventoryService inventoryService) : IDrugCatalogService
+public sealed class DrugCatalogService(PharmacyDbContext dbContext) : IDrugCatalogService
 {
     public IReadOnlyCollection<DrugListItemViewModel> GetDrugs()
     {
-        return dbContext.Drugs
+        var drugs = dbContext.Drugs
             .AsNoTracking()
             .OrderBy(drug => drug.Name)
-            .Select(ToListItem)
             .ToList();
+        var categories = dbContext.Categories.AsNoTracking().ToDictionary(item => item.Id, item => item.Name);
+        var dosageForms = dbContext.DosageForms.AsNoTracking().ToDictionary(item => item.Id, item => item.Name);
+        var manufacturers = dbContext.Manufacturers.AsNoTracking().ToDictionary(item => item.Id, item => item.Name);
+        var today = DateOnly.FromDateTime(DateTime.Today);
+        var stockByDrug = dbContext.Batches
+            .AsNoTracking()
+            .Where(batch => batch.Quantity > 0 && batch.ExpiryDate >= today)
+            .GroupBy(batch => batch.DrugId)
+            .Select(group => new { DrugId = group.Key, Quantity = group.Sum(batch => batch.Quantity) })
+            .ToDictionary(item => item.DrugId, item => item.Quantity);
+
+        return drugs.Select(drug => new DrugListItemViewModel
+        {
+            Id = drug.Id,
+            Name = drug.Name,
+            Strength = drug.Strength,
+            Price = drug.Price,
+            Category = categories[drug.CategoryId],
+            DosageForm = dosageForms[drug.DosageFormId],
+            Manufacturer = manufacturers[drug.ManufacturerId],
+            PrescriptionRequired = drug.PrescriptionRequired,
+            IsActive = drug.IsActive,
+            StockQuantity = stockByDrug.GetValueOrDefault(drug.Id)
+        }).ToList();
     }
 
     public DrugFormViewModel CreateForm()
@@ -138,23 +159,6 @@ public sealed class DrugCatalogService(
     public IReadOnlyCollection<DrugCategory> GetCategories()
     {
         return dbContext.Categories.AsNoTracking().OrderBy(category => category.Name).ToList();
-    }
-
-    private DrugListItemViewModel ToListItem(Drug drug)
-    {
-        return new DrugListItemViewModel
-        {
-            Id = drug.Id,
-            Name = drug.Name,
-            Strength = drug.Strength,
-            Price = drug.Price,
-            Category = dbContext.Categories.AsNoTracking().First(category => category.Id == drug.CategoryId).Name,
-            DosageForm = dbContext.DosageForms.AsNoTracking().First(form => form.Id == drug.DosageFormId).Name,
-            Manufacturer = dbContext.Manufacturers.AsNoTracking().First(manufacturer => manufacturer.Id == drug.ManufacturerId).Name,
-            PrescriptionRequired = drug.PrescriptionRequired,
-            IsActive = drug.IsActive,
-            StockQuantity = inventoryService.GetAvailableQuantity(drug.Id)
-        };
     }
 
     private DrugFormViewModel Populate(DrugFormViewModel model)
