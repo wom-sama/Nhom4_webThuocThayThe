@@ -42,7 +42,7 @@ public sealed class GeminiAiRecommendationExplanationService(
         {
             using var request = new HttpRequestMessage(
                 HttpMethod.Post,
-                $"{Uri.EscapeDataString(_options.Model)}:generateContent");
+                new Uri($"./{Uri.EscapeDataString(_options.Model)}:generateContent", UriKind.Relative));
             request.Headers.Add("x-goog-api-key", _options.ApiKey);
             request.Content = JsonContent.Create(CreateRequest(context), options: JsonOptions);
 
@@ -92,6 +92,11 @@ public sealed class GeminiAiRecommendationExplanationService(
             logger.LogWarning(exception, "Gemini explanation JSON could not be parsed.");
             return CreateFallback(context, "Phan hoi AI khong hop le; dang hien thi giai thich rule-based.");
         }
+        catch (Exception exception) when (exception is NotSupportedException or InvalidOperationException)
+        {
+            logger.LogWarning(exception, "Gemini explanation provider configuration is invalid.");
+            return CreateFallback(context, "Cau hinh AI khong hop le; dang hien thi giai thich rule-based.");
+        }
     }
 
     private object CreateRequest(AiRecommendationContext context)
@@ -128,11 +133,15 @@ public sealed class GeminiAiRecommendationExplanationService(
             {
                 temperature = 0.1,
                 maxOutputTokens = Math.Clamp(_options.MaxOutputTokens, 128, 800),
+                thinkingConfig = new
+                {
+                    thinkingLevel = "minimal"
+                },
                 responseFormat = new
                 {
                     text = new
                     {
-                        mimeType = "application/json",
+                        mimeType = "APPLICATION_JSON",
                         schema = new
                         {
                             type = "object",
