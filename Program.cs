@@ -4,12 +4,20 @@ using Microsoft.EntityFrameworkCore;
 using Nhom4WebThuocThayThe.Data;
 using Nhom4WebThuocThayThe.Models;
 using Nhom4WebThuocThayThe.Services;
+using Nhom4WebThuocThayThe.Services.Ai;
 using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddMemoryCache();
+builder.Services.Configure<GeminiOptions>(
+    builder.Configuration.GetSection(GeminiOptions.SectionName));
+builder.Services.AddHttpClient<IAiRecommendationExplanationService, GeminiAiRecommendationExplanationService>(client =>
+{
+    client.BaseAddress = new Uri("https://generativelanguage.googleapis.com/v1beta/models/");
+});
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
