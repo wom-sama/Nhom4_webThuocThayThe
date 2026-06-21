@@ -33,12 +33,25 @@ Open the local URL printed by `dotnet run`.
 ```powershell
 dotnet restore .\CMPM.sln
 dotnet build .\CMPM.sln --no-restore
+dotnet test .\CMPM.sln --no-build
 dotnet run --project .\tests\Nhom4WebThuocThayThe.AcceptanceTests\Nhom4WebThuocThayThe.AcceptanceTests.csproj --no-build
 dotnet run --project .\tests\Nhom4WebThuocThayThe.SecurityTests\Nhom4WebThuocThayThe.SecurityTests.csproj --no-build
 dotnet run --project .\tests\Nhom4WebThuocThayThe.PerformanceTests\Nhom4WebThuocThayThe.PerformanceTests.csproj --no-build
 ```
 
 Each runner starts the MVC app on a free local port and writes JSON result files under `TestResults/`.
+
+## Run With Docker
+
+Copy `.env.example` to `.env`, replace the sample SQL password, then run:
+
+```powershell
+docker compose up --build -d
+docker compose ps
+Invoke-WebRequest http://localhost:8080/health
+```
+
+The compose stack runs the web image as a non-root user and persists SQL Server data in a named volume.
 
 ## Jira Workflow
 
@@ -65,8 +78,9 @@ Examples:
 Current automated baseline:
 
 - Acceptance: 31 cases.
-- Security: 10 cases.
-- Performance: 8 scenarios.
+- Security: 12 cases, including login throttling and browser hardening headers.
+- Performance: 9 scenarios, including 100 virtual users.
+- Unit and SQL Server integration tests: xUnit projects in `tests/`.
 
 Scrum continuity documents are under `docs/scrum/`.
 

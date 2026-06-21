@@ -1,0 +1,93 @@
+using Microsoft.EntityFrameworkCore;
+using Nhom4WebThuocThayThe.Data;
+using Nhom4WebThuocThayThe.Models;
+using Nhom4WebThuocThayThe.Services;
+
+namespace Nhom4WebThuocThayThe.IntegrationTests;
+
+public sealed class SqlServerPersistenceTests : IClassFixture<SqlServerFixture>
+{
+    private readonly SqlServerFixture _fixture;
+
+    public SqlServerPersistenceTests(SqlServerFixture fixture)
+    {
+        _fixture = fixture;
+    }
+
+    [Fact]
+    public async Task MigrationAndSeed_CreateUsableDatabase()
+    {
+        await using var db = _fixture.CreateContext();
+
+        Assert.True(await db.Database.CanConnectAsync());
+        Assert.NotEmpty(await db.Database.GetAppliedMigrationsAsync());
+        Assert.True(await db.Drugs.CountAsync() >= 7);
+        Assert.NotEmpty(await db.Batches.ToListAsync());
+    }
+
+    [Fact]
+    public async Task SavedAuditLog_SurvivesNewContext()
+    {
+        var marker = $"integration-{Guid.NewGuid():N}";
+
+        await using (var writeDb = _fixture.CreateContext())
+        {
+            var nextId = await writeDb.AuditLogs.MaxAsync(item => (int?)item.Id) + 1 ?? 1;
+            writeDb.AuditLogs.Add(new AuditLogEntry
+            {
+                Id = nextId,
+                Actor = "integration-test",
+                Action = "PersistenceProbe",
+                Entity = "Database",
+                Detail = marker,
+                CreatedAt = DateTimeOffset.UtcNow
+            });
+            await writeDb.SaveChangesAsync();
+        }
+
+        await using var readDb = _fixture.CreateContext();
+        Assert.True(await readDb.AuditLogs.AnyAsync(item => item.Detail == marker));
+    }
+
+    [Fact]
+    public void SearchService_ExecutesAgainstSqlServer()
+    {
+        using var db = _fixture.CreateContext();
+        var inventory = new InventoryService(db);
+        var catalog = new DrugCatalogService(db, inventory);
+        var recommendation = new RecommendationService(db, inventory);
+        var search = new DrugSearchService(db, catalog, inventory, recommendation);
+
+        var result = search.Search("paracetamol", categoryId: null);
+
+        Assert.NotEmpty(result.Results);
+        Assert.Contains(result.Results, item => item.Name.Contains("Para", StringComparison.OrdinalIgnoreCase));
+    }
+}
+
+public sealed class SqlServerFixture : IAsyncLifetime
+{
+    private readonly string _databaseName = $"N4WTT_Integration_{Guid.NewGuid():N}";
+
+    public PharmacyDbContext CreateContext()
+    {
+        var connectionString = $"Server=(localdb)\\MSSQLLocalDB;Database={_databaseName};Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True";
+        var options = new DbContextOptionsBuilder<PharmacyDbContext>()
+            .UseSqlServer(connectionString)
+            .Options;
+        return new PharmacyDbContext(options);
+    }
+
+    public Task InitializeAsync()
+    {
+        using var db = CreateContext();
+        PharmacyDbInitializer.Initialize(db);
+        return Task.CompletedTask;
+    }
+
+    public async Task DisposeAsync()
+    {
+        await using var db = CreateContext();
+        await db.Database.EnsureDeletedAsync();
+    }
+}
