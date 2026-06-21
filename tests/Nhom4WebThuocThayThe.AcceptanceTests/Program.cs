@@ -216,6 +216,46 @@ try
             ex.Message));
         Console.WriteLine($"FAIL TC33 AI-disabled endpoint returns no-PII deterministic fallback: {ex.Message}");
     }
+
+    var compressionStopwatch = Stopwatch.StartNew();
+    try
+    {
+        using var compressionClient = restartRuntime.CreateClient();
+        compressionClient.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("br"));
+        using var response = await compressionClient.GetAsync("/css/site.css");
+        var bytes = await response.Content.ReadAsByteArrayAsync();
+        compressionStopwatch.Stop();
+        var cacheControl = response.Headers.CacheControl;
+        if (!response.IsSuccessStatusCode ||
+            !response.Content.Headers.ContentEncoding.Contains("br") ||
+            cacheControl?.Public != true ||
+            cacheControl.MaxAge < TimeSpan.FromDays(7) ||
+            bytes.Length >= 10_000)
+        {
+            throw new InvalidOperationException("static asset compression or seven-day cache policy is missing");
+        }
+
+        results.Add(new TestResult(
+            "TC34",
+            "Free hosting",
+            "Static assets use Brotli and seven-day public cache",
+            "Pass",
+            compressionStopwatch.ElapsedMilliseconds,
+            null));
+        Console.WriteLine($"PASS TC34 Static assets use Brotli and seven-day public cache ({compressionStopwatch.ElapsedMilliseconds} ms)");
+    }
+    catch (Exception ex)
+    {
+        compressionStopwatch.Stop();
+        results.Add(new TestResult(
+            "TC34",
+            "Free hosting",
+            "Static assets use Brotli and seven-day public cache",
+            "Fail",
+            compressionStopwatch.ElapsedMilliseconds,
+            ex.Message));
+        Console.WriteLine($"FAIL TC34 Static assets use Brotli and seven-day public cache: {ex.Message}");
+    }
 }
 finally
 {

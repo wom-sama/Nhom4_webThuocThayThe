@@ -24,6 +24,9 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__PharmacyDatabase: "Server=sqlserver;Database=N4WTT_Pharmacy;User Id=sa;Password=${SQL_SA_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=true"
+      AI__Gemini__Enabled: "${AI_GEMINI_ENABLED:-false}"
+      AI__Gemini__ApiKey: "${GEMINI_API_KEY:-}"
+      AI__Gemini__Model: "${AI_GEMINI_MODEL:-gemini-3.5-flash}"
     ports:
       - "8080:8080"
     depends_on:
