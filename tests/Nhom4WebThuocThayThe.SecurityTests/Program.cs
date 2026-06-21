@@ -335,6 +335,74 @@ internal static class SecurityTests
                 Expect(response.Headers.TryGetValues("X-Frame-Options", out var frames) && frames.Contains("DENY"), "X-Frame-Options missing");
                 Expect(response.Headers.TryGetValues("Content-Security-Policy", out var policies) && policies.Any(value => value.Contains("frame-ancestors 'none'")), "Content-Security-Policy missing");
                 Expect(response.Headers.TryGetValues("Referrer-Policy", out var referrers) && referrers.Contains("no-referrer"), "Referrer-Policy missing");
+            }),
+            new("SEC13", "AI method", "AI explanation rejects GET requests", async () =>
+            {
+                using var client = runtime.CreateClient(allowAutoRedirect: false);
+                using var response = await client.GetAsync("/Drugs/ExplainAlternative?sourceId=1&candidateId=2");
+                Expect(response.StatusCode == HttpStatusCode.MethodNotAllowed, "AI endpoint should be POST-only");
+            }),
+            new("SEC14", "AI CSRF", "AI explanation rejects POST without anti-forgery token", async () =>
+            {
+                using var client = runtime.CreateClient(allowAutoRedirect: false);
+                using var response = await client.PostAsync(
+                    "/Drugs/ExplainAlternative",
+                    new FormUrlEncodedContent(new Dictionary<string, string>
+                    {
+                        ["sourceId"] = "1",
+                        ["candidateId"] = "2"
+                    }));
+                Expect(response.StatusCode == HttpStatusCode.BadRequest, "AI POST without CSRF token should return 400");
+            }),
+            new("SEC15", "AI privacy", "AI fallback response excludes PII and executable markup", async () =>
+            {
+                using var client = runtime.CreateClient();
+                var details = await GetStringAsync(client, "/Drugs/Details/1");
+                var token = ExtractAntiforgeryToken(details);
+                using var response = await client.PostAsync(
+                    "/Drugs/ExplainAlternative",
+                    new FormUrlEncodedContent(new Dictionary<string, string>
+                    {
+                        ["sourceId"] = "1",
+                        ["candidateId"] = "2",
+                        ["__RequestVerificationToken"] = token
+                    }));
+                var body = await response.Content.ReadAsStringAsync();
+                Expect(response.IsSuccessStatusCode, "AI fallback request failed");
+                Expect(!body.Contains("@nhom4.local", StringComparison.OrdinalIgnoreCase), "AI response leaked an account email");
+                Expect(!body.Contains("<script", StringComparison.OrdinalIgnoreCase), "AI response contains executable markup");
+                Expect(body.Contains("Deterministic fallback"), "disabled AI did not use deterministic fallback");
+            }),
+            new("SEC16", "AI secret", "API key is absent from browser-delivered content", async () =>
+            {
+                using var client = runtime.CreateClient();
+                var html = await GetStringAsync(client, "/Drugs/Details/1");
+                var javascript = await GetStringAsync(client, "/js/site.js");
+                var delivered = html + javascript;
+                Expect(!delivered.Contains("x-goog-api-key", StringComparison.OrdinalIgnoreCase), "API authentication header leaked to browser content");
+                Expect(!delivered.Contains("GEMINI_API_KEY", StringComparison.OrdinalIgnoreCase), "API key environment name leaked to browser content");
+                Expect(!Regex.IsMatch(delivered, @"AIza[0-9A-Za-z_-]{20,}"), "Google API key pattern leaked to browser content");
+            }),
+            new("SEC17", "AI abuse", "AI explanation rate limits repeated requests", async () =>
+            {
+                using var client = runtime.CreateClient();
+                var details = await GetStringAsync(client, "/Drugs/Details/1");
+                var token = ExtractAntiforgeryToken(details);
+                var throttled = false;
+                for (var attempt = 0; attempt < 8; attempt++)
+                {
+                    using var response = await client.PostAsync(
+                        "/Drugs/ExplainAlternative",
+                        new FormUrlEncodedContent(new Dictionary<string, string>
+                        {
+                            ["sourceId"] = "1",
+                            ["candidateId"] = "2",
+                            ["__RequestVerificationToken"] = token
+                        }));
+                    throttled = throttled || response.StatusCode == HttpStatusCode.TooManyRequests;
+                }
+
+                Expect(throttled, "repeated AI requests were not rate limited");
             })
         ];
     }

@@ -53,6 +53,10 @@ Invoke-WebRequest http://localhost:8080/health
 
 The compose stack runs the web image as a non-root user and persists SQL Server data in a named volume.
 
+Gemini explanation is optional and disabled by default. To enable it, set `AI_GEMINI_ENABLED=true`
+and provide `GEMINI_API_KEY` only in the untracked `.env` file. The rule-based score and safety alerts
+remain authoritative when AI is enabled or unavailable.
+
 ## Jira Workflow
 
 Use Jira issue keys in branch names, commit messages, and pull request titles.
@@ -69,6 +73,7 @@ Examples:
 - Drug search by name, active ingredient and category.
 - Drug catalog and inventory/batch administration.
 - Stock-aware substitute recommendation with score and explanation.
+- Optional on-demand Gemini explanation with no-PII guardrails and deterministic fallback.
 - Prescription, active ingredient, allergy and contraindication warnings.
 - Expert review workflow for recommendation results.
 - Dashboard for stock risk, external sources, audit logs and backup metadata.
@@ -77,9 +82,9 @@ Examples:
 
 Current automated baseline:
 
-- Acceptance: 31 cases.
-- Security: 12 cases, including login throttling and browser hardening headers.
-- Performance: 9 scenarios, including 100 virtual users.
+- Acceptance: 34 cases.
+- Security: 17 cases, including AI CSRF, no-PII, key-leak and abuse-rate-limit checks.
+- Performance: 10 scenarios, including a 100-VU stress test and paced 10-VU Somee Free profile.
 - Unit and SQL Server integration tests: xUnit projects in `tests/`.
 
 The `S5 Container Validation` GitHub Actions workflow runs the suites against SQL Server 2022, builds the Docker image and smoke-tests the Compose stack across a web-container restart.
