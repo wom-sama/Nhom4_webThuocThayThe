@@ -8,18 +8,21 @@ using Nhom4WebThuocThayThe.Services;
 
 namespace Nhom4WebThuocThayThe.Controllers;
 
-public class HomeController(
-    PharmacyDbContext dbContext,
-    IInventoryService inventoryService) : Controller
+public class HomeController(PharmacyDbContext dbContext) : Controller
 {
     [AllowAnonymous]
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        var drugs = dbContext.Drugs.AsNoTracking().ToList();
-        ViewBag.DrugCount = drugs.Count;
-        ViewBag.CategoryCount = dbContext.Categories.Count();
-        ViewBag.BatchCount = dbContext.Batches.Count();
-        ViewBag.StockoutCount = drugs.Count(drug => inventoryService.GetAvailableQuantity(drug.Id) == 0);
+        var today = DateOnly.FromDateTime(DateTime.Today);
+        ViewBag.DrugCount = await dbContext.Drugs.AsNoTracking().CountAsync();
+        ViewBag.CategoryCount = await dbContext.Categories.AsNoTracking().CountAsync();
+        ViewBag.BatchCount = await dbContext.Batches.AsNoTracking().CountAsync();
+        ViewBag.StockoutCount = await dbContext.Drugs
+            .AsNoTracking()
+            .CountAsync(drug => !dbContext.Batches.Any(batch =>
+                batch.DrugId == drug.Id &&
+                batch.Quantity > 0 &&
+                batch.ExpiryDate >= today));
         return View();
     }
 
