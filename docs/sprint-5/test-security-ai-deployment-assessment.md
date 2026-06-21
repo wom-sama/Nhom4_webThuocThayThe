@@ -11,7 +11,7 @@ Date: 2026-06-21
 | System | Chrome/Playwright against the running build | 6/6 route/viewport combinations passed | Home, search and login on desktop/mobile; no console/network error or viewport overflow |
 | Acceptance | Process-level HTTP runner | 31/31 passed | Functional, RBAC, persistence, restart and browser-like static asset checks |
 | Security | Process-level HTTP/source runner | 12/12 passed | Password hashing, RBAC, CSRF, redirect, XSS encoding, error leakage, rate limit and headers |
-| Performance | Process-level load runner | 9/9 passed | Includes 100 virtual users, 500 requests, p95 205 ms and 0.00% error on this workstation |
+| Performance | Process-level load runner | 9/9 passed locally and on CI | CI: 100 virtual users, 500 requests, p95 794 ms, max 1,124 ms, 297.5 rps and 0.00% error |
 
 The local 100-user result is not a capacity guarantee for shared hosting. It proves only that the current build and LocalDB setup handled the defined workload on the test workstation.
 
@@ -63,6 +63,7 @@ If AI is added later, the safe design is: validated data ingestion -> determinis
 - Docker Desktop was installed in per-user mode from the official Windows installer.
 - `compose.yaml` defines the ASP.NET Core app and SQL Server 2022 with health-gated startup and persistent DB volume.
 - The web image runs as the .NET image non-root `APP_UID`.
+- GitHub Actions run `27892809788` built `n4wtt-web`, started SQL Server 2022 and the web container, received `database=connected` from `/health`, restarted the web container and passed health again.
 - This workstation still requires Windows Subsystem for Linux and Virtual Machine Platform activation plus a restart before the Linux engine can build the stack.
 
 Reference: <https://docs.docker.com/desktop/setup/install/windows-install/>

@@ -82,6 +82,8 @@ Current automated baseline:
 - Performance: 9 scenarios, including 100 virtual users.
 - Unit and SQL Server integration tests: xUnit projects in `tests/`.
 
+The `S5 Container Validation` GitHub Actions workflow runs the suites against SQL Server 2022, builds the Docker image and smoke-tests the Compose stack across a web-container restart.
+
 Scrum continuity documents are under `docs/scrum/`.
 
 Database documentation and the idempotent schema script are under `database/`.
