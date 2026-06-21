@@ -1,0 +1,169 @@
+using System.Net;
+using System.Text;
+using System.Text.Json;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
+using Nhom4WebThuocThayThe.Services.Ai;
+
+namespace Nhom4WebThuocThayThe.UnitTests;
+
+public sealed class GeminiAiRecommendationExplanationServiceTests
+{
+    [Fact]
+    public async Task DisabledProviderReturnsDeterministicFallbackWithoutCallingHttp()
+    {
+        var handler = new StubHandler(_ => throw new InvalidOperationException("HTTP must not be called."));
+        var service = CreateService(handler, new GeminiOptions { Enabled = false });
+
+        var result = await service.ExplainAsync(CreateContext());
+
+        Assert.False(result.IsAiGenerated);
+        Assert.Equal("Deterministic fallback", result.Provider);
+        Assert.Contains("78/100", result.Summary);
+        Assert.Equal(2, result.Checkpoints.Count);
+        Assert.Equal(0, handler.CallCount);
+    }
+
+    [Fact]
+    public async Task SuccessfulStructuredResponseIsValidatedAndReturned()
+    {
+        var structured = JsonSerializer.Serialize(new
+        {
+            summary = "Ung vien trung khop hoat chat va ham luong.",
+            checkpoints = new[] { "Con hang.", "Can duoc si xac nhan." },
+            limitations = "Khong thay the tu van chuyen mon."
+        });
+        var envelope = JsonSerializer.Serialize(new
+        {
+            candidates = new[]
+            {
+                new { content = new { parts = new[] { new { text = structured } } } }
+            }
+        });
+        var handler = new StubHandler(_ => new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new StringContent(envelope, Encoding.UTF8, "application/json")
+        });
+        var service = CreateService(handler, EnabledOptions());
+
+        var result = await service.ExplainAsync(CreateContext());
+
+        Assert.True(result.IsAiGenerated);
+        Assert.Equal("Google Gemini", result.Provider);
+        Assert.Equal("gemini-3.5-flash", result.Model);
+        Assert.Equal(2, result.Checkpoints.Count);
+        Assert.Equal(1, handler.CallCount);
+        Assert.Contains("x-goog-api-key", handler.LastRequestHeaders, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal(
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent",
+            handler.LastRequestUri);
+    }
+
+    [Theory]
+    [InlineData(HttpStatusCode.TooManyRequests)]
+    [InlineData(HttpStatusCode.InternalServerError)]
+    public async Task ProviderFailureReturnsSafeFallback(HttpStatusCode statusCode)
+    {
+        var handler = new StubHandler(_ => new HttpResponseMessage(statusCode));
+        var service = CreateService(handler, EnabledOptions());
+
+        var result = await service.ExplainAsync(CreateContext());
+
+        Assert.False(result.IsAiGenerated);
+        Assert.Contains("rule-based", result.Summary, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task MalformedStructuredResponseReturnsSafeFallback()
+    {
+        const string envelope = "{\"candidates\":[{\"content\":{\"parts\":[{\"text\":\"not-json\"}]}}]}";
+        var handler = new StubHandler(_ => new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new StringContent(envelope, Encoding.UTF8, "application/json")
+        });
+        var service = CreateService(handler, EnabledOptions());
+
+        var result = await service.ExplainAsync(CreateContext());
+
+        Assert.False(result.IsAiGenerated);
+        Assert.Equal("Deterministic fallback", result.Provider);
+    }
+
+    [Fact]
+    public async Task RequestContainsGuardrailsAndNoPersonalProfileFields()
+    {
+        string? body = null;
+        var handler = new StubHandler(request =>
+        {
+            body = request.Content!.ReadAsStringAsync().GetAwaiter().GetResult();
+            return new HttpResponseMessage(HttpStatusCode.ServiceUnavailable);
+        });
+        var service = CreateService(handler, EnabledOptions());
+
+        await service.ExplainAsync(CreateContext());
+
+        Assert.NotNull(body);
+        Assert.Contains("khong thay doi score", body, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("JSON khong tin cay", body, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("APPLICATION_JSON", body, StringComparison.Ordinal);
+        Assert.Contains("minimal", body, StringComparison.Ordinal);
+        Assert.DoesNotContain("email", body, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("patient", body, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("profile", body, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static GeminiAiRecommendationExplanationService CreateService(
+        HttpMessageHandler handler,
+        GeminiOptions options)
+    {
+        var client = new HttpClient(handler)
+        {
+            BaseAddress = new Uri("https://generativelanguage.googleapis.com/v1beta/models/")
+        };
+        return new GeminiAiRecommendationExplanationService(
+            client,
+            Options.Create(options),
+            new MemoryCache(new MemoryCacheOptions()),
+            NullLogger<GeminiAiRecommendationExplanationService>.Instance);
+    }
+
+    private static GeminiOptions EnabledOptions() => new()
+    {
+        Enabled = true,
+        ApiKey = "test-api-key",
+        Model = "gemini-3.5-flash"
+    };
+
+    private static AiRecommendationContext CreateContext() => new(
+        "Panadol",
+        "500 mg",
+        "Paracetamol STADA",
+        "500 mg",
+        "Paracetamol",
+        "Vien nen",
+        false,
+        24,
+        78,
+        ["Cung hoat chat.", "Con hang."],
+        ["Can duoc si xac nhan."]);
+
+    private sealed class StubHandler(Func<HttpRequestMessage, HttpResponseMessage> respond) : HttpMessageHandler
+    {
+        public int CallCount { get; private set; }
+
+        public string LastRequestHeaders { get; private set; } = string.Empty;
+
+        public string? LastRequestUri { get; private set; }
+
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
+        {
+            CallCount++;
+            LastRequestHeaders = request.Headers.ToString();
+            LastRequestUri = request.RequestUri?.ToString();
+            return Task.FromResult(respond(request));
+        }
+    }
+}

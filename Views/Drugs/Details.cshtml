@@ -90,6 +90,9 @@
         }
         else
         {
+            <form id="ai-explanation-token" class="visually-hidden" aria-hidden="true">
+                @Html.AntiForgeryToken()
+            </form>
             <div class="stack-list">
                 @foreach (var item in Model.Alternatives)
                 {
@@ -138,9 +141,26 @@
                                 }
                             </div>
                         }
+                        <div class="ai-explanation-control">
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-secondary js-ai-explanation"
+                                    data-source-id="@Model.Id"
+                                    data-candidate-id="@item.Id"
+                                    aria-controls="ai-explanation-@item.Id"
+                                    aria-expanded="false">
+                                Giai thich co ho tro AI
+                            </button>
+                            <div id="ai-explanation-@item.Id"
+                                 class="ai-explanation-panel"
+                                 aria-live="polite"
+                                 hidden></div>
+                        </div>
                     </article>
                 }
             </div>
+            <p class="ai-safety-note">
+                AI chi giai thich ket qua rule-based khi ban yeu cau. Diem, canh bao an toan va quyet dinh cua duoc si van la nguon tham chieu chinh; he thong khong gui ho so ca nhan den AI.
+            </p>
         }
     </aside>
 </section>

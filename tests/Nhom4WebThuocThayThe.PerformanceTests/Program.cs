@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Sockets;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -21,6 +22,8 @@ try
     results.Add(await MeasureConcurrencyBurstAsync(runtime));
     results.Add(await MeasureSustainedWindowAsync(runtime));
     results.Add(await MeasureMemorySustainAsync(runtime));
+    results.Add(await MeasureHundredVirtualUsersAsync(runtime));
+    results.Add(await MeasureSomeeFreeProfileAsync(runtime));
 }
 finally
 {
@@ -213,12 +216,137 @@ static async Task<PerfResult> MeasureMemorySustainAsync(WebAppRuntime runtime)
         : result with { Status = "Fail", Message = $"working set too high: {workingSetMb:N1}MB" };
 }
 
+static async Task<PerfResult> MeasureHundredVirtualUsersAsync(WebAppRuntime runtime)
+{
+    const int virtualUsers = 100;
+    const int requestsPerUser = 5;
+    var total = Stopwatch.StartNew();
+    var userTasks = Enumerable.Range(0, virtualUsers).Select(async userIndex =>
+    {
+        using var client = runtime.CreateClient();
+        var timings = new List<double>(requestsPerUser);
+        for (var requestIndex = 0; requestIndex < requestsPerUser; requestIndex++)
+        {
+            var route = ((userIndex + requestIndex) % 3) switch
+            {
+                0 => "/",
+                1 => "/Drugs?keyword=para",
+                _ => "/Drugs/Details/1"
+            };
+            timings.Add(await MeasureOneAsync(client, route));
+        }
+
+        return timings;
+    });
+
+    var timings = (await Task.WhenAll(userTasks)).SelectMany(item => item).ToArray();
+    total.Stop();
+    var failed = timings.Count(item => item < 0);
+    var errorRate = timings.Length == 0 ? 1 : (double)failed / timings.Length;
+    var successful = timings.Where(item => item >= 0).ToArray();
+    var result = PerfResult.FromTimings(
+        "PERF09",
+        "100 virtual users",
+        successful,
+        total.Elapsed,
+        p95LimitMs: 2_000,
+        minRps: 25);
+
+    return errorRate <= 0.01
+        ? result with { Message = $"{result.Message}; users={virtualUsers}; requests={timings.Length}; errorRate={errorRate:P2}" }
+        : result with { Status = "Fail", Message = $"error rate too high: {errorRate:P2}" };
+}
+
+static async Task<PerfResult> MeasureSomeeFreeProfileAsync(WebAppRuntime runtime)
+{
+    const int virtualUsers = 10;
+    const int requestsPerUser = 12;
+    var total = Stopwatch.StartNew();
+    var userTasks = Enumerable.Range(0, virtualUsers).Select(async userIndex =>
+    {
+        using var client = runtime.CreateClient();
+        client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("br"));
+        client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip", 0.8));
+        var samples = new List<(double Milliseconds, int Bytes, bool Success)>(requestsPerUser);
+        for (var requestIndex = 0; requestIndex < requestsPerUser; requestIndex++)
+        {
+            var route = ((userIndex + requestIndex) % 3) switch
+            {
+                0 => "/",
+                1 => "/Drugs?keyword=para",
+                _ => "/Drugs/Details/1"
+            };
+            samples.Add(await MeasureOneWithBytesAsync(client, route));
+            await Task.Delay(250);
+        }
+
+        return samples;
+    });
+
+    var samples = (await Task.WhenAll(userTasks)).SelectMany(item => item).ToArray();
+    total.Stop();
+    var successful = samples.Where(item => item.Success).ToArray();
+    var errorRate = samples.Length == 0 ? 1 : 1 - ((double)successful.Length / samples.Length);
+    var timings = successful.Select(item => item.Milliseconds).ToArray();
+    var result = PerfResult.FromTimings(
+        "PERF10",
+        "Somee Free paced 10 virtual users",
+        timings,
+        total.Elapsed,
+        p95LimitMs: 1_500,
+        minRps: 5);
+    var averageBytes = successful.Length == 0 ? 0 : successful.Average(item => item.Bytes);
+    var estimatedMonthlyRequests = averageBytes <= 0
+        ? 0
+        : Math.Floor(5d * 1024 * 1024 * 1024 / averageBytes);
+    var message =
+        $"{result.Message}; users={virtualUsers}; pacing=250ms; requests={samples.Length}; " +
+        $"errorRate={errorRate:P2}; avgTransfer={averageBytes:N0}B; 5GB~{estimatedMonthlyRequests:N0} responses";
+
+    return errorRate <= 0.01
+        ? result with { Message = message }
+        : result with { Status = "Fail", Message = message };
+}
+
+static async Task<(double Milliseconds, int Bytes, bool Success)> MeasureOneWithBytesAsync(
+    HttpClient client,
+    string route)
+{
+    try
+    {
+        var stopwatch = Stopwatch.StartNew();
+        using var response = await client.GetAsync(route);
+        var bytes = await response.Content.ReadAsByteArrayAsync();
+        stopwatch.Stop();
+        return (stopwatch.Elapsed.TotalMilliseconds, bytes.Length, response.IsSuccessStatusCode);
+    }
+    catch (HttpRequestException)
+    {
+        return (-1, 0, false);
+    }
+    catch (TaskCanceledException)
+    {
+        return (-1, 0, false);
+    }
+}
+
 static async Task<double> MeasureOneAsync(HttpClient client, string route)
 {
-    var stopwatch = Stopwatch.StartNew();
-    using var response = await client.GetAsync(route);
-    stopwatch.Stop();
-    return response.IsSuccessStatusCode ? stopwatch.Elapsed.TotalMilliseconds : -1;
+    try
+    {
+        var stopwatch = Stopwatch.StartNew();
+        using var response = await client.GetAsync(route);
+        stopwatch.Stop();
+        return response.IsSuccessStatusCode ? stopwatch.Elapsed.TotalMilliseconds : -1;
+    }
+    catch (HttpRequestException)
+    {
+        return -1;
+    }
+    catch (TaskCanceledException)
+    {
+        return -1;
+    }
 }
 
 static async Task LoginAsync(HttpClient client, string email, string password)

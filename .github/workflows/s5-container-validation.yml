@@ -1,0 +1,90 @@
+name: S5 Container Validation
+
+on:
+  pull_request:
+    branches: [develop, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: s5-container-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      SQL_SA_PASSWORD: N4wtt_CI_2026_Secure!
+      N4WTT_TEST_SQLSERVER: Server=localhost,1433;Database=master;User Id=sa;Password=N4wtt_CI_2026_Secure!;TrustServerCertificate=True;MultipleActiveResultSets=true
+      ConnectionStrings__PharmacyDatabase: Server=localhost,1433;Database=N4WTT_CI;User Id=sa;Password=N4wtt_CI_2026_Secure!;TrustServerCertificate=True;MultipleActiveResultSets=true
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up .NET 10
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Start SQL Server for automated tests
+        run: |
+          docker run -d --name n4wtt-test-sql \
+            -e ACCEPT_EULA=Y \
+            -e MSSQL_SA_PASSWORD="$SQL_SA_PASSWORD" \
+            -p 1433:1433 \
+            mcr.microsoft.com/mssql/server:2022-latest
+          for attempt in {1..30}; do
+            if docker exec n4wtt-test-sql bash -c 'if [ -x /opt/mssql-tools18/bin/sqlcmd ]; then /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$MSSQL_SA_PASSWORD" -C -Q "SELECT 1"; else /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$MSSQL_SA_PASSWORD" -Q "SELECT 1"; fi' >/dev/null 2>&1; then
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs n4wtt-test-sql
+          exit 1
+
+      - name: Build and run automated suites
+        run: |
+          dotnet restore CMPM.sln
+          dotnet build CMPM.sln --no-restore
+          dotnet test CMPM.sln --no-build --logger "console;verbosity=minimal"
+          dotnet run --project tests/Nhom4WebThuocThayThe.AcceptanceTests/Nhom4WebThuocThayThe.AcceptanceTests.csproj --no-build
+          dotnet run --project tests/Nhom4WebThuocThayThe.SecurityTests/Nhom4WebThuocThayThe.SecurityTests.csproj --no-build
+          dotnet run --project tests/Nhom4WebThuocThayThe.PerformanceTests/Nhom4WebThuocThayThe.PerformanceTests.csproj --no-build
+
+      - name: Build and start application containers
+        run: |
+          docker rm -f n4wtt-test-sql
+          docker compose up --build -d
+          for attempt in {1..40}; do
+            if curl --fail --silent http://127.0.0.1:8080/health >/dev/null; then
+              break
+            fi
+            if [ "$attempt" -eq 40 ]; then
+              docker compose logs
+              exit 1
+            fi
+            sleep 3
+          done
+          curl --fail --show-error http://127.0.0.1:8080/health
+          curl --fail --silent http://127.0.0.1:8080/ >/dev/null
+          docker compose restart web
+          for attempt in {1..20}; do
+            if curl --fail --silent http://127.0.0.1:8080/health >/dev/null; then
+              exit 0
+            fi
+            sleep 3
+          done
+          docker compose logs
+          exit 1
+
+      - name: Record container state
+        if: always()
+        run: |
+          docker compose ps || true
+          docker compose logs --no-color --tail=100 || true
+          docker compose down -v || true
+          docker rm -f n4wtt-test-sql 2>/dev/null || true

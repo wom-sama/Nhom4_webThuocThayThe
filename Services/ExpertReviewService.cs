@@ -48,7 +48,7 @@ public sealed class ExpertReviewService(
         item.Note = string.IsNullOrWhiteSpace(note) ? item.Note : note.Trim();
         item.UpdatedAt = DateTimeOffset.Now;
         dbContext.SaveChanges();
-        auditLogService.Add(item.Reviewer, "Expert review", "AI recommendation", $"Review #{id} moved to {item.Status}.");
+        auditLogService.Add(item.Reviewer, "Expert review", "Rule-based recommendation", $"Review #{id} moved to {item.Status}.");
         return true;
     }
 }

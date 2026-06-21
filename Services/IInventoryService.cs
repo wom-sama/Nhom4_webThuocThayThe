@@ -7,6 +7,8 @@ public interface IInventoryService
 {
     int GetAvailableQuantity(int drugId);
 
+    Task<int> GetAvailableQuantityAsync(int drugId);
+
     IReadOnlyCollection<StockSummaryViewModel> GetStockSummaries();
 
     IReadOnlyCollection<DrugBatch> GetBatches();

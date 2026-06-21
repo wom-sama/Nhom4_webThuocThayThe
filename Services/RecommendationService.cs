@@ -5,29 +5,70 @@ using Nhom4WebThuocThayThe.ViewModels.Search;
 
 namespace Nhom4WebThuocThayThe.Services;
 
-public sealed class RecommendationService(
-    PharmacyDbContext dbContext,
-    IInventoryService inventoryService) : IRecommendationService
+public sealed class RecommendationService(PharmacyDbContext dbContext) : IRecommendationService
 {
     public IReadOnlyCollection<DrugRecommendationViewModel> GetRecommendations(int drugId, string? userEmail)
     {
-        var source = dbContext.Drugs
+        return GetRecommendationsAsync(drugId, userEmail).GetAwaiter().GetResult();
+    }
+
+    public async Task<IReadOnlyCollection<DrugRecommendationViewModel>> GetRecommendationsAsync(int drugId, string? userEmail)
+    {
+        var source = await dbContext.Drugs
             .AsNoTracking()
-            .FirstOrDefault(drug => drug.Id == drugId && drug.IsActive);
+            .FirstOrDefaultAsync(drug => drug.Id == drugId && drug.IsActive);
         if (source is null)
         {
             return [];
         }
 
-        var sourceIngredient = GetPrimaryIngredient(source.Id);
-        var sourceIngredientId = sourceIngredient?.ActiveIngredientId;
-        var sourceProfile = GetProfile(userEmail);
-
-        return dbContext.Drugs
+        var candidates = await dbContext.Drugs
             .AsNoTracking()
             .Where(candidate => candidate.Id != source.Id && candidate.IsActive)
-            .AsEnumerable()
-            .Select(candidate => BuildCandidate(source, candidate, sourceIngredientId, sourceProfile))
+            .ToListAsync();
+        var drugIds = candidates.Select(item => item.Id).Append(source.Id).ToArray();
+        var ingredientLinks = (await dbContext.DrugActiveIngredients
+            .AsNoTracking()
+            .Where(item => drugIds.Contains(item.DrugId))
+            .ToListAsync())
+            .GroupBy(item => item.DrugId)
+            .ToDictionary(group => group.Key, group => group.First());
+        ingredientLinks.TryGetValue(source.Id, out var sourceIngredient);
+        var sourceIngredientId = sourceIngredient?.ActiveIngredientId;
+        var sourceProfile = await GetProfileAsync(userEmail);
+        var ingredientIds = ingredientLinks.Values.Select(item => item.ActiveIngredientId).Distinct().ToArray();
+        var ingredients = await dbContext.ActiveIngredients
+            .AsNoTracking()
+            .Where(item => ingredientIds.Contains(item.Id))
+            .ToDictionaryAsync(item => item.Id);
+        var today = DateOnly.FromDateTime(DateTime.Today);
+        var stockByDrug = await dbContext.Batches
+            .AsNoTracking()
+            .Where(batch => drugIds.Contains(batch.DrugId) && batch.Quantity > 0 && batch.ExpiryDate >= today)
+            .GroupBy(batch => batch.DrugId)
+            .Select(group => new { DrugId = group.Key, Quantity = group.Sum(batch => batch.Quantity) })
+            .ToDictionaryAsync(item => item.DrugId, item => item.Quantity);
+        var dosageForms = await dbContext.DosageForms.AsNoTracking().ToDictionaryAsync(item => item.Id, item => item.Name);
+        var manufacturers = await dbContext.Manufacturers.AsNoTracking().ToDictionaryAsync(item => item.Id, item => item.Name);
+
+        return candidates
+            .Select(candidate =>
+            {
+                ingredientLinks.TryGetValue(candidate.Id, out var candidateIngredient);
+                var ingredient = candidateIngredient is not null && ingredients.TryGetValue(candidateIngredient.ActiveIngredientId, out var value)
+                    ? value
+                    : null;
+                return BuildCandidate(
+                    source,
+                    candidate,
+                    sourceIngredientId,
+                    candidateIngredient,
+                    ingredient,
+                    stockByDrug.GetValueOrDefault(candidate.Id),
+                    dosageForms[candidate.DosageFormId],
+                    manufacturers[candidate.ManufacturerId],
+                    sourceProfile);
+            })
             .Where(candidate => candidate.Score >= 45 || candidate.Reasons.Any(reason => reason.Contains("cung hoat chat", StringComparison.OrdinalIgnoreCase)))
             .OrderByDescending(candidate => candidate.StockQuantity > 0)
             .ThenByDescending(candidate => candidate.Score)
@@ -40,152 +81,54 @@ public sealed class RecommendationService(
         Drug source,
         Drug candidate,
         int? sourceIngredientId,
+        DrugActiveIngredient? candidateIngredient,
+        ActiveIngredient? ingredient,
+        int stock,
+        string dosageForm,
+        string manufacturer,
         PatientSafetyProfile? profile)
     {
-        var candidateIngredient = GetPrimaryIngredient(candidate.Id);
-        var ingredient = candidateIngredient is null
-            ? null
-            : dbContext.ActiveIngredients.AsNoTracking().FirstOrDefault(item => item.Id == candidateIngredient.ActiveIngredientId);
-        var stock = inventoryService.GetAvailableQuantity(candidate.Id);
-        var reasons = new List<string>();
-        var alerts = new List<SafetyAlert>();
-        var score = 0;
-
-        if (sourceIngredientId is not null && candidateIngredient?.ActiveIngredientId == sourceIngredientId)
-        {
-            score += 45;
-            reasons.Add("Cung hoat chat voi thuoc chinh.");
-        }
-        else if (candidate.CategoryId == source.CategoryId)
-        {
-            score += 20;
-            reasons.Add("Cung nhom dieu tri, can duoc si xac nhan truoc khi thay the.");
-        }
-
-        if (string.Equals(candidate.Strength, source.Strength, StringComparison.OrdinalIgnoreCase))
-        {
-            score += 20;
-            reasons.Add("Ham luong trung khop.");
-        }
-
-        if (candidate.DosageFormId == source.DosageFormId)
-        {
-            score += 15;
-            reasons.Add("Dang bao che tuong thich.");
-        }
-
-        if (stock > 0)
-        {
-            score += 15;
-            reasons.Add("Con hang trong kho kha dung.");
-        }
-        else
-        {
-            alerts.Add(new SafetyAlert
-            {
-                Severity = "High",
-                Title = "Het hang",
-                Message = "Ung vien thay the hien khong co lo kha dung."
-            });
-        }
-
-        if (candidate.Price <= source.Price)
-        {
-            score += 5;
-            reasons.Add("Gia khong cao hon thuoc chinh.");
-        }
-
-        if (candidate.PrescriptionRequired)
-        {
-            score -= 10;
-            alerts.Add(new SafetyAlert
-            {
-                Severity = "Medium",
-                Title = "Can ke don",
-                Message = "Thuoc can duoc bac si hoac duoc si xac nhan truoc khi tu van."
-            });
-        }
-
-        if (!string.IsNullOrWhiteSpace(ingredient?.Warning))
-        {
-            alerts.Add(new SafetyAlert
-            {
-                Severity = candidate.PrescriptionRequired ? "Medium" : "Low",
-                Title = "Canh bao hoat chat",
-                Message = ingredient.Warning
-            });
-        }
-
-        if (candidateIngredient is not null &&
-            profile?.AllergyActiveIngredientIds.Contains(candidateIngredient.ActiveIngredientId) == true)
-        {
-            score -= 25;
-            alerts.Add(new SafetyAlert
-            {
-                Severity = "High",
-                Title = "Di ung hoat chat",
-                Message = $"{profile.DisplayName} co ho so di ung voi hoat chat {ingredient?.Name ?? "nay"}."
-            });
-        }
-
-        if (!string.IsNullOrWhiteSpace(candidate.Contraindications) &&
-            candidate.Contraindications.Contains("di ung", StringComparison.OrdinalIgnoreCase))
-        {
-            alerts.Add(new SafetyAlert
-            {
-                Severity = "Medium",
-                Title = "Chong chi dinh",
-                Message = candidate.Contraindications
-            });
-        }
-
-        score = Math.Clamp(score, 0, 100);
+        var patientIsAllergic = candidateIngredient is not null &&
+            profile?.AllergyActiveIngredientIds.Contains(candidateIngredient.ActiveIngredientId) == true;
+        var evaluation = RecommendationScoring.Evaluate(
+            source,
+            candidate,
+            sourceIngredientId,
+            candidateIngredient?.ActiveIngredientId,
+            stock,
+            patientIsAllergic,
+            ingredient?.Name,
+            ingredient?.Warning,
+            profile?.DisplayName);
 
         return new DrugRecommendationViewModel
         {
             Id = candidate.Id,
             Name = candidate.Name,
             Strength = candidate.Strength,
-            DosageForm = dbContext.DosageForms.AsNoTracking().First(form => form.Id == candidate.DosageFormId).Name,
-            Manufacturer = dbContext.Manufacturers.AsNoTracking().First(manufacturer => manufacturer.Id == candidate.ManufacturerId).Name,
+            DosageForm = dosageForm,
+            Manufacturer = manufacturer,
             ActiveIngredient = ingredient?.Name ?? "Chua khai bao",
             Price = candidate.Price,
             StockQuantity = stock,
             PrescriptionRequired = candidate.PrescriptionRequired,
-            Score = score,
-            ScoreLabel = GetScoreLabel(score),
-            Reasons = reasons,
-            Alerts = alerts
+            Score = evaluation.Score,
+            ScoreLabel = RecommendationScoring.GetScoreLabel(evaluation.Score),
+            Reasons = evaluation.Reasons,
+            Alerts = evaluation.Alerts
         };
     }
 
-    private DrugActiveIngredient? GetPrimaryIngredient(int drugId)
-    {
-        return dbContext.DrugActiveIngredients
-            .AsNoTracking()
-            .FirstOrDefault(item => item.DrugId == drugId);
-    }
-
-    private PatientSafetyProfile? GetProfile(string? userEmail)
+    private Task<PatientSafetyProfile?> GetProfileAsync(string? userEmail)
     {
         if (string.IsNullOrWhiteSpace(userEmail))
         {
-            return null;
+            return Task.FromResult<PatientSafetyProfile?>(null);
         }
 
         return dbContext.PatientSafetyProfiles
             .AsNoTracking()
-            .FirstOrDefault(profile => profile.Email == userEmail);
+            .FirstOrDefaultAsync(profile => profile.Email == userEmail);
     }
 
-    private static string GetScoreLabel(int score)
-    {
-        return score switch
-        {
-            >= 85 => "Rat phu hop",
-            >= 70 => "Phu hop",
-            >= 55 => "Can xem xet",
-            _ => "Chi tham khao"
-        };
-    }
 }

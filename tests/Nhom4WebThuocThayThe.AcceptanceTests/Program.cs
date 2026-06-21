@@ -115,6 +115,147 @@ try
             ex.Message));
         Console.WriteLine($"FAIL TC31 Browser-like CSS request returns complete stylesheet: {ex.Message}");
     }
+
+    var vendorAssetStopwatch = Stopwatch.StartNew();
+    try
+    {
+        using var assetClient = restartRuntime.CreateClient();
+        var requiredAssets = new[]
+        {
+            "/lib/bootstrap/dist/css/bootstrap.min.css",
+            "/lib/bootstrap/dist/js/bootstrap.bundle.min.js",
+            "/lib/jquery/dist/jquery.min.js",
+            "/lib/jquery-validation/dist/jquery.validate.min.js",
+            "/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"
+        };
+        foreach (var path in requiredAssets)
+        {
+            using var response = await assetClient.GetAsync(path);
+            var bytes = await response.Content.ReadAsByteArrayAsync();
+            if (!response.IsSuccessStatusCode || bytes.Length < 1_000)
+            {
+                throw new InvalidOperationException($"required vendor asset is missing or empty: {path}");
+            }
+        }
+
+        vendorAssetStopwatch.Stop();
+        results.Add(new TestResult(
+            "TC32",
+            "Static assets",
+            "Bootstrap and validation vendor assets are published",
+            "Pass",
+            vendorAssetStopwatch.ElapsedMilliseconds,
+            null));
+        Console.WriteLine($"PASS TC32 Bootstrap and validation vendor assets are published ({vendorAssetStopwatch.ElapsedMilliseconds} ms)");
+    }
+    catch (Exception ex)
+    {
+        vendorAssetStopwatch.Stop();
+        results.Add(new TestResult(
+            "TC32",
+            "Static assets",
+            "Bootstrap and validation vendor assets are published",
+            "Fail",
+            vendorAssetStopwatch.ElapsedMilliseconds,
+            ex.Message));
+        Console.WriteLine($"FAIL TC32 Bootstrap and validation vendor assets are published: {ex.Message}");
+    }
+
+    var aiFallbackStopwatch = Stopwatch.StartNew();
+    try
+    {
+        using var aiClient = restartRuntime.CreateClient();
+        var details = await aiClient.GetStringAsync("/Drugs/Details/1");
+        var tokenInput = Regex.Match(
+            details,
+            "<input[^>]*name=\"__RequestVerificationToken\"[^>]*>",
+            RegexOptions.IgnoreCase);
+        var tokenValue = Regex.Match(tokenInput.Value, "value=\"([^\"]+)\"", RegexOptions.IgnoreCase);
+        if (!tokenInput.Success || !tokenValue.Success)
+        {
+            throw new InvalidOperationException("AI anti-forgery token is missing");
+        }
+
+        var token = WebUtility.HtmlDecode(tokenValue.Groups[1].Value);
+        using var response = await aiClient.PostAsync(
+            "/Drugs/ExplainAlternative",
+            new FormUrlEncodedContent(new Dictionary<string, string>
+            {
+                ["sourceId"] = "1",
+                ["candidateId"] = "2",
+                ["__RequestVerificationToken"] = token
+            }));
+        var json = await response.Content.ReadAsStringAsync();
+        aiFallbackStopwatch.Stop();
+        if (!response.IsSuccessStatusCode ||
+            !json.Contains("Deterministic fallback") ||
+            !json.Contains("\"isAiGenerated\":false") ||
+            json.Contains("@nhom4.local", StringComparison.OrdinalIgnoreCase))
+        {
+            throw new InvalidOperationException("AI-disabled endpoint did not return a safe fallback");
+        }
+
+        results.Add(new TestResult(
+            "TC33",
+            "AI safety",
+            "AI-disabled endpoint returns no-PII deterministic fallback",
+            "Pass",
+            aiFallbackStopwatch.ElapsedMilliseconds,
+            null));
+        Console.WriteLine($"PASS TC33 AI-disabled endpoint returns no-PII deterministic fallback ({aiFallbackStopwatch.ElapsedMilliseconds} ms)");
+    }
+    catch (Exception ex)
+    {
+        aiFallbackStopwatch.Stop();
+        results.Add(new TestResult(
+            "TC33",
+            "AI safety",
+            "AI-disabled endpoint returns no-PII deterministic fallback",
+            "Fail",
+            aiFallbackStopwatch.ElapsedMilliseconds,
+            ex.Message));
+        Console.WriteLine($"FAIL TC33 AI-disabled endpoint returns no-PII deterministic fallback: {ex.Message}");
+    }
+
+    var compressionStopwatch = Stopwatch.StartNew();
+    try
+    {
+        using var compressionClient = restartRuntime.CreateClient();
+        compressionClient.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("br"));
+        using var response = await compressionClient.GetAsync("/css/site.css");
+        var bytes = await response.Content.ReadAsByteArrayAsync();
+        compressionStopwatch.Stop();
+        var cacheControl = response.Headers.CacheControl;
+        if (!response.IsSuccessStatusCode ||
+            !response.Content.Headers.ContentEncoding.Contains("br") ||
+            cacheControl?.Public != true ||
+            cacheControl.MaxAge < TimeSpan.FromDays(7) ||
+            bytes.Length >= 10_000)
+        {
+            throw new InvalidOperationException("static asset compression or seven-day cache policy is missing");
+        }
+
+        results.Add(new TestResult(
+            "TC34",
+            "Free hosting",
+            "Static assets use Brotli and seven-day public cache",
+            "Pass",
+            compressionStopwatch.ElapsedMilliseconds,
+            null));
+        Console.WriteLine($"PASS TC34 Static assets use Brotli and seven-day public cache ({compressionStopwatch.ElapsedMilliseconds} ms)");
+    }
+    catch (Exception ex)
+    {
+        compressionStopwatch.Stop();
+        results.Add(new TestResult(
+            "TC34",
+            "Free hosting",
+            "Static assets use Brotli and seven-day public cache",
+            "Fail",
+            compressionStopwatch.ElapsedMilliseconds,
+            ex.Message));
+        Console.WriteLine($"FAIL TC34 Static assets use Brotli and seven-day public cache: {ex.Message}");
+    }
 }
 finally
 {
@@ -485,7 +626,7 @@ internal static class AcceptanceTests
                 var html = await GetStringAsync(client, "/Drugs/Details/1");
                 Expect(html.Contains("Thuoc thay the de xuat"), "recommendation section missing");
                 Expect(html.Contains("Paracetamol DHG 500mg"), "primary substitute missing");
-                Expect(html.Contains("AI score") || html.Contains("Rat phu hop"), "recommendation score missing");
+                Expect(html.Contains("Diem quy tac") || html.Contains("Rat phu hop"), "recommendation score missing");
                 Expect(html.Contains("Cung hoat chat"), "recommendation reasons missing");
             }),
             new("TC22", "Safety", "Signed-in safety profile produces allergy warning", async () =>
