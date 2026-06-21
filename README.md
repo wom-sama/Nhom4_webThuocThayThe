@@ -57,6 +57,21 @@ Gemini explanation is optional and disabled by default. To enable it, set `AI_GE
 and provide `GEMINI_API_KEY` only in the untracked `.env` file. The rule-based score and safety alerts
 remain authoritative when AI is enabled or unavailable.
 
+## Deploy To Somee
+
+Create the publish package, run a secret-safe dry run, then deploy through the paced FTP workflow:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\Publish-Somee.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\Deploy-Somee.ps1 `
+  -ConfigurationFile $env:SOMEE_DEPLOY_FILE `
+  -GeminiKeyFile $env:GEMINI_KEY_FILE `
+  -DryRun
+```
+
+The complete release, rollback and evidence procedure is in
+[`docs/operations/somee-deployment-runbook.md`](docs/operations/somee-deployment-runbook.md).
+
 ## Jira Workflow
 
 Use Jira issue keys in branch names, commit messages, and pull request titles.
