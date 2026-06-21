@@ -55,9 +55,8 @@ public sealed class SqlServerPersistenceTests : IClassFixture<SqlServerFixture>
     {
         using var db = _fixture.CreateContext();
         var inventory = new InventoryService(db);
-        var catalog = new DrugCatalogService(db, inventory);
-        var recommendation = new RecommendationService(db, inventory);
-        var search = new DrugSearchService(db, catalog, inventory, recommendation);
+        var recommendation = new RecommendationService(db);
+        var search = new DrugSearchService(db, inventory, recommendation);
 
         var result = search.Search("paracetamol", categoryId: null);
 

@@ -8,41 +8,67 @@ namespace Nhom4WebThuocThayThe.Services;
 
 public sealed class DrugSearchService(
     PharmacyDbContext dbContext,
-    IDrugCatalogService catalogService,
     IInventoryService inventoryService,
     IRecommendationService recommendationService) : IDrugSearchService
 {
     public DrugSearchPageViewModel Search(string? keyword, int? categoryId)
     {
         var normalizedKeyword = keyword?.Trim();
-        var query = catalogService.GetDrugs().AsEnumerable();
+        var categories = dbContext.Categories
+            .AsNoTracking()
+            .OrderBy(category => category.Name)
+            .ToList();
+        var query = dbContext.Drugs.AsNoTracking().AsQueryable();
 
-        if (categoryId is not null)
+        if (categoryId is not null && categories.Any(item => item.Id == categoryId.Value))
         {
-            var category = dbContext.Categories
-                .AsNoTracking()
-                .FirstOrDefault(item => item.Id == categoryId.Value);
-            if (category is not null)
-            {
-                query = query.Where(item => item.Category == category.Name);
-            }
+            query = query.Where(drug => drug.CategoryId == categoryId.Value);
         }
 
         if (!string.IsNullOrWhiteSpace(normalizedKeyword))
         {
-            query = query.Where(item => Matches(item, normalizedKeyword));
+            query = query.Where(drug =>
+                drug.Name.Contains(normalizedKeyword) ||
+                dbContext.Categories.Any(category => category.Id == drug.CategoryId && category.Name.Contains(normalizedKeyword)) ||
+                dbContext.Manufacturers.Any(manufacturer => manufacturer.Id == drug.ManufacturerId && manufacturer.Name.Contains(normalizedKeyword)) ||
+                dbContext.DrugActiveIngredients.Any(link =>
+                    link.DrugId == drug.Id &&
+                    dbContext.ActiveIngredients.Any(ingredient => ingredient.Id == link.ActiveIngredientId && ingredient.Name.Contains(normalizedKeyword))));
         }
+
+        var drugs = query.OrderBy(drug => drug.Name).ToList();
+        var categoryNames = categories.ToDictionary(item => item.Id, item => item.Name);
+        var dosageForms = dbContext.DosageForms.AsNoTracking().ToDictionary(item => item.Id, item => item.Name);
+        var manufacturers = dbContext.Manufacturers.AsNoTracking().ToDictionary(item => item.Id, item => item.Name);
+        var today = DateOnly.FromDateTime(DateTime.Today);
+        var stockByDrug = dbContext.Batches
+            .AsNoTracking()
+            .Where(batch => batch.Quantity > 0 && batch.ExpiryDate >= today)
+            .GroupBy(batch => batch.DrugId)
+            .Select(group => new { DrugId = group.Key, Quantity = group.Sum(batch => batch.Quantity) })
+            .ToDictionary(item => item.DrugId, item => item.Quantity);
+        var results = drugs.Select(drug => new DrugListItemViewModel
+        {
+            Id = drug.Id,
+            Name = drug.Name,
+            Strength = drug.Strength,
+            Price = drug.Price,
+            Category = categoryNames[drug.CategoryId],
+            DosageForm = dosageForms[drug.DosageFormId],
+            Manufacturer = manufacturers[drug.ManufacturerId],
+            PrescriptionRequired = drug.PrescriptionRequired,
+            IsActive = drug.IsActive,
+            StockQuantity = stockByDrug.GetValueOrDefault(drug.Id)
+        }).ToList();
 
         return new DrugSearchPageViewModel
         {
             Keyword = normalizedKeyword,
             CategoryId = categoryId,
-            Categories = dbContext.Categories
-                .AsNoTracking()
-                .OrderBy(category => category.Name)
+            Categories = categories
                 .Select(category => new SelectListItem(category.Name, category.Id.ToString(), category.Id == categoryId))
                 .ToList(),
-            Results = query.ToList()
+            Results = results
         };
     }
 
@@ -85,31 +111,6 @@ public sealed class DrugSearchService(
             SafetyProfileNote = profile?.ClinicalNote,
             Alternatives = recommendationService.GetRecommendations(drug.Id, userEmail)
         };
-    }
-
-    private bool Matches(DrugListItemViewModel item, string keyword)
-    {
-        var drug = dbContext.Drugs.AsNoTracking().First(current => current.Id == item.Id);
-        var ingredientIds = dbContext.DrugActiveIngredients
-            .AsNoTracking()
-            .Where(link => link.DrugId == drug.Id)
-            .Select(link => link.ActiveIngredientId)
-            .ToHashSet();
-        var activeIngredientNames = dbContext.ActiveIngredients
-            .AsNoTracking()
-            .Where(ingredient => ingredientIds.Contains(ingredient.Id))
-            .Select(ingredient => ingredient.Name)
-            .ToList();
-
-        return Contains(item.Name, keyword) ||
-               Contains(item.Category, keyword) ||
-               Contains(item.Manufacturer, keyword) ||
-               activeIngredientNames.Any(name => Contains(name, keyword));
-    }
-
-    private static bool Contains(string value, string keyword)
-    {
-        return value.Contains(keyword, StringComparison.OrdinalIgnoreCase);
     }
 
 }
