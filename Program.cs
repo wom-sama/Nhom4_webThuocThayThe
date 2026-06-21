@@ -28,8 +28,7 @@ builder.Services.AddRateLimiter(options =>
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
     options.AddPolicy("login", httpContext =>
     {
-        var userAgent = httpContext.Request.Headers.UserAgent.ToString();
-        var partitionKey = $"{httpContext.Connection.RemoteIpAddress}:{userAgent}";
+        var partitionKey = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
         return RateLimitPartition.GetFixedWindowLimiter(
             partitionKey,
             _ => new FixedWindowRateLimiterOptions
