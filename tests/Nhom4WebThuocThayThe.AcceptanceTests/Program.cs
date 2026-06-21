@@ -115,6 +115,107 @@ try
             ex.Message));
         Console.WriteLine($"FAIL TC31 Browser-like CSS request returns complete stylesheet: {ex.Message}");
     }
+
+    var vendorAssetStopwatch = Stopwatch.StartNew();
+    try
+    {
+        using var assetClient = restartRuntime.CreateClient();
+        var requiredAssets = new[]
+        {
+            "/lib/bootstrap/dist/css/bootstrap.min.css",
+            "/lib/bootstrap/dist/js/bootstrap.bundle.min.js",
+            "/lib/jquery/dist/jquery.min.js",
+            "/lib/jquery-validation/dist/jquery.validate.min.js",
+            "/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"
+        };
+        foreach (var path in requiredAssets)
+        {
+            using var response = await assetClient.GetAsync(path);
+            var bytes = await response.Content.ReadAsByteArrayAsync();
+            if (!response.IsSuccessStatusCode || bytes.Length < 1_000)
+            {
+                throw new InvalidOperationException($"required vendor asset is missing or empty: {path}");
+            }
+        }
+
+        vendorAssetStopwatch.Stop();
+        results.Add(new TestResult(
+            "TC32",
+            "Static assets",
+            "Bootstrap and validation vendor assets are published",
+            "Pass",
+            vendorAssetStopwatch.ElapsedMilliseconds,
+            null));
+        Console.WriteLine($"PASS TC32 Bootstrap and validation vendor assets are published ({vendorAssetStopwatch.ElapsedMilliseconds} ms)");
+    }
+    catch (Exception ex)
+    {
+        vendorAssetStopwatch.Stop();
+        results.Add(new TestResult(
+            "TC32",
+            "Static assets",
+            "Bootstrap and validation vendor assets are published",
+            "Fail",
+            vendorAssetStopwatch.ElapsedMilliseconds,
+            ex.Message));
+        Console.WriteLine($"FAIL TC32 Bootstrap and validation vendor assets are published: {ex.Message}");
+    }
+
+    var aiFallbackStopwatch = Stopwatch.StartNew();
+    try
+    {
+        using var aiClient = restartRuntime.CreateClient();
+        var details = await aiClient.GetStringAsync("/Drugs/Details/1");
+        var tokenInput = Regex.Match(
+            details,
+            "<input[^>]*name=\"__RequestVerificationToken\"[^>]*>",
+            RegexOptions.IgnoreCase);
+        var tokenValue = Regex.Match(tokenInput.Value, "value=\"([^\"]+)\"", RegexOptions.IgnoreCase);
+        if (!tokenInput.Success || !tokenValue.Success)
+        {
+            throw new InvalidOperationException("AI anti-forgery token is missing");
+        }
+
+        var token = WebUtility.HtmlDecode(tokenValue.Groups[1].Value);
+        using var response = await aiClient.PostAsync(
+            "/Drugs/ExplainAlternative",
+            new FormUrlEncodedContent(new Dictionary<string, string>
+            {
+                ["sourceId"] = "1",
+                ["candidateId"] = "2",
+                ["__RequestVerificationToken"] = token
+            }));
+        var json = await response.Content.ReadAsStringAsync();
+        aiFallbackStopwatch.Stop();
+        if (!response.IsSuccessStatusCode ||
+            !json.Contains("Deterministic fallback") ||
+            !json.Contains("\"isAiGenerated\":false") ||
+            json.Contains("@nhom4.local", StringComparison.OrdinalIgnoreCase))
+        {
+            throw new InvalidOperationException("AI-disabled endpoint did not return a safe fallback");
+        }
+
+        results.Add(new TestResult(
+            "TC33",
+            "AI safety",
+            "AI-disabled endpoint returns no-PII deterministic fallback",
+            "Pass",
+            aiFallbackStopwatch.ElapsedMilliseconds,
+            null));
+        Console.WriteLine($"PASS TC33 AI-disabled endpoint returns no-PII deterministic fallback ({aiFallbackStopwatch.ElapsedMilliseconds} ms)");
+    }
+    catch (Exception ex)
+    {
+        aiFallbackStopwatch.Stop();
+        results.Add(new TestResult(
+            "TC33",
+            "AI safety",
+            "AI-disabled endpoint returns no-PII deterministic fallback",
+            "Fail",
+            aiFallbackStopwatch.ElapsedMilliseconds,
+            ex.Message));
+        Console.WriteLine($"FAIL TC33 AI-disabled endpoint returns no-PII deterministic fallback: {ex.Message}");
+    }
 }
 finally
 {

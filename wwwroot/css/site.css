@@ -508,6 +508,57 @@ a:hover {
   gap: 0.45rem;
 }
 
+.ai-explanation-control {
+  display: grid;
+  justify-items: start;
+  gap: 0.65rem;
+  padding-top: 0.25rem;
+  border-top: 1px solid var(--app-border);
+}
+
+.ai-explanation-panel {
+  display: grid;
+  width: 100%;
+  gap: 0.55rem;
+  padding: 0.75rem;
+  color: var(--app-ink);
+  background: #f4f8f7;
+  border: 1px solid #cfe0dc;
+  border-radius: var(--app-radius);
+}
+
+.ai-explanation-panel[hidden] {
+  display: none;
+}
+
+.ai-explanation-panel p,
+.ai-explanation-panel ul {
+  margin: 0;
+}
+
+.ai-explanation-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.ai-explanation-limit,
+.ai-explanation-metadata,
+.ai-safety-note {
+  color: var(--app-muted);
+  font-size: 0.82rem;
+}
+
+.ai-explanation-limit {
+  padding-left: 0.65rem;
+  border-left: 3px solid #d59a16;
+}
+
+.ai-safety-note {
+  margin: 0.85rem 0 0;
+}
+
 .safety-alert,
 .safety-profile {
   display: grid;

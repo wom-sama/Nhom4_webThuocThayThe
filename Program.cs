@@ -47,6 +47,19 @@ builder.Services.AddRateLimiter(options =>
                 AutoReplenishment = true
             });
     });
+    options.AddPolicy("ai", httpContext =>
+    {
+        var partitionKey = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        return RateLimitPartition.GetFixedWindowLimiter(
+            $"ai:{partitionKey}",
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0,
+                AutoReplenishment = true
+            });
+    });
 });
 builder.Services.AddAuthorization(options =>
 {
