@@ -21,6 +21,7 @@ try
     results.Add(await MeasureConcurrencyBurstAsync(runtime));
     results.Add(await MeasureSustainedWindowAsync(runtime));
     results.Add(await MeasureMemorySustainAsync(runtime));
+    results.Add(await MeasureHundredVirtualUsersAsync(runtime));
 }
 finally
 {
@@ -211,6 +212,47 @@ static async Task<PerfResult> MeasureMemorySustainAsync(WebAppRuntime runtime)
     return workingSetMb < 420
         ? result with { Message = $"{result.Message}; workingSet={workingSetMb:N1}MB" }
         : result with { Status = "Fail", Message = $"working set too high: {workingSetMb:N1}MB" };
+}
+
+static async Task<PerfResult> MeasureHundredVirtualUsersAsync(WebAppRuntime runtime)
+{
+    const int virtualUsers = 100;
+    const int requestsPerUser = 5;
+    var total = Stopwatch.StartNew();
+    var userTasks = Enumerable.Range(0, virtualUsers).Select(async userIndex =>
+    {
+        using var client = runtime.CreateClient();
+        var timings = new List<double>(requestsPerUser);
+        for (var requestIndex = 0; requestIndex < requestsPerUser; requestIndex++)
+        {
+            var route = ((userIndex + requestIndex) % 3) switch
+            {
+                0 => "/",
+                1 => "/Drugs?keyword=para",
+                _ => "/Drugs/Details/1"
+            };
+            timings.Add(await MeasureOneAsync(client, route));
+        }
+
+        return timings;
+    });
+
+    var timings = (await Task.WhenAll(userTasks)).SelectMany(item => item).ToArray();
+    total.Stop();
+    var failed = timings.Count(item => item < 0);
+    var errorRate = timings.Length == 0 ? 1 : (double)failed / timings.Length;
+    var successful = timings.Where(item => item >= 0).ToArray();
+    var result = PerfResult.FromTimings(
+        "PERF09",
+        "100 virtual users",
+        successful,
+        total.Elapsed,
+        p95LimitMs: 2_000,
+        minRps: 25);
+
+    return errorRate <= 0.01
+        ? result with { Message = $"{result.Message}; users={virtualUsers}; requests={timings.Length}; errorRate={errorRate:P2}" }
+        : result with { Status = "Fail", Message = $"error rate too high: {errorRate:P2}" };
 }
 
 static async Task<double> MeasureOneAsync(HttpClient client, string route)
