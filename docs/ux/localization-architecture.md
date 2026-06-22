@@ -107,14 +107,21 @@ Localization/
   ReportsResource.cs
   AiExplanationResource.cs
 Resources/
-  SharedResource.vi-VN.resx
-  AuthenticationResource.vi-VN.resx
-  DrugSearchResource.vi-VN.resx
-  InventoryResource.vi-VN.resx
-  ExpertReviewResource.vi-VN.resx
-  ReportsResource.vi-VN.resx
-  AiExplanationResource.vi-VN.resx
+  Localization/
+    SharedResource.vi-VN.resx
+    AuthenticationResource.vi-VN.resx
+    DrugSearchResource.vi-VN.resx
+    InventoryResource.vi-VN.resx
+    ExpertReviewResource.vi-VN.resx
+    ReportsResource.vi-VN.resx
+    AiExplanationResource.vi-VN.resx
 ```
+
+The `Resources/Localization` segment is intentional: with root namespace
+`Nhom4WebThuocThayThe`, marker namespace `Nhom4WebThuocThayThe.Localization` and
+`ResourcesPath = "Resources"`, the resource path must mirror the remaining `Localization`
+namespace. Moving marker classes or changing their namespace requires updating this path and its lookup
+test in the same PR.
 
 | Resource | Owns | Does not own |
 | --- | --- | --- |
@@ -186,7 +193,8 @@ records.
 
 The implementation is accepted only when all checks pass:
 
-1. Unit: resource keys required by marker classes resolve for `vi-VN`.
+1. Unit: each `IStringLocalizer<TMarker>` resolves a known key for `vi-VN` without returning
+   `ResourceNotFound`; this verifies the marker namespace and `Resources/Localization` lookup path.
 2. Unit: inventory cross-field and numeric validation returns the canonical Vietnamese messages.
 3. Integration: a request without culture hints uses `vi-VN` and emits `Content-Language: vi-VN`.
 4. Acceptance: every HTML response has `lang="vi"` and no English error/privacy scaffold remains.
