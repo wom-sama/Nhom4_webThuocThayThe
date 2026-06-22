@@ -172,7 +172,7 @@ $runtimeValues = [ordered]@{
     "ConnectionStrings__PharmacyDatabase" = $settings["SQL_CONNECTION_STRING"]
     "AI__Gemini__Enabled" = if ($DisableAi) { "false" } else { "true" }
     "AI__Gemini__ApiKey" = $geminiKey
-    "AI__Gemini__Model" = "gemini-3.5-flash"
+    "AI__Gemini__Model" = "gemini-2.5-flash"
 }
 foreach ($name in $runtimeValues.Keys) {
     $node = $environmentNode.SelectSingleNode("environmentVariable[@name='$name']")
