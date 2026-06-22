@@ -4,6 +4,8 @@ Incident severity, ownership and escalation are defined in
 [`support-escalation-runbook.md`](support-escalation-runbook.md).
 Production SLOs, hosting guardrails and the go/no-go checklist are defined in
 [`slo-quota-release-gate.md`](slo-quota-release-gate.md).
+Daily production evidence and Jira defect rules are defined in
+[`production-monitoring.md`](production-monitoring.md).
 
 This runbook deploys the published ASP.NET Core package without storing credentials in Git, Jira,
 shell history or the generated archive.
