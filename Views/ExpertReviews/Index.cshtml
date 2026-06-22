@@ -1,13 +1,13 @@
 @model IReadOnlyCollection<Nhom4WebThuocThayThe.ViewModels.ExpertReviews.ExpertReviewListItemViewModel>
 
 @{
-    ViewData["Title"] = "Danh gia chuyen gia";
+    ViewData["Title"] = "Đánh giá chuyên gia";
 }
 
 <section class="mb-4">
-    <div class="page-kicker">Kiem soat de xuat</div>
-    <h1 class="page-title">Danh gia de xuat thuoc thay the</h1>
-    <p class="page-description">Duoc si/chuyen gia xac nhan ket qua xep hang truoc khi su dung trong tu van thuc te.</p>
+    <div class="page-kicker">Kiểm soát đề xuất</div>
+    <h1 class="page-title">Đánh giá đề xuất thuốc thay thế</h1>
+    <p class="page-description">Chuyên gia xác nhận kết quả xếp hạng trước khi sử dụng trong tư vấn thực tế.</p>
 </section>
 
 @if (TempData["SuccessMessage"] is string successMessage)
@@ -21,33 +21,33 @@
         <article class="app-surface review-card">
             <div class="review-summary">
                 <div>
-                    <span class="page-kicker">Review #@item.Id</span>
+                    <span class="page-kicker">Đánh giá #@item.Id</span>
                     <h2 class="h5">@item.SourceDrug</h2>
-                    <p class="mb-0">De xuat: <strong>@item.RecommendedDrug</strong></p>
+                    <p class="mb-0">Đề xuất: <strong>@item.RecommendedDrug</strong></p>
                 </div>
                 <div class="score-chip">
                     <strong>@item.Score</strong>
-                    <span>Diem quy tac</span>
+                    <span>Điểm quy tắc</span>
                 </div>
             </div>
             <form asp-action="Update" method="post" class="review-form">
                 <input type="hidden" name="id" value="@item.Id" />
                 <div>
-                    <label class="form-label" for="status-@item.Id">Trang thai</label>
+                    <label class="form-label" for="status-@item.Id">Trạng thái</label>
                     <select id="status-@item.Id" name="status" class="form-select">
-                        <option selected="@(item.Status == "Cho danh gia")">Cho danh gia</option>
-                        <option selected="@(item.Status == "Chap nhan")">Chap nhan</option>
-                        <option selected="@(item.Status == "Can xem xet")">Can xem xet</option>
-                        <option selected="@(item.Status == "Tu choi")">Tu choi</option>
+                        <option value="Cho danh gia" selected="@(item.Status == "Cho danh gia")">Chờ đánh giá</option>
+                        <option value="Chap nhan" selected="@(item.Status == "Chap nhan")">Chấp nhận</option>
+                        <option value="Can xem xet" selected="@(item.Status == "Can xem xet")">Cần xem xét</option>
+                        <option value="Tu choi" selected="@(item.Status == "Tu choi")">Từ chối</option>
                     </select>
                 </div>
                 <div>
-                    <label class="form-label" for="note-@item.Id">Nhan xet chuyen mon</label>
+                    <label class="form-label" for="note-@item.Id">Nhận xét chuyên môn</label>
                     <textarea id="note-@item.Id" name="note" class="form-control" rows="3">@item.Note</textarea>
                 </div>
                 <div class="review-actions">
-                    <span class="muted-copy">Cap nhat: @item.UpdatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm") · @item.Reviewer</span>
-                    <button type="submit" class="btn btn-primary">Luu danh gia</button>
+                    <span class="muted-copy">Cập nhật: @item.UpdatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm") · @item.Reviewer</span>
+                    <button type="submit" class="btn btn-primary">Lưu đánh giá</button>
                 </div>
             </form>
         </article>

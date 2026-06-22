@@ -1,0 +1,22 @@
+@{
+    ViewData["Title"] = "Tổng quan cá nhân";
+}
+
+<section class="mb-4">
+    <div class="page-kicker">Khu vực người dùng</div>
+    <h1 class="page-title">Chào @User.Identity?.Name</h1>
+    <p class="page-description">Tra cứu thuốc, xem lại lịch sử và theo dõi những thuốc bạn đã lưu trong một không gian riêng.</p>
+</section>
+
+<section class="metric-grid mb-4" aria-label="Tổng quan cá nhân">
+    <article class="metric-card"><span>Lượt tra cứu</span><strong>0</strong><span>Chưa có lịch sử trong phiên bản này</span></article>
+    <article class="metric-card"><span>Thuốc đã lưu</span><strong>0</strong><span>Sẵn sàng cho dữ liệu cá nhân</span></article>
+    <article class="metric-card"><span>Cảnh báo cần xem</span><strong>0</strong><span>Không có cảnh báo mới</span></article>
+    <article class="metric-card"><span>Phiên hiện tại</span><strong>Đang hoạt động</strong><span>Tự hết hạn sau thời gian không hoạt động</span></article>
+</section>
+
+<section class="workflow-grid">
+    <article class="workflow-card"><h2 class="h5">Tra cứu thuốc</h2><p>Kiểm tra tồn kho và cảnh báo an toàn trước nội dung giải thích tùy chọn.</p><a asp-area="" asp-controller="Drugs" asp-action="Index" class="btn btn-primary btn-sm">Mở tra cứu</a></article>
+    <article class="workflow-card"><h2 class="h5">Lịch sử tra cứu</h2><p>Kết quả cũ luôn có thời gian và phải được tra cứu lại trước khi sử dụng.</p><a asp-action="History" class="btn btn-outline-primary btn-sm">Xem lịch sử</a></article>
+    <article class="workflow-card"><h2 class="h5">Thuốc đã lưu</h2><p>Danh sách cá nhân không thay thế đơn thuốc hoặc tư vấn chuyên môn.</p><a asp-action="Saved" class="btn btn-outline-primary btn-sm">Xem danh sách</a></article>
+</section>

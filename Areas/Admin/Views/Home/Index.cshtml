@@ -1,0 +1,9 @@
+@model Nhom4WebThuocThayThe.ViewModels.Reports.DashboardViewModel
+@{
+    ViewData["Title"] = "Tổng quan quản trị";
+}
+
+<section class="mb-4"><div class="page-kicker">Khu vực quản trị</div><h1 class="page-title">Tổng quan vận hành</h1><p class="page-description">Quản trị danh mục, kho, nguồn dữ liệu, phân quyền và khả năng khôi phục trong một giao diện riêng.</p></section>
+<section class="metric-grid mb-4" aria-label="Chỉ số quản trị">@foreach (var metric in Model.Metrics){<article class="metric-card"><span>@metric.Label</span><strong>@metric.Value</strong><span>@metric.Hint</span></article>}</section>
+<section class="workflow-grid mb-4"><article class="workflow-card"><h2 class="h5">Danh mục thuốc</h2><p>Quản lý thuốc, hoạt chất, hàm lượng và trạng thái sử dụng.</p><a asp-controller="DrugCatalog" asp-action="Index" class="btn btn-primary btn-sm">Mở danh mục</a></article><article class="workflow-card"><h2 class="h5">Kho và lô thuốc</h2><p>Theo dõi số lượng, ngày nhập, hạn sử dụng và các lô rủi ro.</p><a asp-controller="Inventory" asp-action="Index" class="btn btn-outline-primary btn-sm">Mở kho</a></article><article class="workflow-card"><h2 class="h5">Nguồn và sao lưu</h2><p>Kiểm tra nguồn ngoài, audit log và metadata sao lưu.</p><a asp-controller="Reports" asp-action="Index" class="btn btn-outline-primary btn-sm">Mở vận hành</a></article></section>
+<section id="roles" class="app-surface"><div class="section-heading"><div><h2 class="h4">Phân quyền theo khu vực</h2><p class="muted-copy mb-0">Mỗi vai trò sử dụng một không gian nghiệp vụ độc lập.</p></div></div><div class="role-summary-grid"><span>Quản trị viên · /Admin</span><span>Dược sĩ · /Pharmacist</span><span>Chuyên gia · /Expert</span><span>Người dùng · /User</span></div></section>

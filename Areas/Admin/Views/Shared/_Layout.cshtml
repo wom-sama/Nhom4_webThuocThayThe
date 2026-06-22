@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
+<head>
+    <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Khu vực quản trị</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /><link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="role-shell role-admin">
+    <a class="skip-link" href="#main-content">@T["Common.SkipNavigation"]</a>
+    <div class="role-layout">
+        <aside class="role-sidebar" aria-label="Điều hướng quản trị viên">
+            <a class="role-brand" asp-area="Admin" asp-controller="Home" asp-action="Index"><span>Rx</span><strong>Quản trị viên</strong></a>
+            <nav class="role-nav"><a asp-area="Admin" asp-controller="Home" asp-action="Index">Tổng quan hệ thống</a><a asp-area="Admin" asp-controller="DrugCatalog" asp-action="Index">Danh mục thuốc</a><a asp-area="Admin" asp-controller="Inventory" asp-action="Index">Kho và lô thuốc</a><a asp-area="Admin" asp-controller="Home" asp-action="Index" asp-fragment="roles">Người dùng và vai trò</a><a asp-area="Admin" asp-controller="ExternalData" asp-action="Index">Nguồn dữ liệu</a><a asp-area="Admin" asp-controller="Reports" asp-action="Index">Log và sao lưu</a></nav>
+            <div class="role-user-panel"><strong>@User.Identity?.Name</strong><span>Quản trị viên</span><form asp-area="" asp-controller="Auth" asp-action="Logout" method="post"><button type="submit">Đăng xuất</button></form></div>
+        </aside>
+        <div class="role-content"><header class="role-topbar"><span>Vận hành hệ thống</span><a asp-area="" asp-controller="Drugs" asp-action="Index">Tra cứu công khai</a></header><main id="main-content" class="role-main">@RenderBody()</main></div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script><script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script><script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

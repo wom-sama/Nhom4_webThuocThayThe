@@ -5,24 +5,24 @@ namespace Nhom4WebThuocThayThe.ViewModels.Inventory;
 
 public sealed class BatchFormViewModel
 {
-    [Required]
+    [Required(ErrorMessage = "Validation.Required")]
     public int DrugId { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Validation.Required")]
     public int WarehouseId { get; set; }
 
-    [Required]
-    [StringLength(40)]
+    [Required(ErrorMessage = "Validation.Required")]
+    [StringLength(40, ErrorMessage = "Validation.StringLength")]
     public string BatchNumber { get; set; } = string.Empty;
 
-    [Range(0, 1000000)]
+    [Range(0, 1000000, ErrorMessage = "Validation.Range")]
     public int Quantity { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Validation.Required")]
     [DataType(DataType.Date)]
     public DateOnly ImportedDate { get; set; } = DateOnly.FromDateTime(DateTime.Today);
 
-    [Required]
+    [Required(ErrorMessage = "Validation.Required")]
     [DataType(DataType.Date)]
     public DateOnly ExpiryDate { get; set; } = DateOnly.FromDateTime(DateTime.Today.AddYears(1));
 

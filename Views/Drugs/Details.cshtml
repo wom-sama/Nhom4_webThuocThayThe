@@ -6,30 +6,30 @@
 
 <section class="action-bar">
     <div>
-        <div class="page-kicker">Ho so thuoc</div>
+        <div class="page-kicker">Hồ sơ thuốc</div>
         <h1 class="page-title">@Model.Name</h1>
         <p class="page-description">@Model.Strength - @Model.DosageForm - @Model.Manufacturer</p>
     </div>
-    <a asp-action="Index" class="btn btn-outline-secondary">&lt; Quay lai</a>
+    <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
 </section>
 
 <section class="detail-grid">
     <div class="app-surface">
         <div class="section-heading">
-            <h2 class="h4">Thong tin duoc ly</h2>
+            <h2 class="h4">Thông tin dược lý</h2>
             @if (Model.PrescriptionRequired)
             {
-                <span class="status-badge is-warning">Can ke don</span>
+                <span class="status-badge is-warning">Cần kê đơn</span>
             }
             else
             {
-                <span class="status-badge is-info">Khong ke don</span>
+                <span class="status-badge is-info">Không kê đơn</span>
             }
         </div>
 
         <dl class="detail-list">
             <div class="detail-row">
-                <dt>Hoat chat</dt>
+                <dt>Hoạt chất</dt>
                 <dd>
                     <strong>@Model.ActiveIngredient</strong>
                     @if (!string.IsNullOrWhiteSpace(Model.ActiveIngredientWarning))
@@ -39,23 +39,23 @@
                 </dd>
             </div>
             <div class="detail-row">
-                <dt>Danh muc</dt>
+                <dt>Danh mục</dt>
                 <dd>@Model.Category</dd>
             </div>
             <div class="detail-row">
-                <dt>Gia ban</dt>
+                <dt>Giá bán</dt>
                 <dd>@Model.Price.ToString("N0") VND / @Model.Unit</dd>
             </div>
             <div class="detail-row">
-                <dt>Mo ta</dt>
+                <dt>Mô tả</dt>
                 <dd>@Model.Description</dd>
             </div>
             <div class="detail-row">
-                <dt>Cach dung</dt>
+                <dt>Cách dùng</dt>
                 <dd>@Model.Usage</dd>
             </div>
             <div class="detail-row">
-                <dt>Chong chi dinh</dt>
+                <dt>Chống chỉ định</dt>
                 <dd>@Model.Contraindications</dd>
             </div>
         </dl>
@@ -63,30 +63,30 @@
 
     <aside class="app-surface">
         <div class="section-heading">
-            <h2 class="h4">Ton kho</h2>
+            <h2 class="h4">Tồn kho</h2>
             @if (Model.StockQuantity <= 0)
             {
-                <span class="status-badge is-danger">Het hang</span>
+                <span class="status-badge is-danger">Hết hàng</span>
             }
             else
             {
-                <span class="status-badge is-success">@Model.StockQuantity kha dung</span>
+                <span class="status-badge is-success">@Model.StockQuantity khả dụng</span>
             }
         </div>
-        <p class="muted-copy">Trang thai nay tinh theo cac lo con so luong va chua qua han.</p>
+        <p class="muted-copy">Trạng thái này tính theo các lô còn số lượng và chưa quá hạn.</p>
 
         @if (!string.IsNullOrWhiteSpace(Model.SafetyProfileName))
         {
             <div class="safety-profile">
-                <strong>Ho so an toan: @Model.SafetyProfileName</strong>
+                <strong>Hồ sơ an toàn: @Model.SafetyProfileName</strong>
                 <span>@Model.SafetyProfileNote</span>
             </div>
         }
 
-        <h3 class="h5 mt-4">Thuoc thay the de xuat</h3>
+        <h3 class="h5 mt-4">Thuốc thay thế đề xuất</h3>
         @if (!Model.Alternatives.Any())
         {
-            <div class="empty-state">Chua co thuoc thay the phu hop trong du lieu hien tai.</div>
+            <div class="empty-state">Chưa có thuốc thay thế phù hợp trong dữ liệu hiện tại.</div>
         }
         else
         {
@@ -111,15 +111,15 @@
                             <span>@item.ActiveIngredient</span>
                             @if (item.StockQuantity <= 0)
                             {
-                                <span class="status-badge is-danger">Het hang</span>
+                                <span class="status-badge is-danger">Hết hàng</span>
                             }
                             else
                             {
-                                <span class="status-badge is-success">@item.StockQuantity kha dung</span>
+                                <span class="status-badge is-success">@item.StockQuantity khả dụng</span>
                             }
                             @if (item.PrescriptionRequired)
                             {
-                                <span class="status-badge is-warning">Can ke don</span>
+                                <span class="status-badge is-warning">Cần kê đơn</span>
                             }
                         </div>
                         <ul class="reason-list">
@@ -146,9 +146,10 @@
                                     class="btn btn-sm btn-outline-secondary js-ai-explanation"
                                     data-source-id="@Model.Id"
                                     data-candidate-id="@item.Id"
+                                    data-endpoint="@Url.Action("ExplainAlternative")"
                                     aria-controls="ai-explanation-@item.Id"
                                     aria-expanded="false">
-                                Giai thich co ho tro AI
+                                Giải thích có hỗ trợ AI
                             </button>
                             <div id="ai-explanation-@item.Id"
                                  class="ai-explanation-panel"
@@ -159,7 +160,7 @@
                 }
             </div>
             <p class="ai-safety-note">
-                AI chi giai thich ket qua rule-based khi ban yeu cau. Diem, canh bao an toan va quyet dinh cua duoc si van la nguon tham chieu chinh; he thong khong gui ho so ca nhan den AI.
+                AI chỉ giải thích kết quả từ bộ quy tắc khi bạn yêu cầu. Điểm, cảnh báo an toàn và quyết định của dược sĩ vẫn là nguồn tham chiếu chính; hệ thống không gửi hồ sơ cá nhân đến AI.
             </p>
         }
     </aside>

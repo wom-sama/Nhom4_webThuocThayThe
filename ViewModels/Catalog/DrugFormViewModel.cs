@@ -7,34 +7,37 @@ public sealed class DrugFormViewModel
 {
     public int? Id { get; set; }
 
-    [Required]
-    [StringLength(120)]
+    [Display(Name = "Drug.Name")]
+    [Required(ErrorMessage = "Validation.Required")]
+    [StringLength(120, ErrorMessage = "Validation.StringLength")]
     public string Name { get; set; } = string.Empty;
 
-    [Required]
-    [StringLength(50)]
+    [Display(Name = "Drug.Strength")]
+    [Required(ErrorMessage = "Validation.Required")]
+    [StringLength(50, ErrorMessage = "Validation.StringLength")]
     public string Strength { get; set; } = string.Empty;
 
-    [Range(0, 100000000)]
+    [Display(Name = "Drug.Price")]
+    [Range(0, 100000000, ErrorMessage = "Validation.Range")]
     public decimal Price { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Validation.Required")]
     public int CategoryId { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Validation.Required")]
     public int DosageFormId { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Validation.Required")]
     public int UnitId { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Validation.Required")]
     public int ManufacturerId { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Validation.Required")]
     public int ActiveIngredientId { get; set; }
 
-    [Required]
-    [StringLength(50)]
+    [Required(ErrorMessage = "Validation.Required")]
+    [StringLength(50, ErrorMessage = "Validation.StringLength")]
     public string ActiveIngredientStrength { get; set; } = string.Empty;
 
     public bool PrescriptionRequired { get; set; }

@@ -13,7 +13,7 @@ public sealed class InMemoryUserAccountService : IUserAccountService
         new()
         {
             Email = "admin@nhom4.local",
-            DisplayName = "Quan tri vien",
+            DisplayName = "Quản trị viên",
             Role = AppRoles.Admin,
             PasswordSalt = "6VKgNzqpI/qfApM5Q0g0ig==",
             PasswordHash = "el7XNeTksvc7i+AmuBloDjz1btG9tic4TttQgpl44uk="
@@ -21,7 +21,7 @@ public sealed class InMemoryUserAccountService : IUserAccountService
         new()
         {
             Email = "duocsi@nhom4.local",
-            DisplayName = "Duoc si",
+            DisplayName = "Dược sĩ",
             Role = AppRoles.Pharmacist,
             PasswordSalt = "GJEYIeqZduWKh7WgLd8t5A==",
             PasswordHash = "gxH8oKXpAV9lZSlpIPTI+U3C0mb/XyfBWp3GyNU5+DQ="
@@ -29,7 +29,7 @@ public sealed class InMemoryUserAccountService : IUserAccountService
         new()
         {
             Email = "chuyengia@nhom4.local",
-            DisplayName = "Chuyen gia y te",
+            DisplayName = "Chuyên gia y tế",
             Role = AppRoles.Expert,
             PasswordSalt = "70MZlMsHbFDBliFBLiciPw==",
             PasswordHash = "NBOdpiVV/OLQM1X4JAD85aPg0ybEF+dPwJ/EsonXqjg="
@@ -37,7 +37,7 @@ public sealed class InMemoryUserAccountService : IUserAccountService
         new()
         {
             Email = "user@nhom4.local",
-            DisplayName = "Nguoi dung",
+            DisplayName = "Người dùng",
             Role = AppRoles.User,
             PasswordSalt = "FlkBYh0kzwbSw9YYW2SVog==",
             PasswordHash = "LFQmL72UMIGthgrqk7IdaqV2pI/6OA+ncmTZUeXUZr4="

@@ -12,7 +12,7 @@ public sealed class RecommendationScoringTests
 
         Assert.Equal(100, result.Score);
         Assert.Empty(result.Alerts);
-        Assert.Contains(result.Reasons, reason => reason.Contains("Cung hoat chat"));
+        Assert.Contains(result.Reasons, reason => reason.Contains("Cùng hoạt chất"));
     }
 
     [Fact]
@@ -21,7 +21,7 @@ public sealed class RecommendationScoringTests
         var result = Evaluate(candidateIngredientId: 10, stock: 20, prescriptionRequired: true);
 
         Assert.Equal(90, result.Score);
-        Assert.Contains(result.Alerts, alert => alert.Title == "Can ke don" && alert.Severity == "Medium");
+        Assert.Contains(result.Alerts, alert => alert.Title == "Cần kê đơn" && alert.Severity == "Medium");
     }
 
     [Fact]
@@ -30,7 +30,7 @@ public sealed class RecommendationScoringTests
         var result = Evaluate(candidateIngredientId: 10, stock: 20, patientIsAllergic: true);
 
         Assert.Equal(75, result.Score);
-        Assert.Contains(result.Alerts, alert => alert.Title == "Di ung hoat chat" && alert.Severity == "High");
+        Assert.Contains(result.Alerts, alert => alert.Title == "Dị ứng hoạt chất" && alert.Severity == "High");
     }
 
     [Fact]
@@ -39,14 +39,14 @@ public sealed class RecommendationScoringTests
         var result = Evaluate(candidateIngredientId: 10, stock: 0);
 
         Assert.Equal(85, result.Score);
-        Assert.Contains(result.Alerts, alert => alert.Title == "Het hang" && alert.Severity == "High");
+        Assert.Contains(result.Alerts, alert => alert.Title == "Hết hàng" && alert.Severity == "High");
     }
 
     [Theory]
-    [InlineData(90, "Rat phu hop")]
-    [InlineData(70, "Phu hop")]
-    [InlineData(55, "Can xem xet")]
-    [InlineData(54, "Chi tham khao")]
+    [InlineData(90, "Rất phù hợp")]
+    [InlineData(70, "Phù hợp")]
+    [InlineData(55, "Cần xem xét")]
+    [InlineData(54, "Chỉ tham khảo")]
     public void ScoreLabels_RespectBoundaries(int score, string expected)
     {
         Assert.Equal(expected, RecommendationScoring.GetScoreLabel(score));
