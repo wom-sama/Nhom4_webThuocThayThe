@@ -92,7 +92,7 @@ internal sealed class WebAppRuntime : IAsyncDisposable
             StartInfo = new ProcessStartInfo
             {
                 FileName = "dotnet",
-                Arguments = $"run --no-build --configuration Release --project \"{projectPath}\" --urls {baseUri}",
+                Arguments = $"run --no-build --no-launch-profile --configuration Release --project \"{projectPath}\" --urls {baseUri}",
                 WorkingDirectory = repoRoot.FullName,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
@@ -101,6 +101,8 @@ internal sealed class WebAppRuntime : IAsyncDisposable
             },
             EnableRaisingEvents = true
         };
+
+        process.StartInfo.Environment["ASPNETCORE_ENVIRONMENT"] = "Testing";
 
         process.OutputDataReceived += (_, args) =>
         {

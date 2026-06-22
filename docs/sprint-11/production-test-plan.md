@@ -36,6 +36,9 @@ The runner reads the target URL and role credentials from environment variables.
 `docs/testing/demo-accounts.md` for internal testing only and are never written to reports, Jira, browser
 assets or command output.
 
+Production does not use those demo passwords. Its role credentials are rotated and supplied from an
+untracked operator file; the deployment script stores only PBKDF2 salts and hashes in runtime configuration.
+
 The optional direct database diagnostic is read-only, does not run migrations or seed data, and is used
 only to reproduce a production data-access failure with the production connection characteristics.
 

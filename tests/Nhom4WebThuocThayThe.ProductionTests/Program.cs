@@ -27,6 +27,17 @@ var credentials = new Dictionary<string, TestCredential>(StringComparer.OrdinalI
 var tests = new List<ProductionTestResult>();
 using var publicClient = CreateClient();
 
+if (Environment.GetEnvironmentVariable("N4WTT_AUTH_SMOKE_ONLY") == "1")
+{
+    EnsureCredentials();
+    using var adminClient = CreateClient();
+    await Login(adminClient, credentials["Admin"]);
+    using var adminResponse = await adminClient.GetAsync(new Uri(new Uri(baseUrl), "/Admin"));
+    Expect(adminResponse.StatusCode == HttpStatusCode.OK, $"Admin smoke status={(int)adminResponse.StatusCode}");
+    Console.WriteLine("Production-configured Admin authentication smoke passed.");
+    return 0;
+}
+
 await Run("PROD01", "Health", "HTTPS health reports database connected", async () =>
 {
     using var response = await publicClient.GetAsync(new Uri(new Uri(baseUrl), "/health"));

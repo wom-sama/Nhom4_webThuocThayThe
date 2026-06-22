@@ -101,7 +101,16 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("InventoryManager", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Pharmacist));
     options.AddPolicy("ExpertReviewer", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Expert, AppRoles.Pharmacist));
 });
-builder.Services.AddSingleton<IUserAccountService, InMemoryUserAccountService>();
+if (builder.Environment.IsProduction())
+{
+    var accounts = ConfiguredUserAccountLoader.Load(
+        builder.Configuration["Authentication:EncodedAccounts"]);
+    builder.Services.AddSingleton<IUserAccountService>(new InMemoryUserAccountService(accounts));
+}
+else
+{
+    builder.Services.AddSingleton<IUserAccountService>(new InMemoryUserAccountService());
+}
 builder.Services.AddDbContext<PharmacyDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("PharmacyDatabase")));
 builder.Services.AddScoped<IInventoryService, InventoryService>();

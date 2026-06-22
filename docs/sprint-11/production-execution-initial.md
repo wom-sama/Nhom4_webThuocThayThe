@@ -35,3 +35,19 @@ Result Sets, so the second query failed while the first data reader was open.
 
 The production site remains on the previous runtime until CI, cross-review and deployment finish. The
 final `13/13` result is recorded separately after release.
+
+## Security review addendum
+
+PR review found `N4WTT-251`: the old production runtime still accepted the documented development
+passwords. Release was blocked and the deployment contract was changed before rollout:
+
+- demo accounts now load only in `Development` or `Testing`;
+- `Production` fails closed when `Authentication__EncodedAccounts` is missing or invalid;
+- the deployment script reads rotated credentials from an untracked, ACL-restricted operator file;
+- only 16-byte salts and 32-byte PBKDF2-SHA256 hashes enter staging runtime configuration;
+- staging scan found zero production plaintext and zero demo-password occurrences;
+- production-mode local smoke accepted the rotated Admin credential and opened `/Admin`;
+- PSScriptAnalyzer returned no warning/error for the deployment script.
+
+Post-remediation pre-release suites: Unit `30/30`, Integration `4/4`, Acceptance `40/40`, Security
+`17/17`, Performance `10/10`.

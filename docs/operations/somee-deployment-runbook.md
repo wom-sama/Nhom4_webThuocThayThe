@@ -24,12 +24,32 @@ FTP_REMOTE_PATH=
 SQL_CONNECTION_STRING=
 ```
 
-The Gemini file contains only the authorization key or `GEMINI_API_KEY=<value>`. Set their paths in
-the current process:
+The Gemini file contains only the authorization key or `GEMINI_API_KEY=<value>`.
+
+The production account file is also outside the repository and contains four pairs. These are
+production credentials, not the documented demo passwords:
+
+```text
+ADMIN_EMAIL=
+ADMIN_DISPLAY_NAME=
+ADMIN_PASSWORD=
+PHARMACIST_EMAIL=
+PHARMACIST_DISPLAY_NAME=
+PHARMACIST_PASSWORD=
+EXPERT_EMAIL=
+EXPERT_DISPLAY_NAME=
+EXPERT_PASSWORD=
+USER_EMAIL=
+USER_DISPLAY_NAME=
+USER_PASSWORD=
+```
+
+Set all three paths in the current process:
 
 ```powershell
 $env:SOMEE_DEPLOY_FILE = "D:\path\someeDeploy.txt"
 $env:GEMINI_KEY_FILE = "D:\path\geminiKey.txt"
+$env:N4WTT_ACCOUNTS_FILE = "D:\path\n4wttProductionAccounts.txt"
 ```
 
 Do not pass secret values as command-line arguments. Never attach these files to Jira or GitHub.
@@ -49,11 +69,13 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\Publish-Somee.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\Deploy-Somee.ps1 `
   -ConfigurationFile $env:SOMEE_DEPLOY_FILE `
   -GeminiKeyFile $env:GEMINI_KEY_FILE `
+  -UserAccountsFile $env:N4WTT_ACCOUNTS_FILE `
   -DryRun
 
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\Deploy-Somee.ps1 `
   -ConfigurationFile $env:SOMEE_DEPLOY_FILE `
-  -GeminiKeyFile $env:GEMINI_KEY_FILE
+  -GeminiKeyFile $env:GEMINI_KEY_FILE `
+  -UserAccountsFile $env:N4WTT_ACCOUNTS_FILE
 ```
 
 Use `-DisableAi` when the host must run without Gemini. Use `-KeepStaging` only for local diagnosis;
@@ -66,6 +88,8 @@ contain the previous runtime secrets.
 - Publish and staging paths must remain under `artifacts/`.
 - The package must be at most 145 MB, preserving headroom on the 150 MB plan.
 - Known secret files are rejected from staging.
+- Production account plaintext never enters the publish folder; deployment writes only PBKDF2 salts
+  and hashes into the runtime configuration.
 - A SHA-256 manifest is written before upload.
 - The current remote root listing and existing `web.config`/`default.asp` are backed up locally.
 - FTP operations use passive binary mode, pacing, exponential retry and one sequential stream.
