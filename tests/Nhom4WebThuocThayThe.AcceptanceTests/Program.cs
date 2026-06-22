@@ -323,7 +323,7 @@ internal sealed class WebAppRuntime : IAsyncDisposable
             StartInfo = new ProcessStartInfo
             {
                 FileName = "dotnet",
-                Arguments = $"run --no-build --project \"{projectPath}\" --urls {baseUri}",
+                Arguments = $"run --no-build --configuration Release --project \"{projectPath}\" --urls {baseUri}",
                 WorkingDirectory = repoRoot.FullName,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
