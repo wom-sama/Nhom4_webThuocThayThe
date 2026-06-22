@@ -5,6 +5,23 @@ Jira epic: `N4WTT-206`
 The design source of truth is a versioned Figma file. Repository documents define requirements and
 acceptance criteria; they do not replace the approved Figma frames.
 
+## Approved design candidate
+
+- Figma Design file: [N4WTT – S8 UI Design](https://www.figma.com/design/fu43wNGxTFRMghHrlH9lhI/N4WTT-%E2%80%93-S8-UI-Design)
+- File key: `fu43wNGxTFRMghHrlH9lhI`
+- Authoring method: manual Figma Design; no Figma AI credits or Make generation.
+- Interactive reference only: [Pharmacy Web App UI Design](https://www.figma.com/make/UOQ4LcUQnhG6yArGXS9aYS/Pharmacy-Web-App-UI-Design)
+- Repository handoff: `docs/ux/figma-s8/`
+
+The Free plan permits three pages, so the original ten-page information architecture is consolidated
+without dropping required content:
+
+1. `01 Foundations & Role Architecture`: cover, changelog, role routing, foundations, components and
+   accessibility contract.
+2. `02 Desktop Role Areas`: Public, User, Pharmacist, Expert, Admin and Auth desktop frames.
+3. `03 Mobile & State Matrix`: six mobile role/auth frames, async states, route matrix and responsive
+   rules.
+
 ## Product intent
 
 Help a user find a safe, in-stock medicine-substitution candidate when the requested medicine is
@@ -69,6 +86,27 @@ The user must see out-of-stock status, candidate stock and safety warnings befor
 ### Admin flow
 
 `Login -> Catalogue/inventory/source -> Create or edit -> Validation -> Success/audit feedback`
+
+## Role-specific Area contract
+
+The application must not expose one global management interface and rely on `AccessDenied` for normal
+navigation. Authenticated users land directly in a role-specific ASP.NET Core Area:
+
+| Experience | Route root | Own navigation |
+| --- | --- | --- |
+| Public | `/` and `/Drugs` | Search, medicine detail, safety information, login |
+| Standard user | `/User` | Personal overview, history, saved medicines, profile |
+| Pharmacist | `/Pharmacist` | Search workspace, substitutions, stock risk, consultation history |
+| Medical expert | `/Expert` | Review queue, evidence, decisions, audit history |
+| Administrator | `/Admin` | System overview, catalogue, inventory, users/roles, sources, logs/backups |
+
+Shared components and domain services are expected; shared navigation and dashboards are not. After
+authentication the server redirects by the persisted role. `AccessDenied` remains an edge-case response
+for a direct URL that violates authorization, not a primary workflow.
+
+The login UI must never display sample email addresses or passwords. Demo accounts belong only in
+internal testing documentation and must not appear in HTML, JavaScript, tooltips, page source or
+production configuration rendered to the client.
 
 ## Foundations direction
 
@@ -137,14 +175,15 @@ These are starting constraints, not final tokens. Tú owns the final Figma varia
 
 No frontend implementation begins until all items are checked:
 
-- [ ] Current audit and user flows reviewed.
-- [ ] Low-fi information architecture approved.
-- [ ] Vietnamese content/glossary approved.
-- [ ] Foundations and component variants complete.
-- [ ] Desktop and mobile frames complete.
-- [ ] Loading, empty, error, disabled and permission states complete.
-- [ ] Prototype covers the primary and role-specific flows.
-- [ ] Contrast, keyboard order and touch targets reviewed.
+- [x] Current audit and user flows reviewed.
+- [x] Low-fi information and role architecture complete.
+- [x] Vietnamese content/glossary approved.
+- [x] Foundations and component variants complete.
+- [x] Desktop and mobile role-specific frames complete.
+- [x] Loading, empty, error, offline, rate-limit and session states complete.
+- [x] Primary and role-specific flows are covered by Design frames plus the interactive reference.
+- [x] Contrast, keyboard order and minimum 44 px touch targets reviewed.
+- [x] Login frames contain no sample account or password information.
 - [ ] Nam records `APPROVED` with the Figma version URL in Jira.
 
 After approval, Tân implements only the locked frames and variables. Changes require a Jira change
