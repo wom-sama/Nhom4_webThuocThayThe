@@ -106,4 +106,7 @@ The `S5 Container Validation` GitHub Actions workflow runs the suites against SQ
 
 Scrum continuity documents are under `docs/scrum/`.
 
+Figma-first UX requirements, the current visual audit and the Vietnamese localization guide are under
+`docs/ux/`. Frontend implementation is blocked until the approved Figma version is recorded in Jira.
+
 Database documentation and the idempotent schema script are under `database/`.
