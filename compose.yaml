@@ -27,6 +27,7 @@ services:
       AI__Gemini__Enabled: "${AI_GEMINI_ENABLED:-false}"
       AI__Gemini__ApiKey: "${GEMINI_API_KEY:-}"
       AI__Gemini__Model: "${AI_GEMINI_MODEL:-gemini-2.5-flash}"
+      Authentication__EncodedAccounts: "${AUTHENTICATION_ENCODED_ACCOUNTS:-W3siRW1haWwiOiJjaS1hdXRoLWRpc2FibGVkQGV4YW1wbGUudGVzdCIsIkRpc3BsYXlOYW1lIjoiQ0kgZGlzYWJsZWQgYWNjb3VudCIsIlJvbGUiOiJBZG1pbiIsIlBhc3N3b3JkU2FsdCI6IkFBQUFBQUFBQUFBQUFBQUFBQUFBQUE9PSIsIlBhc3N3b3JkSGFzaCI6IkFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUE9IiwiSXNMb2NrZWQiOnRydWV9XQ==}"
     ports:
       - "8080:8080"
     depends_on:

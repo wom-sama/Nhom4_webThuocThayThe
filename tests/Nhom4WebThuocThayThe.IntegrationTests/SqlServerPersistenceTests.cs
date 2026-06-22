@@ -63,6 +63,21 @@ public sealed class SqlServerPersistenceTests : IClassFixture<SqlServerFixture>
         Assert.NotEmpty(result.Results);
         Assert.Contains(result.Results, item => item.Name.Contains("Para", StringComparison.OrdinalIgnoreCase));
     }
+
+    [Fact]
+    public void ReportingDashboard_WorksWithoutMultipleActiveResultSets()
+    {
+        using var db = _fixture.CreateContext();
+        var inventory = new InventoryService(db);
+        var recommendation = new RecommendationService(db);
+        var audit = new AuditLogService(db);
+        var reporting = new ReportingService(db, inventory, recommendation, audit);
+
+        var dashboard = reporting.GetDashboard();
+
+        Assert.Equal(4, dashboard.Metrics.Count);
+        Assert.NotEmpty(dashboard.StockRisks);
+    }
 }
 
 public sealed class SqlServerFixture : IAsyncLifetime
@@ -78,7 +93,7 @@ public sealed class SqlServerFixture : IAsyncLifetime
         {
             InitialCatalog = _databaseName,
             TrustServerCertificate = true,
-            MultipleActiveResultSets = true
+            MultipleActiveResultSets = false
         }.ConnectionString;
         var options = new DbContextOptionsBuilder<PharmacyDbContext>()
             .UseSqlServer(connectionString)

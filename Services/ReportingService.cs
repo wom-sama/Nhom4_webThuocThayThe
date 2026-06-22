@@ -12,9 +12,12 @@ public sealed class ReportingService(
 {
     public DashboardViewModel GetDashboard()
     {
-        var stockRisks = dbContext.Drugs
+        // Materialize before issuing per-drug inventory/recommendation queries. Somee's
+        // SQL connection does not enable MARS, so nested queries cannot share an open reader.
+        var drugs = dbContext.Drugs
             .AsNoTracking()
-            .AsEnumerable()
+            .ToList();
+        var stockRisks = drugs
             .Select(drug =>
             {
                 var quantity = inventoryService.GetAvailableQuantity(drug.Id);
@@ -31,9 +34,7 @@ public sealed class ReportingService(
             .ToList();
 
         var stockoutCount = stockRisks.Count(item => item.Quantity == 0);
-        var highRiskRecommendations = dbContext.Drugs
-            .AsNoTracking()
-            .AsEnumerable()
+        var highRiskRecommendations = drugs
             .Where(drug => inventoryService.GetAvailableQuantity(drug.Id) == 0)
             .SelectMany(drug => recommendationService.GetRecommendations(drug.Id, null))
             .Count(item => item.HasHighRiskAlert);

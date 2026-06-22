@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1600" viewBox="0 0 2200 1600">
+  <rect width="2200" height="1600" fill="#EEF2F5"/>
+  <rect x="40" y="40" width="2120" height="112" rx="6" fill="#0B1F33"/>
+  <text x="82" y="86" fill="#9BE8D9" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">N4WTT · S11 · MOBILE V2</text>
+  <text x="82" y="126" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="700">Decision-first Detail, Progressive Reasons &amp; State Matrix</text>
+
+  <g font-family="Inter, Arial, sans-serif">
+    <!-- Phone 1 -->
+    <rect x="80" y="198" width="390" height="844" rx="28" fill="#FFFFFF" stroke="#AAB7C2" stroke-width="3"/>
+    <rect x="80" y="198" width="390" height="68" rx="26" fill="#0B1F33"/><text x="108" y="240" fill="#FFFFFF" font-size="18" font-weight="700">Rx · Tra cứu</text><text x="414" y="240" fill="#FFFFFF" font-size="20">☰</text>
+    <text x="108" y="312" fill="#0B8F7A" font-size="14" font-weight="700">TÌM THUỐC</text><text x="108" y="350" fill="#0B1F33" font-size="27" font-weight="700">Bạn cần tìm gì?</text>
+    <rect x="108" y="380" width="334" height="52" rx="5" fill="#FFFFFF" stroke="#9BAAB8"/><text x="132" y="412" fill="#6A7986" font-size="14">Tên thuốc hoặc hoạt chất</text>
+    <rect x="108" y="448" width="334" height="52" rx="5" fill="#FFFFFF" stroke="#9BAAB8"/><text x="132" y="480" fill="#263746" font-size="14">Tất cả nhóm thuốc⌄</text>
+    <rect x="108" y="516" width="334" height="52" rx="5" fill="#0B8F7A"/><text x="220" y="549" fill="#FFFFFF" font-size="15" font-weight="700">⌕ Tra cứu</text>
+    <text x="108" y="626" fill="#0B1F33" font-size="18" font-weight="700">Tìm gần đây</text>
+    <rect x="108" y="650" width="334" height="78" rx="6" fill="#F8FAFC" stroke="#DCE3EA"/><text x="132" y="681" fill="#263746" font-size="15" font-weight="700">Paracetamol 500mg</text><text x="132" y="707" fill="#405364" font-size="13">1 kết quả hết hàng · có đề xuất</text>
+    <rect x="108" y="748" width="334" height="118" rx="6" fill="#FFF8E8" stroke="#EBC773"/><text x="132" y="782" fill="#A35C00" font-size="14" font-weight="700">Lưu ý an toàn</text><text x="132" y="812" fill="#263746" font-size="13">Không tự ý đổi thuốc kê đơn.</text><text x="132" y="840" fill="#263746" font-size="13">Hãy xác nhận với chuyên môn.</text>
+    <rect x="108" y="918" width="334" height="52" rx="5" fill="#2477C9"/><text x="190" y="951" fill="#FFFFFF" font-size="14" font-weight="700">Mở thuốc đã lưu</text>
+    <text x="146" y="1085" fill="#405364" font-size="15" font-weight="700">01 · Public search</text>
+
+    <!-- Phone 2 -->
+    <rect x="540" y="198" width="390" height="844" rx="28" fill="#FFFFFF" stroke="#AAB7C2" stroke-width="3"/>
+    <rect x="540" y="198" width="390" height="68" rx="26" fill="#0B1F33"/><text x="568" y="240" fill="#FFFFFF" font-size="18" font-weight="700">‹ Chi tiết thuốc</text>
+    <text x="568" y="312" fill="#0B1F33" font-size="25" font-weight="700">Paracetamol 500mg</text><text x="568" y="342" fill="#405364" font-size="14">Viên nén · Thuốc không kê đơn</text>
+    <rect x="568" y="374" width="334" height="142" rx="6" fill="#FFF4F4" stroke="#ECA7A7"/>
+    <text x="592" y="408" fill="#B42318" font-size="14" font-weight="700">HẾT HÀNG · TỒN 0</text><text x="592" y="440" fill="#0B1F33" font-size="18" font-weight="700">Có 3 phương án thay thế</text><text x="592" y="468" fill="#263746" font-size="13">Ưu tiên cùng hoạt chất và còn hàng.</text><rect x="592" y="482" width="286" height="38" rx="5" fill="#C33B3B"/><text x="656" y="507" fill="#FFFFFF" font-size="13" font-weight="700">Xem đề xuất ngay</text>
+    <text x="568" y="568" fill="#0B1F33" font-size="18" font-weight="700">Phương án ưu tiên</text>
+    <rect x="568" y="594" width="334" height="208" rx="6" fill="#FFFFFF" stroke="#AACDF7"/>
+    <text x="592" y="628" fill="#0B1F33" font-size="17" font-weight="700">Paracetamol DHG</text><rect x="592" y="646" width="150" height="28" rx="14" fill="#EAF7F0"/><text x="616" y="665" fill="#1D7042" font-size="12" font-weight="700">92 · Rất phù hợp</text><text x="592" y="704" fill="#1D7042" font-size="13">✓ Còn 120 · ✓ An toàn</text><text x="592" y="734" fill="#263746" font-size="13">Cùng hoạt chất và hàm lượng</text><rect x="592" y="752" width="286" height="38" rx="5" fill="#0B8F7A"/><text x="656" y="777" fill="#FFFFFF" font-size="13" font-weight="700">Mở so sánh</text>
+    <rect x="568" y="826" width="334" height="58" rx="6" fill="#F8FAFC" stroke="#DCE3EA"/><text x="592" y="861" fill="#263746" font-size="14" font-weight="700">Thông tin dược lý⌄</text>
+    <rect x="568" y="900" width="334" height="74" rx="6" fill="#FFF8E8" stroke="#EBC773"/><text x="592" y="930" fill="#A35C00" font-size="13" font-weight="700">Cần xác nhận chuyên môn</text><text x="592" y="954" fill="#263746" font-size="12">khi đổi thuốc hoặc liều dùng.</text>
+    <text x="610" y="1085" fill="#405364" font-size="15" font-weight="700">02 · Decision first</text>
+
+    <!-- Phone 3 -->
+    <rect x="1000" y="198" width="390" height="844" rx="28" fill="#FFFFFF" stroke="#AAB7C2" stroke-width="3"/>
+    <rect x="1000" y="198" width="390" height="68" rx="26" fill="#0B8F7A"/><text x="1028" y="240" fill="#FFFFFF" font-size="18" font-weight="700">‹ So sánh đề xuất</text>
+    <text x="1028" y="312" fill="#0B1F33" font-size="22" font-weight="700">Paracetamol DHG 500mg</text>
+    <rect x="1028" y="344" width="334" height="96" rx="6" fill="#EAF7F0" stroke="#8CC9A6"/><text x="1052" y="378" fill="#1D7042" font-size="15" font-weight="700">Còn hàng · 120</text><text x="1052" y="408" fill="#263746" font-size="13">Điểm 92 · Không cảnh báo hồ sơ</text>
+    <text x="1028" y="490" fill="#0B1F33" font-size="18" font-weight="700">Tín hiệu quyết định</text>
+    <rect x="1028" y="516" width="334" height="52" rx="6" fill="#F8FAFC" stroke="#DCE3EA"/><text x="1052" y="548" fill="#263746" font-size="14">✓ Cùng hoạt chất</text>
+    <rect x="1028" y="580" width="334" height="52" rx="6" fill="#F8FAFC" stroke="#DCE3EA"/><text x="1052" y="612" fill="#263746" font-size="14">✓ Cùng hàm lượng 500mg</text>
+    <rect x="1028" y="644" width="334" height="52" rx="6" fill="#F8FAFC" stroke="#DCE3EA"/><text x="1052" y="676" fill="#263746" font-size="14">✓ Dạng bào chế phù hợp</text>
+    <rect x="1028" y="718" width="334" height="58" rx="6" fill="#FFFFFF" stroke="#9BAAB8"/><text x="1052" y="753" fill="#263746" font-size="14" font-weight="700">Xem thêm 2 lý do⌄</text>
+    <rect x="1028" y="794" width="334" height="58" rx="6" fill="#F1EEFF" stroke="#BDB2F3"/><text x="1052" y="829" fill="#5D42B3" font-size="14" font-weight="700">✦ Giải thích AI (tùy chọn)</text>
+    <rect x="1028" y="870" width="334" height="104" rx="6" fill="#FFF4F4" stroke="#ECA7A7"/><text x="1052" y="904" fill="#B42318" font-size="14" font-weight="700">Cảnh báo</text><text x="1052" y="934" fill="#263746" font-size="13">AI không phải chỉ định y khoa.</text><text x="1052" y="958" fill="#263746" font-size="13">Cần xác nhận chuyên môn.</text>
+    <text x="1054" y="1085" fill="#405364" font-size="15" font-weight="700">03 · Progressive reasons</text>
+
+    <!-- Phone 4 states -->
+    <rect x="1460" y="198" width="660" height="844" rx="28" fill="#FFFFFF" stroke="#AAB7C2" stroke-width="3"/>
+    <rect x="1460" y="198" width="660" height="68" rx="26" fill="#0B1F33"/><text x="1488" y="240" fill="#FFFFFF" font-size="18" font-weight="700">State component family</text>
+    <text x="1492" y="310" fill="#0B1F33" font-size="20" font-weight="700">Cùng cấu trúc · khác thông điệp và hành động</text>
+    <rect x="1492" y="344" width="286" height="132" rx="6" fill="#F4F8FF" stroke="#8DBAF1"/><text x="1516" y="378" fill="#1769AA" font-size="14" font-weight="700">ĐANG TẢI</text><rect x="1516" y="398" width="200" height="12" rx="4" fill="#D8E5F5"/><rect x="1516" y="420" width="150" height="12" rx="4" fill="#D8E5F5"/><text x="1516" y="456" fill="#405364" font-size="12">Giữ kích thước ổn định</text>
+    <rect x="1802" y="344" width="286" height="132" rx="6" fill="#F8FAFC" stroke="#C8D2DC"/><text x="1826" y="378" fill="#405364" font-size="14" font-weight="700">KHÔNG CÓ DỮ LIỆU</text><text x="1826" y="408" fill="#263746" font-size="12">Chưa có thuốc đã lưu.</text><text x="1826" y="434" fill="#1769AA" font-size="12" font-weight="700">Tra cứu thuốc →</text>
+    <rect x="1492" y="500" width="286" height="132" rx="6" fill="#FFF4F4" stroke="#ECA7A7"/><text x="1516" y="534" fill="#B42318" font-size="14" font-weight="700">LỖI DỊCH VỤ</text><text x="1516" y="564" fill="#263746" font-size="12">Mã: REQ-20260622</text><rect x="1516" y="584" width="112" height="30" rx="4" fill="#C33B3B"/><text x="1540" y="604" fill="#FFFFFF" font-size="11">Thử lại</text>
+    <rect x="1802" y="500" width="286" height="132" rx="6" fill="#FFF8E8" stroke="#EBC773"/><text x="1826" y="534" fill="#A35C00" font-size="14" font-weight="700">QUÁ NHIỀU YÊU CẦU</text><text x="1826" y="564" fill="#263746" font-size="12">Thử lại sau 42 giây.</text><text x="1826" y="596" fill="#405364" font-size="12">Không tự gửi liên tục.</text>
+    <rect x="1492" y="656" width="286" height="132" rx="6" fill="#F1EEFF" stroke="#BDB2F3"/><text x="1516" y="690" fill="#5D42B3" font-size="14" font-weight="700">PHIÊN ĐÃ HẾT HẠN</text><text x="1516" y="720" fill="#263746" font-size="12">Đăng nhập để tiếp tục.</text><rect x="1516" y="742" width="138" height="30" rx="4" fill="#5D42B3"/><text x="1536" y="762" fill="#FFFFFF" font-size="11">Đăng nhập lại</text>
+    <rect x="1802" y="656" width="286" height="132" rx="6" fill="#FFF8E8" stroke="#EBC773"/><text x="1826" y="690" fill="#A35C00" font-size="14" font-weight="700">AI CHƯA SẴN SÀNG</text><text x="1826" y="720" fill="#263746" font-size="12">Điểm và lý do vẫn đầy đủ.</text><text x="1826" y="752" fill="#405364" font-size="12">Tiếp tục không cần AI.</text>
+    <rect x="1492" y="812" width="596" height="124" rx="6" fill="#EAF7F0" stroke="#8CC9A6"/><text x="1516" y="848" fill="#1D7042" font-size="14" font-weight="700">THÀNH CÔNG · THAY ĐỔI ĐÃ ĐƯỢC GHI NHẬN</text><text x="1516" y="880" fill="#263746" font-size="12">Toast không che điều hướng; có audit khi là tác vụ nghiệp vụ.</text><text x="1516" y="910" fill="#1D7042" font-size="12" font-weight="700">Xem lịch sử →</text>
+    <text x="1656" y="1085" fill="#405364" font-size="15" font-weight="700">04 · Loading / empty / error / auth / AI</text>
+
+    <rect x="80" y="1140" width="2040" height="370" rx="6" fill="#FFFFFF" stroke="#DCE3EA"/>
+    <text x="112" y="1184" fill="#0B1F33" font-size="24" font-weight="700">Mobile acceptance annotations</text>
+    <rect x="112" y="1222" width="460" height="210" rx="6" fill="#EAF3FF" stroke="#AACDF7"/><text x="140" y="1260" fill="#1769AA" font-size="16" font-weight="700">VIEWPORT &amp; TOUCH</text><text x="140" y="1296" fill="#263746" font-size="14">320 / 390 px không overflow</text><text x="140" y="1326" fill="#263746" font-size="14">Primary action ≥ 44 × 44</text><text x="140" y="1356" fill="#263746" font-size="14">Không font-size theo viewport</text><text x="140" y="1386" fill="#263746" font-size="14">Focus visible và label đầy đủ</text>
+    <rect x="592" y="1222" width="460" height="210" rx="6" fill="#EAF7F0" stroke="#8CC9A6"/><text x="620" y="1260" fill="#1D7042" font-size="16" font-weight="700">DECISION</text><text x="620" y="1296" fill="#263746" font-size="14">Tồn kho trong viewport đầu</text><text x="620" y="1326" fill="#263746" font-size="14">Top signal trước chi tiết</text><text x="620" y="1356" fill="#263746" font-size="14">Cảnh báo không bị collapse</text><text x="620" y="1386" fill="#263746" font-size="14">AI là tùy chọn</text>
+    <rect x="1072" y="1222" width="460" height="210" rx="6" fill="#FFF8E8" stroke="#EBC773"/><text x="1100" y="1260" fill="#A35C00" font-size="16" font-weight="700">CONTENT</text><text x="1100" y="1296" fill="#263746" font-size="14">Tiếng Việt có dấu</text><text x="1100" y="1326" fill="#263746" font-size="14">Không lộ tài khoản mẫu</text><text x="1100" y="1356" fill="#263746" font-size="14">Không claim thay bác sĩ</text><text x="1100" y="1386" fill="#263746" font-size="14">Thông báo có bước tiếp theo</text>
+    <rect x="1552" y="1222" width="536" height="210" rx="6" fill="#F1EEFF" stroke="#BDB2F3"/><text x="1580" y="1260" fill="#5D42B3" font-size="16" font-weight="700">ROLE &amp; SECURITY</text><text x="1580" y="1296" fill="#263746" font-size="14">Shell riêng cho từng Area</text><text x="1580" y="1326" fill="#263746" font-size="14">Không render link trái quyền</text><text x="1580" y="1356" fill="#263746" font-size="14">Session timeout có returnUrl an toàn</text><text x="1580" y="1386" fill="#263746" font-size="14">Server vẫn là nguồn kiểm soát quyền</text>
+  </g>
+</svg>

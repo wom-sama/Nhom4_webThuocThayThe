@@ -2,21 +2,62 @@
 
 @{
     ViewData["Title"] = Model.Name;
+    var hasAlternatives = Model.Alternatives.Any();
 }
 
 <section class="action-bar">
     <div>
         <div class="page-kicker">Hồ sơ thuốc</div>
         <h1 class="page-title">@Model.Name</h1>
-        <p class="page-description">@Model.Strength - @Model.DosageForm - @Model.Manufacturer</p>
+        <p class="page-description">@Model.Strength · @Model.DosageForm · @Model.Manufacturer</p>
     </div>
-    <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
+    <a asp-action="Index" class="btn btn-outline-secondary icon-button-label">
+        <i data-lucide="arrow-left" class="app-icon" aria-hidden="true"></i><span>Quay lại</span>
+    </a>
+</section>
+
+<section class="decision-summary @(Model.StockQuantity <= 0 ? "is-stockout" : "is-available")" aria-labelledby="availability-heading">
+    <div class="decision-summary-icon" aria-hidden="true">
+        <i data-lucide="@(Model.StockQuantity <= 0 ? "package-x" : "package-check")"></i>
+    </div>
+    <div>
+        <div class="decision-label">Tình trạng hiện tại</div>
+        <h2 id="availability-heading" class="h4 mb-1">
+            @if (Model.StockQuantity <= 0)
+            {
+                <text>Hết hàng · Có @Model.Alternatives.Count phương án thay thế</text>
+            }
+            else
+            {
+                <text>Còn @Model.StockQuantity đơn vị khả dụng</text>
+            }
+        </h2>
+        <p class="mb-0">
+            @if (Model.StockQuantity <= 0)
+            {
+                <text>Ưu tiên phương án còn hàng, cùng hoạt chất và không có cảnh báo an toàn nghiêm trọng.</text>
+            }
+            else
+            {
+                <text>Số lượng được tính từ các lô còn hạn sử dụng và còn tồn kho.</text>
+            }
+        </p>
+    </div>
+    @if (Model.StockQuantity <= 0 && hasAlternatives)
+    {
+        <a href="#recommendations" class="btn btn-primary icon-button-label">
+            <i data-lucide="git-compare-arrows" class="app-icon" aria-hidden="true"></i><span>Xem đề xuất</span>
+        </a>
+    }
 </section>
 
 <section class="detail-grid">
-    <div class="app-surface">
+    <div class="app-surface detail-information">
         <div class="section-heading">
-            <h2 class="h4">Thông tin dược lý</h2>
+            <div>
+                <h2 class="h4">Thông tin thuốc</h2>
+                <p class="muted-copy mb-0">Dữ liệu dược lý và hướng dẫn tham khảo.</p>
+            </div>
             @if (Model.PrescriptionRequired)
             {
                 <span class="status-badge is-warning">Cần kê đơn</span>
@@ -27,141 +68,102 @@
             }
         </div>
 
-        <dl class="detail-list">
-            <div class="detail-row">
-                <dt>Hoạt chất</dt>
-                <dd>
-                    <strong>@Model.ActiveIngredient</strong>
-                    @if (!string.IsNullOrWhiteSpace(Model.ActiveIngredientWarning))
-                    {
-                        <div class="muted-copy">@Model.ActiveIngredientWarning</div>
-                    }
-                </dd>
-            </div>
-            <div class="detail-row">
-                <dt>Danh mục</dt>
-                <dd>@Model.Category</dd>
-            </div>
-            <div class="detail-row">
-                <dt>Giá bán</dt>
-                <dd>@Model.Price.ToString("N0") VND / @Model.Unit</dd>
-            </div>
-            <div class="detail-row">
-                <dt>Mô tả</dt>
-                <dd>@Model.Description</dd>
-            </div>
-            <div class="detail-row">
-                <dt>Cách dùng</dt>
-                <dd>@Model.Usage</dd>
-            </div>
-            <div class="detail-row">
-                <dt>Chống chỉ định</dt>
-                <dd>@Model.Contraindications</dd>
-            </div>
+        <dl class="detail-list detail-list-primary">
+            <div class="detail-row"><dt>Hoạt chất</dt><dd><strong>@Model.ActiveIngredient</strong>@if (!string.IsNullOrWhiteSpace(Model.ActiveIngredientWarning)){<div class="muted-copy">@Model.ActiveIngredientWarning</div>}</dd></div>
+            <div class="detail-row"><dt>Nhóm thuốc</dt><dd>@Model.Category</dd></div>
+            <div class="detail-row"><dt>Giá tham khảo</dt><dd>@Model.Price.ToString("N0") VND / @Model.Unit</dd></div>
         </dl>
+
+        <details class="pharmacology-disclosure" open>
+            <summary><span><i data-lucide="book-open" class="app-icon" aria-hidden="true"></i>Thông tin dược lý chi tiết</span><i data-lucide="chevron-down" class="app-icon disclosure-chevron" aria-hidden="true"></i></summary>
+            <dl class="detail-list mt-3">
+                <div class="detail-row"><dt>Mô tả</dt><dd>@Model.Description</dd></div>
+                <div class="detail-row"><dt>Cách dùng</dt><dd>@Model.Usage</dd></div>
+                <div class="detail-row"><dt>Chống chỉ định</dt><dd>@Model.Contraindications</dd></div>
+            </dl>
+        </details>
     </div>
 
-    <aside class="app-surface">
+    <aside id="recommendations" class="app-surface recommendation-panel" aria-labelledby="recommendations-heading">
         <div class="section-heading">
-            <h2 class="h4">Tồn kho</h2>
-            @if (Model.StockQuantity <= 0)
-            {
-                <span class="status-badge is-danger">Hết hàng</span>
-            }
-            else
-            {
-                <span class="status-badge is-success">@Model.StockQuantity khả dụng</span>
-            }
+            <div>
+                <h2 id="recommendations-heading" class="h4">Thuốc thay thế đề xuất</h2>
+                <p class="muted-copy mb-0">Xếp hạng theo quy tắc, tồn kho và cảnh báo.</p>
+            </div>
+            <span class="status-badge @(Model.StockQuantity <= 0 ? "is-danger" : "is-success")">
+                @(Model.StockQuantity <= 0 ? "Hết hàng" : $"Còn {Model.StockQuantity}")
+            </span>
         </div>
-        <p class="muted-copy">Trạng thái này tính theo các lô còn số lượng và chưa quá hạn.</p>
 
         @if (!string.IsNullOrWhiteSpace(Model.SafetyProfileName))
         {
             <div class="safety-profile">
-                <strong>Hồ sơ an toàn: @Model.SafetyProfileName</strong>
+                <strong><i data-lucide="shield-check" class="app-icon" aria-hidden="true"></i>Hồ sơ an toàn: @Model.SafetyProfileName</strong>
                 <span>@Model.SafetyProfileNote</span>
             </div>
         }
 
-        <h3 class="h5 mt-4">Thuốc thay thế đề xuất</h3>
-        @if (!Model.Alternatives.Any())
+        @if (!hasAlternatives)
         {
-            <div class="empty-state">Chưa có thuốc thay thế phù hợp trong dữ liệu hiện tại.</div>
+            <div class="empty-state"><i data-lucide="package-search" class="app-icon" aria-hidden="true"></i><span>Chưa có thuốc thay thế phù hợp trong dữ liệu hiện tại.</span></div>
         }
         else
         {
-            <form id="ai-explanation-token" class="visually-hidden" aria-hidden="true">
-                @Html.AntiForgeryToken()
-            </form>
+            <form id="ai-explanation-token" class="visually-hidden" aria-hidden="true">@Html.AntiForgeryToken()</form>
             <div class="stack-list">
                 @foreach (var item in Model.Alternatives)
                 {
+                    var primaryReasons = item.Reasons.Take(3).ToArray();
+                    var additionalReasons = item.Reasons.Skip(3).ToArray();
                     <article class="recommendation-card">
                         <div class="recommendation-topline">
                             <div>
                                 <a asp-action="Details" asp-route-id="@item.Id"><strong>@item.Name</strong></a>
-                                <span>@item.Strength - @item.DosageForm - @item.Manufacturer</span>
+                                <span>@item.Strength · @item.DosageForm · @item.Manufacturer</span>
                             </div>
-                            <div class="score-chip">
-                                <strong>@item.Score</strong>
-                                <span>@item.ScoreLabel</span>
-                            </div>
+                            <div class="score-chip"><strong>@item.Score</strong><span>@item.ScoreLabel</span></div>
                         </div>
-                        <div class="drug-meta">
-                            <span>@item.ActiveIngredient</span>
-                            @if (item.StockQuantity <= 0)
-                            {
-                                <span class="status-badge is-danger">Hết hàng</span>
-                            }
-                            else
-                            {
-                                <span class="status-badge is-success">@item.StockQuantity khả dụng</span>
-                            }
-                            @if (item.PrescriptionRequired)
-                            {
-                                <span class="status-badge is-warning">Cần kê đơn</span>
-                            }
+
+                        <div class="recommendation-signals" aria-label="Tín hiệu quyết định">
+                            <span class="decision-signal @(item.StockQuantity > 0 ? "is-positive" : "is-negative")"><i data-lucide="@(item.StockQuantity > 0 ? "package-check" : "package-x")" class="app-icon" aria-hidden="true"></i>@(item.StockQuantity > 0 ? $"Còn {item.StockQuantity}" : "Hết hàng")</span>
+                            <span class="decision-signal @(item.HasHighRiskAlert ? "is-negative" : "is-positive")"><i data-lucide="@(item.HasHighRiskAlert ? "shield-alert" : "shield-check")" class="app-icon" aria-hidden="true"></i>@(item.HasHighRiskAlert ? "Có cảnh báo cao" : "Không cảnh báo cao")</span>
+                            @if (item.PrescriptionRequired){<span class="decision-signal is-warning"><i data-lucide="file-warning" class="app-icon" aria-hidden="true"></i>Cần kê đơn</span>}
                         </div>
-                        <ul class="reason-list">
-                            @foreach (var reason in item.Reasons)
-                            {
-                                <li>@reason</li>
-                            }
+
+                        <ul class="reason-list reason-list-primary">
+                            @foreach (var reason in primaryReasons){<li>@reason</li>}
                         </ul>
+                        @if (additionalReasons.Any())
+                        {
+                            <details class="reason-disclosure">
+                                <summary>Xem thêm @additionalReasons.Length lý do <i data-lucide="chevron-down" class="app-icon disclosure-chevron" aria-hidden="true"></i></summary>
+                                <ul class="reason-list mt-2">@foreach (var reason in additionalReasons){<li>@reason</li>}</ul>
+                            </details>
+                        }
+
                         @if (item.Alerts.Any())
                         {
                             <div class="alert-stack">
                                 @foreach (var alert in item.Alerts)
                                 {
                                     var alertClass = alert.Severity == "High" ? "is-danger" : alert.Severity == "Medium" ? "is-warning" : "is-info";
-                                    <div class="safety-alert @alertClass">
-                                        <strong>@alert.Title</strong>
-                                        <span>@alert.Message</span>
-                                    </div>
+                                    <div class="safety-alert @alertClass"><strong>@alert.Title</strong><span>@alert.Message</span></div>
                                 }
                             </div>
                         }
+
                         <div class="ai-explanation-control">
-                            <button type="button"
-                                    class="btn btn-sm btn-outline-secondary js-ai-explanation"
-                                    data-source-id="@Model.Id"
-                                    data-candidate-id="@item.Id"
-                                    data-endpoint="@Url.Action("ExplainAlternative")"
-                                    aria-controls="ai-explanation-@item.Id"
-                                    aria-expanded="false">
-                                Giải thích có hỗ trợ AI
+                            <button type="button" class="btn btn-sm btn-outline-secondary js-ai-explanation icon-button-label"
+                                    data-source-id="@Model.Id" data-candidate-id="@item.Id" data-endpoint="@Url.Action("ExplainAlternative")"
+                                    aria-controls="ai-explanation-@item.Id" aria-expanded="false">
+                                <i data-lucide="sparkles" class="app-icon" aria-hidden="true"></i><span>Giải thích bằng AI (tùy chọn)</span>
                             </button>
-                            <div id="ai-explanation-@item.Id"
-                                 class="ai-explanation-panel"
-                                 aria-live="polite"
-                                 hidden></div>
+                            <div id="ai-explanation-@item.Id" class="ai-explanation-panel" aria-live="polite" hidden></div>
                         </div>
                     </article>
                 }
             </div>
-            <p class="ai-safety-note">
-                AI chỉ giải thích kết quả từ bộ quy tắc khi bạn yêu cầu. Điểm, cảnh báo an toàn và quyết định của dược sĩ vẫn là nguồn tham chiếu chính; hệ thống không gửi hồ sơ cá nhân đến AI.
-            </p>
+            <p class="ai-safety-note"><i data-lucide="info" class="app-icon" aria-hidden="true"></i>AI chỉ diễn giải kết quả khi được yêu cầu; điểm, cảnh báo và quyết định chuyên môn vẫn là nguồn chính.</p>
         }
     </aside>
 </section>
