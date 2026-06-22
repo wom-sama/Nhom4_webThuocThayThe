@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1300" viewBox="0 0 2200 1300">
+  <rect width="2200" height="1300" fill="#F4F7FA"/>
+  <rect x="40" y="40" width="2120" height="1220" rx="6" fill="#FFFFFF" stroke="#DCE3EA"/>
+  <rect x="40" y="40" width="2120" height="108" rx="6" fill="#0B1F33"/>
+  <text x="84" y="86" fill="#9BE8D9" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">N4WTT · S11 · FIGMA MANUAL V2</text>
+  <text x="84" y="124" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="700">V2 Foundations, State Contract &amp; Role Boundaries</text>
+  <text x="1780" y="105" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="16">N4WTT-249 · 22/06/2026</text>
+
+  <text x="84" y="205" fill="#0B1F33" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="700">01 · Nguyên tắc trải nghiệm</text>
+  <g font-family="Inter, Arial, sans-serif">
+    <rect x="84" y="236" width="380" height="126" rx="6" fill="#EAF3FF" stroke="#AACDF7"/>
+    <text x="110" y="274" fill="#1769AA" font-size="17" font-weight="700">DECISION FIRST</text>
+    <text x="110" y="305" fill="#263746" font-size="16">Tồn kho, an toàn và đề xuất</text>
+    <text x="110" y="331" fill="#263746" font-size="16">xuất hiện trước nội dung dài.</text>
+    <rect x="484" y="236" width="380" height="126" rx="6" fill="#E6F7F3" stroke="#6FD6C2"/>
+    <text x="510" y="274" fill="#087F6B" font-size="17" font-weight="700">TASK ORIENTED</text>
+    <text x="510" y="305" fill="#263746" font-size="16">Mỗi vai trò có quick action</text>
+    <text x="510" y="331" fill="#263746" font-size="16">và điều hướng riêng.</text>
+    <rect x="884" y="236" width="380" height="126" rx="6" fill="#FFF7E6" stroke="#F1C36A"/>
+    <text x="910" y="274" fill="#A35C00" font-size="17" font-weight="700">PROGRESSIVE</text>
+    <text x="910" y="305" fill="#263746" font-size="16">Giữ cảnh báo hiển thị, thu gọn</text>
+    <text x="910" y="331" fill="#263746" font-size="16">lý do chi tiết khi cần.</text>
+    <rect x="1284" y="236" width="380" height="126" rx="6" fill="#FDEDED" stroke="#ECA7A7"/>
+    <text x="1310" y="274" fill="#B42318" font-size="17" font-weight="700">SAFE BY DEFAULT</text>
+    <text x="1310" y="305" fill="#263746" font-size="16">AI không thay thế điểm, cảnh báo</text>
+    <text x="1310" y="331" fill="#263746" font-size="16">hay xác nhận chuyên môn.</text>
+    <rect x="1684" y="236" width="392" height="126" rx="6" fill="#F1EEFF" stroke="#BDB2F3"/>
+    <text x="1710" y="274" fill="#5D42B3" font-size="17" font-weight="700">ROLE SPECIFIC</text>
+    <text x="1710" y="305" fill="#263746" font-size="16">Public, User, Pharmacist, Expert</text>
+    <text x="1710" y="331" fill="#263746" font-size="16">và Admin không dùng chung shell.</text>
+  </g>
+
+  <text x="84" y="425" fill="#0B1F33" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="700">02 · Token và icon contract</text>
+  <g font-family="Inter, Arial, sans-serif">
+    <rect x="84" y="456" width="190" height="82" rx="6" fill="#0B1F33"/><text x="104" y="488" fill="#FFFFFF" font-size="15" font-weight="700">NAVY</text><text x="104" y="516" fill="#FFFFFF" font-size="14">#0B1F33</text>
+    <rect x="288" y="456" width="190" height="82" rx="6" fill="#0B8F7A"/><text x="308" y="488" fill="#FFFFFF" font-size="15" font-weight="700">TEAL</text><text x="308" y="516" fill="#FFFFFF" font-size="14">#0B8F7A</text>
+    <rect x="492" y="456" width="190" height="82" rx="6" fill="#2477C9"/><text x="512" y="488" fill="#FFFFFF" font-size="15" font-weight="700">BLUE</text><text x="512" y="516" fill="#FFFFFF" font-size="14">#2477C9</text>
+    <rect x="696" y="456" width="190" height="82" rx="6" fill="#258750"/><text x="716" y="488" fill="#FFFFFF" font-size="15" font-weight="700">GREEN</text><text x="716" y="516" fill="#FFFFFF" font-size="14">#258750</text>
+    <rect x="900" y="456" width="190" height="82" rx="6" fill="#C77B00"/><text x="920" y="488" fill="#FFFFFF" font-size="15" font-weight="700">AMBER</text><text x="920" y="516" fill="#FFFFFF" font-size="14">#C77B00</text>
+    <rect x="1104" y="456" width="190" height="82" rx="6" fill="#C33B3B"/><text x="1124" y="488" fill="#FFFFFF" font-size="15" font-weight="700">RED</text><text x="1124" y="516" fill="#FFFFFF" font-size="14">#C33B3B</text>
+    <rect x="1308" y="456" width="190" height="82" rx="6" fill="#EEF2F5"/><text x="1328" y="488" fill="#263746" font-size="15" font-weight="700">CANVAS</text><text x="1328" y="516" fill="#263746" font-size="14">#EEF2F5</text>
+    <rect x="1536" y="446" width="540" height="104" rx="6" fill="#F8FAFC" stroke="#DCE3EA"/>
+    <text x="1560" y="476" fill="#0B1F33" font-size="16" font-weight="700">Lucide icon set · stroke 1.75 · 20/24 px</text>
+    <text x="1560" y="505" fill="#263746" font-size="15">Search · PackageX · ShieldCheck · ClipboardCheck</text>
+    <text x="1560" y="532" fill="#263746" font-size="15">History · Bell · Sparkles · ChevronDown · LogOut</text>
+  </g>
+
+  <text x="84" y="615" fill="#0B1F33" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="700">03 · Một state family dùng toàn hệ thống</text>
+  <g font-family="Inter, Arial, sans-serif">
+    <rect x="84" y="648" width="238" height="116" rx="6" fill="#F4F8FF" stroke="#8DBAF1"/><text x="108" y="682" fill="#1769AA" font-size="16" font-weight="700">ĐANG TẢI</text><text x="108" y="714" fill="#263746" font-size="14">Skeleton ổn định</text><text x="108" y="738" fill="#263746" font-size="14">Không dịch layout</text>
+    <rect x="336" y="648" width="238" height="116" rx="6" fill="#F8FAFC" stroke="#C8D2DC"/><text x="360" y="682" fill="#405364" font-size="16" font-weight="700">TRỐNG</text><text x="360" y="714" fill="#263746" font-size="14">Nêu nguyên nhân</text><text x="360" y="738" fill="#263746" font-size="14">Có hành động tiếp</text>
+    <rect x="588" y="648" width="238" height="116" rx="6" fill="#FFF4F4" stroke="#ECA7A7"/><text x="612" y="682" fill="#B42318" font-size="16" font-weight="700">LỖI DỊCH VỤ</text><text x="612" y="714" fill="#263746" font-size="14">Mã tham chiếu</text><text x="612" y="738" fill="#263746" font-size="14">Thử lại an toàn</text>
+    <rect x="840" y="648" width="238" height="116" rx="6" fill="#FFF8E8" stroke="#EBC773"/><text x="864" y="682" fill="#A35C00" font-size="16" font-weight="700">RATE LIMIT</text><text x="864" y="714" fill="#263746" font-size="14">Thời gian chờ</text><text x="864" y="738" fill="#263746" font-size="14">Không tự retry dồn</text>
+    <rect x="1092" y="648" width="238" height="116" rx="6" fill="#F1EEFF" stroke="#BDB2F3"/><text x="1116" y="682" fill="#5D42B3" font-size="16" font-weight="700">HẾT PHIÊN</text><text x="1116" y="714" fill="#263746" font-size="14">Giữ returnUrl hợp lệ</text><text x="1116" y="738" fill="#263746" font-size="14">Đăng nhập lại</text>
+    <rect x="1344" y="648" width="238" height="116" rx="6" fill="#EAF7F0" stroke="#8CC9A6"/><text x="1368" y="682" fill="#1D7042" font-size="16" font-weight="700">THÀNH CÔNG</text><text x="1368" y="714" fill="#263746" font-size="14">Xác nhận ngắn</text><text x="1368" y="738" fill="#263746" font-size="14">Không che nội dung</text>
+    <rect x="1596" y="648" width="238" height="116" rx="6" fill="#FFF8E8" stroke="#EBC773"/><text x="1620" y="682" fill="#A35C00" font-size="16" font-weight="700">AI FALLBACK</text><text x="1620" y="714" fill="#263746" font-size="14">Giữ điểm và lý do</text><text x="1620" y="738" fill="#263746" font-size="14">Nêu AI chưa sẵn sàng</text>
+    <rect x="1848" y="648" width="228" height="116" rx="6" fill="#F4F8FF" stroke="#8DBAF1"/><text x="1872" y="682" fill="#1769AA" font-size="16" font-weight="700">OFFLINE</text><text x="1872" y="714" fill="#263746" font-size="14">Không ghi dữ liệu</text><text x="1872" y="738" fill="#263746" font-size="14">Cho thử lại</text>
+  </g>
+
+  <text x="84" y="835" fill="#0B1F33" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="700">04 · Role architecture &amp; accessibility gate</text>
+  <g font-family="Inter, Arial, sans-serif">
+    <rect x="84" y="870" width="382" height="156" rx="6" fill="#F8FAFC" stroke="#DCE3EA"/><rect x="84" y="870" width="382" height="42" rx="6" fill="#2477C9"/><text x="108" y="898" fill="#FFFFFF" font-size="16" font-weight="700">PUBLIC / USER</text><text x="108" y="944" fill="#263746" font-size="15">Search · saved · stock notice</text><text x="108" y="974" fill="#263746" font-size="15">Không lộ công cụ quản trị</text><text x="108" y="1004" fill="#263746" font-size="15">Area: / và /User</text>
+    <rect x="484" y="870" width="382" height="156" rx="6" fill="#F8FAFC" stroke="#DCE3EA"/><rect x="484" y="870" width="382" height="42" rx="6" fill="#0B8F7A"/><text x="508" y="898" fill="#FFFFFF" font-size="16" font-weight="700">PHARMACIST</text><text x="508" y="944" fill="#263746" font-size="15">Stockout queue · compare · inventory</text><text x="508" y="974" fill="#263746" font-size="15">Cảnh báo luôn hiển thị</text><text x="508" y="1004" fill="#263746" font-size="15">Area: /Pharmacist</text>
+    <rect x="884" y="870" width="382" height="156" rx="6" fill="#F8FAFC" stroke="#DCE3EA"/><rect x="884" y="870" width="382" height="42" rx="6" fill="#C77B00"/><text x="908" y="898" fill="#FFFFFF" font-size="16" font-weight="700">EXPERT</text><text x="908" y="944" fill="#263746" font-size="15">Pending review · evidence · history</text><text x="908" y="974" fill="#263746" font-size="15">Quyết định có audit</text><text x="908" y="1004" fill="#263746" font-size="15">Area: /Expert</text>
+    <rect x="1284" y="870" width="382" height="156" rx="6" fill="#F8FAFC" stroke="#DCE3EA"/><rect x="1284" y="870" width="382" height="42" rx="6" fill="#C33B3B"/><text x="1308" y="898" fill="#FFFFFF" font-size="16" font-weight="700">ADMIN</text><text x="1308" y="944" fill="#263746" font-size="15">Catalogue · source · backup · audit</text><text x="1308" y="974" fill="#263746" font-size="15">Không dùng UI người dùng</text><text x="1308" y="1004" fill="#263746" font-size="15">Area: /Admin</text>
+    <rect x="1684" y="870" width="392" height="156" rx="6" fill="#FFF8E8" stroke="#EBC773"/><text x="1708" y="906" fill="#0B1F33" font-size="16" font-weight="700">ACCESSIBILITY GATE</text><text x="1708" y="940" fill="#263746" font-size="15">Touch target ≥ 44 × 44</text><text x="1708" y="970" fill="#263746" font-size="15">Focus visible · label tiếng Việt</text><text x="1708" y="1000" fill="#263746" font-size="15">320 / 390 / 768 / 1280 / 1440</text>
+  </g>
+
+  <rect x="84" y="1080" width="1992" height="116" rx="6" fill="#0B1F33"/>
+  <text x="116" y="1119" fill="#9BE8D9" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700">IMPLEMENTATION CONTRACT · N4WTT-244</text>
+  <text x="116" y="1152" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="16">Không disabled control giả tương tác · Quyết định trong viewport mobile đầu · Không credential trên UI · AI chỉ bổ trợ</text>
+  <text x="116" y="1180" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="16">No overflow · keyboard/focus pass · role shell tách biệt · production regression suite bắt buộc trước release</text>
+</svg>

@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2600" height="1800" viewBox="0 0 2600 1800">
+  <rect width="2600" height="1800" fill="#EEF2F5"/>
+  <rect x="40" y="40" width="2520" height="112" rx="6" fill="#0B1F33"/>
+  <text x="82" y="86" fill="#9BE8D9" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">N4WTT · S11 · DESKTOP V2</text>
+  <text x="82" y="126" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="700">Public Search &amp; Distinct Role Workspaces</text>
+  <text x="2150" y="106" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="16">N4WTT-244 · Design gate</text>
+
+  <!-- Public -->
+  <g font-family="Inter, Arial, sans-serif">
+    <rect x="60" y="184" width="1200" height="690" rx="6" fill="#FFFFFF" stroke="#CCD6DF"/>
+    <rect x="60" y="184" width="1200" height="68" rx="6" fill="#FFFFFF" stroke="#DCE3EA"/>
+    <text x="92" y="226" fill="#0B1F33" font-size="21" font-weight="700">Rx · Web thuốc thay thế</text>
+    <text x="720" y="226" fill="#405364" font-size="16">Tổng quan</text><text x="840" y="226" fill="#405364" font-size="16">Tra cứu thuốc</text>
+    <rect x="1080" y="201" width="144" height="36" rx="5" fill="#0B8F7A"/><text x="1115" y="225" fill="#FFFFFF" font-size="15" font-weight="700">Đăng nhập</text>
+    <text x="92" y="306" fill="#0B8F7A" font-size="16" font-weight="700">TRA CỨU CÔNG KHAI</text>
+    <text x="92" y="348" fill="#0B1F33" font-size="32" font-weight="700">Tìm thuốc và phương án thay thế</text>
+    <text x="92" y="380" fill="#405364" font-size="16">Ưu tiên tồn kho, an toàn và lý do có thể kiểm chứng.</text>
+    <rect x="92" y="412" width="580" height="54" rx="5" fill="#FFFFFF" stroke="#9BAAB8"/><text x="118" y="446" fill="#6A7986" font-size="16">Tên thuốc, hoạt chất hoặc nhà sản xuất</text>
+    <rect x="686" y="412" width="280" height="54" rx="5" fill="#FFFFFF" stroke="#9BAAB8"/><text x="710" y="446" fill="#263746" font-size="16">Tất cả nhóm thuốc⌄</text>
+    <rect x="980" y="412" width="244" height="54" rx="5" fill="#0B8F7A"/><text x="1056" y="446" fill="#FFFFFF" font-size="16" font-weight="700">⌕  Tra cứu</text>
+    <text x="92" y="515" fill="#0B1F33" font-size="20" font-weight="700">Tình trạng hệ thống</text>
+    <rect x="92" y="542" width="252" height="104" rx="6" fill="#EAF7F0" stroke="#8CC9A6"/><text x="116" y="574" fill="#1D7042" font-size="15" font-weight="700">CÓ SẴN</text><text x="116" y="614" fill="#0B1F33" font-size="25" font-weight="700">6 thuốc</text>
+    <rect x="360" y="542" width="252" height="104" rx="6" fill="#FFF4F4" stroke="#ECA7A7"/><text x="384" y="574" fill="#B42318" font-size="15" font-weight="700">HẾT HÀNG</text><text x="384" y="614" fill="#0B1F33" font-size="25" font-weight="700">1 thuốc</text>
+    <rect x="628" y="542" width="252" height="104" rx="6" fill="#EAF3FF" stroke="#AACDF7"/><text x="652" y="574" fill="#1769AA" font-size="15" font-weight="700">ĐỀ XUẤT</text><text x="652" y="614" fill="#0B1F33" font-size="25" font-weight="700">3 phù hợp</text>
+    <rect x="896" y="542" width="328" height="104" rx="6" fill="#FFF8E8" stroke="#EBC773"/><text x="920" y="574" fill="#A35C00" font-size="15" font-weight="700">LƯU Ý AN TOÀN</text><text x="920" y="607" fill="#263746" font-size="14">Không tự ý thay thuốc kê đơn.</text>
+    <rect x="92" y="688" width="1132" height="126" rx="6" fill="#F8FAFC" stroke="#DCE3EA"/>
+    <text x="116" y="724" fill="#0B1F33" font-size="18" font-weight="700">Luồng rõ ràng: Tra cứu → Kiểm tra tồn kho → So sánh → Xác nhận chuyên môn</text>
+    <text x="116" y="760" fill="#405364" font-size="15">Phạm vi là control hoạt động. Không hiển thị tài khoản mẫu. AI không phải bước bắt buộc.</text>
+    <rect x="116" y="782" width="250" height="4" fill="#2477C9"/><rect x="366" y="782" width="250" height="4" fill="#0B8F7A"/><rect x="616" y="782" width="250" height="4" fill="#C77B00"/><rect x="866" y="782" width="250" height="4" fill="#258750"/>
+  </g>
+
+  <!-- Pharmacist -->
+  <g font-family="Inter, Arial, sans-serif">
+    <rect x="1300" y="184" width="1240" height="690" rx="6" fill="#FFFFFF" stroke="#CCD6DF"/>
+    <rect x="1300" y="184" width="240" height="690" rx="6" fill="#0B1F33"/>
+    <text x="1332" y="226" fill="#9BE8D9" font-size="18" font-weight="700">DƯỢC SĨ</text>
+    <text x="1332" y="274" fill="#FFFFFF" font-size="16" font-weight="700">▣  Tổng quan</text><text x="1332" y="318" fill="#C7D2DC" font-size="16">⌕  Tra cứu thay thế</text><text x="1332" y="362" fill="#C7D2DC" font-size="16">□  Kho và lô thuốc</text><text x="1332" y="406" fill="#C7D2DC" font-size="16">⚠  Rủi ro tồn kho</text>
+    <text x="1576" y="232" fill="#0B8F7A" font-size="15" font-weight="700">HẾT HÀNG · QUYẾT ĐỊNH TRƯỚC</text>
+    <text x="1576" y="274" fill="#0B1F33" font-size="30" font-weight="700">Paracetamol 500mg</text>
+    <rect x="1576" y="302" width="930" height="116" rx="6" fill="#FFF8E8" stroke="#E2B95F"/>
+    <text x="1604" y="338" fill="#A35C00" font-size="16" font-weight="700">TỒN KHO: 0 · CẦN PHƯƠNG ÁN THAY THẾ</text>
+    <text x="1604" y="372" fill="#263746" font-size="15">Ưu tiên cùng hoạt chất, còn hàng và không có cảnh báo hồ sơ.</text>
+    <rect x="2242" y="328" width="230" height="48" rx="5" fill="#0B8F7A"/><text x="2284" y="359" fill="#FFFFFF" font-size="15" font-weight="700">So sánh đề xuất</text>
+    <text x="1576" y="468" fill="#0B1F33" font-size="21" font-weight="700">Phương án ưu tiên</text>
+    <rect x="1576" y="494" width="930" height="190" rx="6" fill="#FFFFFF" stroke="#AACDF7"/>
+    <text x="1604" y="530" fill="#0B1F33" font-size="20" font-weight="700">Paracetamol DHG 500mg</text>
+    <rect x="2220" y="508" width="252" height="36" rx="18" fill="#EAF7F0"/><text x="2260" y="532" fill="#1D7042" font-size="14" font-weight="700">92 · RẤT PHÙ HỢP</text>
+    <text x="1604" y="572" fill="#1D7042" font-size="15" font-weight="700">✓ Còn 120 · ✓ Cùng hoạt chất · ✓ Không cảnh báo dị ứng</text>
+    <rect x="1604" y="598" width="270" height="42" rx="5" fill="#0B8F7A"/><text x="1650" y="625" fill="#FFFFFF" font-size="14" font-weight="700">Chọn để đối chiếu</text>
+    <rect x="1890" y="598" width="220" height="42" rx="5" fill="#FFFFFF" stroke="#9BAAB8"/><text x="1928" y="625" fill="#263746" font-size="14">Xem 5 lý do⌄</text>
+    <rect x="2126" y="598" width="346" height="42" rx="5" fill="#F1EEFF" stroke="#BDB2F3"/><text x="2164" y="625" fill="#5D42B3" font-size="14">✦ Giải thích AI (tùy chọn)</text>
+    <text x="1576" y="732" fill="#0B1F33" font-size="18" font-weight="700">Thông tin dược lý</text><text x="1760" y="732" fill="#405364" font-size="15">Chỉ định · Chống chỉ định · Liều dùng⌄</text>
+    <rect x="1576" y="770" width="930" height="68" rx="6" fill="#FFF4F4" stroke="#ECA7A7"/><text x="1604" y="812" fill="#B42318" font-size="15" font-weight="700">Cảnh báo luôn hiển thị: xác nhận bác sĩ với thuốc kê đơn hoặc thay đổi liều.</text>
+  </g>
+
+  <!-- User -->
+  <g font-family="Inter, Arial, sans-serif">
+    <rect x="60" y="920" width="800" height="790" rx="6" fill="#FFFFFF" stroke="#CCD6DF"/>
+    <rect x="60" y="920" width="800" height="76" rx="6" fill="#2477C9"/>
+    <text x="92" y="966" fill="#FFFFFF" font-size="21" font-weight="700">Không gian người dùng</text>
+    <text x="92" y="1048" fill="#0B1F33" font-size="29" font-weight="700">Chào bạn, hôm nay cần tìm gì?</text>
+    <text x="92" y="1080" fill="#405364" font-size="15">Lịch sử và dữ liệu sức khỏe chỉ hiển thị trong Area /User.</text>
+    <rect x="92" y="1112" width="736" height="56" rx="5" fill="#FFFFFF" stroke="#9BAAB8"/><text x="118" y="1148" fill="#6A7986" font-size="15">⌕ Tìm thuốc hoặc hoạt chất</text>
+    <text x="92" y="1222" fill="#0B1F33" font-size="19" font-weight="700">Bắt đầu nhanh</text>
+    <rect x="92" y="1250" width="224" height="126" rx="6" fill="#EAF3FF" stroke="#AACDF7"/><text x="116" y="1286" fill="#1769AA" font-size="16" font-weight="700">⌕ Tra cứu gần đây</text><text x="116" y="1320" fill="#263746" font-size="14">2 lượt trong tuần</text><text x="116" y="1348" fill="#1769AA" font-size="14">Mở lịch sử →</text>
+    <rect x="332" y="1250" width="224" height="126" rx="6" fill="#EAF7F0" stroke="#8CC9A6"/><text x="356" y="1286" fill="#1D7042" font-size="16" font-weight="700">♡ Thuốc đã lưu</text><text x="356" y="1320" fill="#263746" font-size="14">3 thuốc theo dõi</text><text x="356" y="1348" fill="#1D7042" font-size="14">Xem danh sách →</text>
+    <rect x="572" y="1250" width="256" height="126" rx="6" fill="#FFF8E8" stroke="#EBC773"/><text x="596" y="1286" fill="#A35C00" font-size="16" font-weight="700">♢ Thay đổi tồn kho</text><text x="596" y="1320" fill="#263746" font-size="14">1 thông báo mới</text><text x="596" y="1348" fill="#A35C00" font-size="14">Kiểm tra →</text>
+    <text x="92" y="1434" fill="#0B1F33" font-size="19" font-weight="700">An toàn cá nhân</text>
+    <rect x="92" y="1462" width="736" height="112" rx="6" fill="#F8FAFC" stroke="#DCE3EA"/><text x="116" y="1498" fill="#263746" font-size="15" font-weight="700">Hồ sơ dị ứng và chống chỉ định</text><text x="116" y="1530" fill="#405364" font-size="14">Đã cấu hình · Cập nhật lần cuối 20/06/2026</text><rect x="620" y="1487" width="180" height="42" rx="5" fill="#FFFFFF" stroke="#2477C9"/><text x="654" y="1514" fill="#1769AA" font-size="14">Quản lý hồ sơ</text>
+    <rect x="92" y="1610" width="736" height="62" rx="6" fill="#FFF8E8" stroke="#EBC773"/><text x="116" y="1648" fill="#A35C00" font-size="14">Thông tin chỉ hỗ trợ tra cứu, không thay thế tư vấn và đơn thuốc.</text>
+  </g>
+
+  <!-- Expert -->
+  <g font-family="Inter, Arial, sans-serif">
+    <rect x="900" y="920" width="800" height="790" rx="6" fill="#FFFFFF" stroke="#CCD6DF"/>
+    <rect x="900" y="920" width="800" height="76" rx="6" fill="#C77B00"/>
+    <text x="932" y="966" fill="#FFFFFF" font-size="21" font-weight="700">Không gian chuyên gia</text>
+    <text x="932" y="1048" fill="#0B1F33" font-size="29" font-weight="700">Hàng đợi thẩm định</text>
+    <text x="932" y="1080" fill="#405364" font-size="15">Bằng chứng, cảnh báo và quyết định được audit.</text>
+    <rect x="932" y="1120" width="218" height="98" rx="6" fill="#FFF8E8" stroke="#EBC773"/><text x="956" y="1152" fill="#A35C00" font-size="14" font-weight="700">CHỜ DUYỆT</text><text x="956" y="1190" fill="#0B1F33" font-size="27" font-weight="700">4</text>
+    <rect x="1166" y="1120" width="218" height="98" rx="6" fill="#EAF7F0" stroke="#8CC9A6"/><text x="1190" y="1152" fill="#1D7042" font-size="14" font-weight="700">ĐÃ XÁC NHẬN</text><text x="1190" y="1190" fill="#0B1F33" font-size="27" font-weight="700">12</text>
+    <rect x="1400" y="1120" width="268" height="98" rx="6" fill="#FFF4F4" stroke="#ECA7A7"/><text x="1424" y="1152" fill="#B42318" font-size="14" font-weight="700">CẢNH BÁO CAO</text><text x="1424" y="1190" fill="#0B1F33" font-size="27" font-weight="700">1</text>
+    <text x="932" y="1270" fill="#0B1F33" font-size="19" font-weight="700">Cần xử lý hôm nay</text>
+    <rect x="932" y="1298" width="736" height="160" rx="6" fill="#FFFFFF" stroke="#DCE3EA"/>
+    <text x="956" y="1334" fill="#0B1F33" font-size="17" font-weight="700">Paracetamol 500mg → DHG 500mg</text><text x="956" y="1368" fill="#405364" font-size="14">Điểm 92 · Cùng hoạt chất · Còn 120 · Không cảnh báo hồ sơ</text>
+    <rect x="956" y="1394" width="196" height="42" rx="5" fill="#C77B00"/><text x="1001" y="1421" fill="#FFFFFF" font-size="14" font-weight="700">Mở thẩm định</text><rect x="1168" y="1394" width="180" height="42" rx="5" fill="#FFFFFF" stroke="#9BAAB8"/><text x="1206" y="1421" fill="#263746" font-size="14">Xem bằng chứng</text>
+    <text x="932" y="1514" fill="#0B1F33" font-size="19" font-weight="700">Lịch sử quyết định</text>
+    <rect x="932" y="1542" width="736" height="118" rx="6" fill="#F8FAFC" stroke="#DCE3EA"/><text x="956" y="1578" fill="#263746" font-size="15">22/06 · Xác nhận đề xuất · EXP-012</text><text x="956" y="1608" fill="#405364" font-size="14">Có ghi chú chuyên môn · Có audit actor/time</text><text x="956" y="1638" fill="#1769AA" font-size="14">Mở lịch sử đầy đủ →</text>
+  </g>
+
+  <!-- Admin -->
+  <g font-family="Inter, Arial, sans-serif">
+    <rect x="1740" y="920" width="800" height="790" rx="6" fill="#FFFFFF" stroke="#CCD6DF"/>
+    <rect x="1740" y="920" width="800" height="76" rx="6" fill="#C33B3B"/>
+    <text x="1772" y="966" fill="#FFFFFF" font-size="21" font-weight="700">Không gian quản trị</text>
+    <text x="1772" y="1048" fill="#0B1F33" font-size="29" font-weight="700">Vận hành hệ thống</text>
+    <text x="1772" y="1080" fill="#405364" font-size="15">Danh mục, nguồn, audit và khả năng khôi phục.</text>
+    <text x="1772" y="1134" fill="#0B1F33" font-size="19" font-weight="700">Tác vụ ưu tiên</text>
+    <rect x="1772" y="1162" width="350" height="116" rx="6" fill="#EAF3FF" stroke="#AACDF7"/><text x="1796" y="1198" fill="#1769AA" font-size="16" font-weight="700">□ Danh mục thuốc</text><text x="1796" y="1230" fill="#263746" font-size="14">7 thuốc · 0 bản ghi lỗi</text><text x="1796" y="1255" fill="#1769AA" font-size="14">Quản lý →</text>
+    <rect x="2138" y="1162" width="370" height="116" rx="6" fill="#FFF8E8" stroke="#EBC773"/><text x="2162" y="1198" fill="#A35C00" font-size="16" font-weight="700">⚠ Ngoại lệ tồn kho</text><text x="2162" y="1230" fill="#263746" font-size="14">1 thuốc hết hàng</text><text x="2162" y="1255" fill="#A35C00" font-size="14">Xử lý →</text>
+    <rect x="1772" y="1294" width="350" height="116" rx="6" fill="#EAF7F0" stroke="#8CC9A6"/><text x="1796" y="1330" fill="#1D7042" font-size="16" font-weight="700">↻ Trạng thái nguồn</text><text x="1796" y="1362" fill="#263746" font-size="14">3 nguồn · 3 kết nối</text><text x="1796" y="1387" fill="#1D7042" font-size="14">Kiểm tra →</text>
+    <rect x="2138" y="1294" width="370" height="116" rx="6" fill="#F1EEFF" stroke="#BDB2F3"/><text x="2162" y="1330" fill="#5D42B3" font-size="16" font-weight="700">◷ Backup và audit</text><text x="2162" y="1362" fill="#263746" font-size="14">Snapshot mới · 3 audit logs</text><text x="2162" y="1387" fill="#5D42B3" font-size="14">Mở vận hành →</text>
+    <text x="1772" y="1466" fill="#0B1F33" font-size="19" font-weight="700">Sức khỏe production</text>
+    <rect x="1772" y="1494" width="736" height="112" rx="6" fill="#EAF7F0" stroke="#8CC9A6"/><text x="1796" y="1532" fill="#1D7042" font-size="16" font-weight="700">✓ HTTPS healthy · SQL connected</text><text x="1796" y="1564" fill="#263746" font-size="14">Production test: chờ release S11 · Credential demo đã cô lập</text><text x="2288" y="1530" fill="#1D7042" font-size="14">Chi tiết →</text>
+    <rect x="1772" y="1624" width="736" height="48" rx="5" fill="#C33B3B"/><text x="1972" y="1655" fill="#FFFFFF" font-size="15" font-weight="700">Mở audit log và sự cố</text>
+  </g>
+</svg>
