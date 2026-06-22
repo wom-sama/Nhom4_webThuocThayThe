@@ -118,7 +118,7 @@ public sealed class GeminiAiRecommendationExplanationServiceTests
         Assert.True(generationConfig.TryGetProperty("responseSchema", out var responseSchema));
         Assert.Equal("object", responseSchema.GetProperty("type").GetString());
         Assert.False(generationConfig.TryGetProperty("responseFormat", out _));
-        Assert.Contains("minimal", body, StringComparison.Ordinal);
+        Assert.False(generationConfig.TryGetProperty("thinkingConfig", out _));
         Assert.DoesNotContain("email", body, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("patient", body, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("profile", body, StringComparison.OrdinalIgnoreCase);
