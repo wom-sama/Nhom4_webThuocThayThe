@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using Nhom4WebThuocThayThe.Models;
 using Nhom4WebThuocThayThe.Services;
 using Nhom4WebThuocThayThe.ViewModels.Auth;
 
@@ -17,7 +18,7 @@ public sealed class AuthController(IUserAccountService userAccountService) : Con
     {
         if (User.Identity?.IsAuthenticated == true)
         {
-            return RedirectToLocal(returnUrl);
+            return RedirectToRole(User.FindFirstValue(ClaimTypes.Role), returnUrl);
         }
 
         return View(new LoginViewModel { ReturnUrl = returnUrl });
@@ -37,7 +38,7 @@ public sealed class AuthController(IUserAccountService userAccountService) : Con
         var user = userAccountService.ValidateCredentials(model.Email, model.Password);
         if (user is null)
         {
-            ModelState.AddModelError(string.Empty, "Email hoac mat khau khong hop le.");
+            ModelState.AddModelError(string.Empty, "Email hoặc mật khẩu không đúng.");
             return View(model);
         }
 
@@ -55,7 +56,7 @@ public sealed class AuthController(IUserAccountService userAccountService) : Con
             new ClaimsPrincipal(identity),
             new AuthenticationProperties { IsPersistent = false });
 
-        return RedirectToLocal(model.ReturnUrl);
+        return RedirectToRole(user.Role, model.ReturnUrl);
     }
 
     [HttpPost]
@@ -74,13 +75,43 @@ public sealed class AuthController(IUserAccountService userAccountService) : Con
         return View();
     }
 
-    private IActionResult RedirectToLocal(string? returnUrl)
+    private IActionResult RedirectToRole(string? role, string? returnUrl)
     {
-        if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
+        if (!string.IsNullOrWhiteSpace(returnUrl) &&
+            Url.IsLocalUrl(returnUrl) &&
+            IsReturnUrlAllowed(role, returnUrl))
         {
             return Redirect(returnUrl);
         }
 
-        return RedirectToAction("Index", "Home");
+        return role switch
+        {
+            AppRoles.Admin => RedirectToAction("Index", "Home", new { area = "Admin" }),
+            AppRoles.Pharmacist => RedirectToAction("Index", "Home", new { area = "Pharmacist" }),
+            AppRoles.Expert => RedirectToAction("Index", "Home", new { area = "Expert" }),
+            AppRoles.User => RedirectToAction("Index", "Home", new { area = "User" }),
+            _ => RedirectToAction("Index", "Home", new { area = string.Empty })
+        };
+    }
+
+    private static bool IsReturnUrlAllowed(string? role, string returnUrl)
+    {
+        var path = returnUrl.Split('?', '#')[0];
+        if (path.StartsWith("/Drugs", StringComparison.OrdinalIgnoreCase) ||
+            path.Equals("/", StringComparison.Ordinal))
+        {
+            return true;
+        }
+
+        var areaPrefix = role switch
+        {
+            AppRoles.Admin => "/Admin",
+            AppRoles.Pharmacist => "/Pharmacist",
+            AppRoles.Expert => "/Expert",
+            AppRoles.User => "/User",
+            _ => null
+        };
+
+        return areaPrefix is not null && path.StartsWith(areaPrefix, StringComparison.OrdinalIgnoreCase);
     }
 }

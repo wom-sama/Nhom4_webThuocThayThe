@@ -42,10 +42,10 @@ public sealed class ReportingService(
         {
             Metrics =
             [
-                new() { Label = "Thuoc dang quan ly", Value = dbContext.Drugs.Count().ToString("N0"), Hint = "Danh muc SQL Server" },
-                new() { Label = "Thuoc het hang", Value = stockoutCount.ToString("N0"), Hint = "Can kich hoat de xuat thay the" },
-                new() { Label = "Nguon du lieu ngoai", Value = dbContext.ExternalDataSources.Count().ToString("N0"), Hint = "DrugBank, PubChem, ATC..." },
-                new() { Label = "De xuat can canh bao", Value = highRiskRecommendations.ToString("N0"), Hint = "Can QC/duoc si xac nhan" }
+                new() { Label = "Thuốc đang quản lý", Value = dbContext.Drugs.Count().ToString("N0"), Hint = "Danh mục SQL Server" },
+                new() { Label = "Thuốc hết hàng", Value = stockoutCount.ToString("N0"), Hint = "Cần kích hoạt đề xuất thay thế" },
+                new() { Label = "Nguồn dữ liệu ngoài", Value = dbContext.ExternalDataSources.Count().ToString("N0"), Hint = "DrugBank, PubChem, ATC..." },
+                new() { Label = "Đề xuất cần cảnh báo", Value = highRiskRecommendations.ToString("N0"), Hint = "Cần QC hoặc dược sĩ xác nhận" }
             ],
             StockRisks = stockRisks,
             ExternalSources = dbContext.ExternalDataSources.AsNoTracking().OrderBy(item => item.Name).ToList(),

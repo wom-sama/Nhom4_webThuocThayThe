@@ -1,28 +1,28 @@
 @model IReadOnlyCollection<Nhom4WebThuocThayThe.ViewModels.Catalog.DrugListItemViewModel>
 
 @{
-    ViewData["Title"] = "Danh muc thuoc";
+    ViewData["Title"] = "Danh mục thuốc";
 }
 
 <section class="action-bar">
     <div>
-        <div class="page-kicker">Quan tri du lieu</div>
-        <h1 class="page-title">Danh muc thuoc</h1>
-        <p class="page-description">Cap nhat thong tin thuoc, ham luong, nha san xuat, canh bao ke don va trang thai kinh doanh.</p>
+        <div class="page-kicker">Quản trị dữ liệu</div>
+        <h1 class="page-title">Danh mục thuốc</h1>
+        <p class="page-description">Cập nhật thông tin thuốc, hàm lượng, nhà sản xuất, cảnh báo kê đơn và trạng thái kinh doanh.</p>
     </div>
-    <a asp-action="Create" class="btn btn-primary">+ Them thuoc</a>
+    <a asp-action="Create" class="btn btn-primary">Thêm thuốc</a>
 </section>
 
 <div class="table-shell">
     <table class="table align-middle">
         <thead>
             <tr>
-                <th>Ten thuoc</th>
-                <th>Danh muc</th>
-                <th>Nha san xuat</th>
-                <th>Gia</th>
-                <th>Ton kho</th>
-                <th>Trang thai</th>
+                <th>Tên thuốc</th>
+                <th>Danh mục</th>
+                <th>Nhà sản xuất</th>
+                <th>Giá</th>
+                <th>Tồn kho</th>
+                <th>Trạng thái</th>
                 <th></th>
             </tr>
         </thead>
@@ -40,7 +40,7 @@
                     <td>
                         @if (item.StockQuantity <= 0)
                         {
-                            <span class="status-badge is-danger">Het hang</span>
+                            <span class="status-badge is-danger">Hết hàng</span>
                         }
                         else
                         {
@@ -50,15 +50,15 @@
                     <td>
                         @if (item.IsActive)
                         {
-                            <span class="status-badge is-info">Dang ban</span>
+                            <span class="status-badge is-info">Đang bán</span>
                         }
                         else
                         {
-                            <span class="status-badge is-warning">Ngung ban</span>
+                            <span class="status-badge is-warning">Ngừng bán</span>
                         }
                     </td>
                     <td class="text-end">
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Sua</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Sửa</a>
                     </td>
                 </tr>
             }

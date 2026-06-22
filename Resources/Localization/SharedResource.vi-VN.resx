@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="App.Name" xml:space="preserve"><value>Web thuốc thay thế</value></data>
+  <data name="App.Group" xml:space="preserve"><value>Nhóm 4</value></data>
+  <data name="Common.SkipNavigation" xml:space="preserve"><value>Bỏ qua điều hướng</value></data>
+  <data name="Common.ToggleNavigation" xml:space="preserve"><value>Mở hoặc đóng điều hướng</value></data>
+  <data name="Common.SignIn" xml:space="preserve"><value>Đăng nhập</value></data>
+  <data name="Common.SignOut" xml:space="preserve"><value>Đăng xuất</value></data>
+  <data name="Common.Privacy" xml:space="preserve"><value>Chính sách bảo mật</value></data>
+  <data name="Navigation.Public" xml:space="preserve"><value>Điều hướng công khai</value></data>
+  <data name="Navigation.Overview" xml:space="preserve"><value>Tổng quan</value></data>
+  <data name="Navigation.DrugSearch" xml:space="preserve"><value>Tra cứu thuốc</value></data>
+  <data name="Navigation.Workspace" xml:space="preserve"><value>Không gian làm việc</value></data>
+  <data name="Auth.Title" xml:space="preserve"><value>Đăng nhập</value></data>
+  <data name="Auth.Kicker" xml:space="preserve"><value>Phiên làm việc an toàn</value></data>
+  <data name="Auth.Heading" xml:space="preserve"><value>Đăng nhập hệ thống</value></data>
+  <data name="Auth.Description" xml:space="preserve"><value>Hệ thống xác định vai trò sau khi xác thực và chuyển bạn đến đúng không gian làm việc.</value></data>
+  <data name="Auth.Email" xml:space="preserve"><value>Email</value></data>
+  <data name="Auth.Password" xml:space="preserve"><value>Mật khẩu</value></data>
+  <data name="Auth.Benefit.RoleRedirect" xml:space="preserve"><value>Điều hướng riêng cho từng vai trò.</value></data>
+  <data name="Auth.Benefit.SecureSession" xml:space="preserve"><value>Phiên đăng nhập được bảo vệ và tự hết hạn.</value></data>
+  <data name="Auth.Benefit.ProfessionalBoundary" xml:space="preserve"><value>Hệ thống hỗ trợ chuyên môn, không thay thế chỉ định của bác sĩ.</value></data>
+  <data name="Auth.SecurityNote" xml:space="preserve"><value>Không chia sẻ thông tin đăng nhập. Tài khoản thử nghiệm chỉ được lưu trong tài liệu nội bộ.</value></data>
+  <data name="AccessDenied.Title" xml:space="preserve"><value>Không có quyền truy cập</value></data>
+  <data name="AccessDenied.Kicker" xml:space="preserve"><value>Phân quyền</value></data>
+  <data name="AccessDenied.Heading" xml:space="preserve"><value>Bạn không có quyền truy cập chức năng này</value></data>
+  <data name="AccessDenied.Description" xml:space="preserve"><value>Đường dẫn hiện tại không thuộc không gian làm việc của vai trò đã đăng nhập. Hãy quay lại khu vực phù hợp.</value></data>
+  <data name="Validation.Required" xml:space="preserve"><value>{0} là thông tin bắt buộc.</value></data>
+  <data name="Validation.Email" xml:space="preserve"><value>Địa chỉ email không đúng định dạng.</value></data>
+  <data name="Validation.StringLength" xml:space="preserve"><value>{0} không được vượt quá {1} ký tự.</value></data>
+  <data name="Validation.Range" xml:space="preserve"><value>{0} phải nằm trong khoảng từ {1} đến {2}.</value></data>
+  <data name="Drug.Name" xml:space="preserve"><value>Tên thuốc</value></data>
+  <data name="Drug.Strength" xml:space="preserve"><value>Hàm lượng</value></data>
+  <data name="Drug.Price" xml:space="preserve"><value>Giá bán</value></data>
+</root>

@@ -1,13 +1,13 @@
 @model IReadOnlyCollection<Nhom4WebThuocThayThe.Models.ExternalDataSource>
 
 @{
-    ViewData["Title"] = "Nguon du lieu ngoai";
+    ViewData["Title"] = "Nguồn dữ liệu ngoài";
 }
 
 <section class="mb-4">
-    <div class="page-kicker">Tich hop du lieu</div>
-    <h1 class="page-title">Quan ly nguon du lieu duoc ngoai</h1>
-    <p class="page-description">Theo doi muc dich, mapping va lan dong bo metadata cua tung nguon tham chieu.</p>
+    <div class="page-kicker">Tích hợp dữ liệu</div>
+    <h1 class="page-title">Quản lý nguồn dữ liệu dược ngoài</h1>
+    <p class="page-description">Theo dõi mục đích, ánh xạ và lần đồng bộ siêu dữ liệu của từng nguồn tham chiếu.</p>
 </section>
 
 @if (TempData["SuccessMessage"] is string successMessage)
@@ -28,10 +28,10 @@
             </div>
             <p>@source.Purpose</p>
             <div class="action-bar mb-0">
-                <span class="muted-copy">Lan dong bo: @(source.LastSyncDate?.ToString("dd/MM/yyyy") ?? "Chua co")</span>
+                <span class="muted-copy">Lần đồng bộ: @(source.LastSyncDate?.ToString("dd/MM/yyyy") ?? "Chưa có")</span>
                 <form asp-action="MarkSynced" method="post">
                     <input type="hidden" name="id" value="@source.Id" />
-                    <button type="submit" class="btn btn-sm btn-primary">Danh dau da dong bo</button>
+                    <button type="submit" class="btn btn-sm btn-primary">Đánh dấu đã đồng bộ</button>
                 </form>
             </div>
         </article>

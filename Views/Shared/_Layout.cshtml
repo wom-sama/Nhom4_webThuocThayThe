@@ -1,61 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Web Thuoc Thay The</title>
+    <title>@ViewData["Title"] - @T["App.Name"]</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body>
-    <a class="skip-link" href="#main-content">Bo qua dieu huong</a>
+<body class="public-shell">
+    <a class="skip-link" href="#main-content">@T["Common.SkipNavigation"]</a>
     <header class="app-header">
-        <nav class="navbar navbar-expand-lg">
+        <nav class="navbar navbar-expand-lg" aria-label="@T["Navigation.Public"]">
             <div class="container-fluid app-container">
                 <a class="navbar-brand brand-lockup" asp-area="" asp-controller="Home" asp-action="Index">
                     <span class="brand-mark" aria-hidden="true">Rx</span>
                     <span>
-                        <span class="brand-name">Web Thuoc Thay The</span>
-                        <span class="brand-subtitle">Nhom 4</span>
+                        <span class="brand-name">@T["App.Name"]</span>
+                        <span class="brand-subtitle">@T["App.Group"]</span>
                     </span>
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="@T["Common.ToggleNavigation"]">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse">
                     <ul class="navbar-nav app-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Tong quan</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">@T["Navigation.Overview"]</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Drugs" asp-action="Index">Tra cuu</a>
+                            <a class="nav-link" asp-area="" asp-controller="Drugs" asp-action="Index">@T["Navigation.DrugSearch"]</a>
                         </li>
-                        @if (User.IsInRole("Admin") || User.IsInRole("Pharmacist"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="DrugCatalog" asp-action="Index">Danh muc</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Inventory" asp-action="Index">Kho thuoc</a>
-                            </li>
-                        }
-                        @if (User.IsInRole("Admin") || User.IsInRole("Pharmacist") || User.IsInRole("Expert"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="ExpertReviews" asp-action="Index">Danh gia de xuat</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Reports" asp-action="Index">Bao cao</a>
-                            </li>
-                        }
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="ExternalData" asp-action="Index">Nguon du lieu</a>
-                            </li>
-                        }
                     </ul>
                     <ul class="navbar-nav app-user-nav">
                         @if (User.Identity?.IsAuthenticated == true)
@@ -64,15 +40,33 @@
                                 <span class="user-chip">@User.Identity.Name <span>@User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value</span></span>
                             </li>
                             <li class="nav-item">
-                                <form asp-controller="Auth" asp-action="Logout" method="post">
-                                    <button type="submit" class="btn btn-outline-secondary btn-sm">Thoat</button>
+                                @if (User.IsInRole(AppRoles.Admin))
+                                {
+                                    <a class="btn btn-primary btn-sm" asp-area="Admin" asp-controller="Home" asp-action="Index">@T["Navigation.Workspace"]</a>
+                                }
+                                else if (User.IsInRole(AppRoles.Pharmacist))
+                                {
+                                    <a class="btn btn-primary btn-sm" asp-area="Pharmacist" asp-controller="Home" asp-action="Index">@T["Navigation.Workspace"]</a>
+                                }
+                                else if (User.IsInRole(AppRoles.Expert))
+                                {
+                                    <a class="btn btn-primary btn-sm" asp-area="Expert" asp-controller="Home" asp-action="Index">@T["Navigation.Workspace"]</a>
+                                }
+                                else if (User.IsInRole(AppRoles.User))
+                                {
+                                    <a class="btn btn-primary btn-sm" asp-area="User" asp-controller="Home" asp-action="Index">@T["Navigation.Workspace"]</a>
+                                }
+                            </li>
+                            <li class="nav-item">
+                                <form asp-area="" asp-controller="Auth" asp-action="Logout" method="post">
+                                    <button type="submit" class="btn btn-outline-secondary btn-sm">@T["Common.SignOut"]</button>
                                 </form>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="btn btn-primary btn-sm" asp-controller="Auth" asp-action="Login">Dang nhap</a>
+                                <a class="btn btn-primary btn-sm" asp-area="" asp-controller="Auth" asp-action="Login">@T["Common.SignIn"]</a>
                             </li>
                         }
                     </ul>
@@ -85,11 +79,10 @@
             @RenderBody()
         </main>
     </div>
-
     <footer class="app-footer">
         <div class="container-fluid app-container d-flex flex-wrap justify-content-between gap-2">
-            <span>&copy; 2026 - Nhom4 Web Thuoc Thay The</span>
-            <a asp-area="" asp-controller="Home" asp-action="Privacy">Chinh sach</a>
+            <span>&copy; 2026 - @T["App.Name"]</span>
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">@T["Common.Privacy"]</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

@@ -423,7 +423,7 @@ internal static class AcceptanceTests
             {
                 using var client = runtime.CreateClient();
                 var html = await GetStringAsync(client, "/");
-                Expect(html.Contains("Bang dieu khien tra cuu va quan ly thuoc"), "dashboard title missing");
+                Expect(html.Contains("Tra cứu thuốc rõ ràng, an toàn và có kiểm chứng"), "public home title missing");
                 Expect(html.Contains("skip-link"), "skip link missing");
             }),
             new("TC02", "Search", "Search finds medicine by active ingredient", async () =>
@@ -437,7 +437,7 @@ internal static class AcceptanceTests
             {
                 using var client = runtime.CreateClient();
                 var html = await GetStringAsync(client, "/Drugs?keyword=zzzz-not-found");
-                Expect(html.Contains("Khong tim thay thuoc phu hop"), "empty state missing");
+                Expect(html.Contains("Không tìm thấy thuốc phù hợp"), "empty state missing");
             }),
             new("TC04", "Search", "Category filter narrows results", async () =>
             {
@@ -450,7 +450,7 @@ internal static class AcceptanceTests
             {
                 using var client = runtime.CreateClient();
                 var html = await GetStringAsync(client, "/Drugs/Details/1");
-                Expect(html.Contains("Thuoc thay the de xuat"), "recommendation section missing");
+                Expect(html.Contains("Thuốc thay thế đề xuất"), "recommendation section missing");
                 Expect(html.Contains("Paracetamol DHG 500mg"), "same-active-ingredient alternative missing");
             }),
             new("TC06", "Error handling", "Invalid drug detail returns clean 404", async () =>
@@ -472,20 +472,20 @@ internal static class AcceptanceTests
             {
                 using var client = runtime.CreateClient();
                 var html = await LoginAsync(client, "admin@nhom4.local", "WrongPassword", followRedirects: true);
-                Expect(html.Contains("Email hoac mat khau khong hop le"), "invalid login error missing");
+                Expect(html.Contains("Email hoặc mật khẩu không đúng"), "invalid login error missing");
             }),
             new("TC09", "Auth", "Pharmacist login can open inventory", async () =>
             {
                 using var client = runtime.CreateClient();
                 await LoginAsync(client, "duocsi@nhom4.local", "Duocsi@123", followRedirects: true);
-                var html = await GetStringAsync(client, "/Inventory");
-                Expect(html.Contains("Ton kho va lo thuoc"), "inventory page missing");
+                var html = await GetStringAsync(client, "/Pharmacist/Inventory");
+                Expect(html.Contains("Tồn kho và lô thuốc"), "inventory page missing");
             }),
             new("TC10", "RBAC", "Normal user is denied from catalog admin", async () =>
             {
                 using var client = runtime.CreateClient(allowAutoRedirect: false);
                 await LoginAsync(client, "user@nhom4.local", "User@123", followRedirects: false);
-                using var response = await client.GetAsync("/DrugCatalog");
+                using var response = await client.GetAsync("/Admin/DrugCatalog");
                 Expect(response.StatusCode == HttpStatusCode.Redirect, "user should be redirected away from catalog");
                 Expect(response.Headers.Location?.ToString().Contains("/Auth/AccessDenied") == true, "redirect should target access denied");
             }),
@@ -507,9 +507,9 @@ internal static class AcceptanceTests
             {
                 using var client = runtime.CreateClient();
                 await LoginAsync(client, "admin@nhom4.local", "Admin@123", followRedirects: true);
-                var form = await GetStringAsync(client, "/DrugCatalog/Create");
+                var form = await GetStringAsync(client, "/Admin/DrugCatalog/Create");
                 var token = ExtractAntiforgeryToken(form);
-                var html = await PostFormStringAsync(client, "/DrugCatalog/Create", new Dictionary<string, string>
+                var html = await PostFormStringAsync(client, "/Admin/DrugCatalog/Create", new Dictionary<string, string>
                 {
                     ["__RequestVerificationToken"] = token,
                     ["Name"] = "",
@@ -523,14 +523,14 @@ internal static class AcceptanceTests
                     ["ActiveIngredientStrength"] = "500mg",
                     ["IsActive"] = "true"
                 });
-                Expect(html.Contains("Them thuoc"), "create form did not stay open");
+                Expect(html.Contains("Thêm thuốc"), "create form did not stay open");
                 Expect(html.Contains("field-validation-error"), "validation message missing");
             }),
             new("TC13", "Security", "Anti-forgery rejects inventory post without token", async () =>
             {
                 using var client = runtime.CreateClient(allowAutoRedirect: false);
                 await LoginAsync(client, "admin@nhom4.local", "Admin@123", followRedirects: false);
-                using var response = await client.PostAsync("/Inventory/CreateBatch", new FormUrlEncodedContent(new Dictionary<string, string>
+                using var response = await client.PostAsync("/Admin/Inventory/CreateBatch", new FormUrlEncodedContent(new Dictionary<string, string>
                 {
                     ["DrugId"] = "2",
                     ["WarehouseId"] = "1",
@@ -624,32 +624,32 @@ internal static class AcceptanceTests
             {
                 using var client = runtime.CreateClient();
                 var html = await GetStringAsync(client, "/Drugs/Details/1");
-                Expect(html.Contains("Thuoc thay the de xuat"), "recommendation section missing");
+                Expect(html.Contains("Thuốc thay thế đề xuất"), "recommendation section missing");
                 Expect(html.Contains("Paracetamol DHG 500mg"), "primary substitute missing");
-                Expect(html.Contains("Diem quy tac") || html.Contains("Rat phu hop"), "recommendation score missing");
-                Expect(html.Contains("Cung hoat chat"), "recommendation reasons missing");
+                Expect(html.Contains("Rất phù hợp") || html.Contains("Phù hợp"), "recommendation score missing");
+                Expect(html.Contains("Cùng hoạt chất"), "recommendation reasons missing");
             }),
             new("TC22", "Safety", "Signed-in safety profile produces allergy warning", async () =>
             {
                 using var client = runtime.CreateClient();
                 await LoginAsync(client, "duocsi@nhom4.local", "Duocsi@123", followRedirects: true);
                 var html = await GetStringAsync(client, "/Drugs/Details/1");
-                Expect(html.Contains("Ho so an toan"), "safety profile context missing");
-                Expect(html.Contains("Di ung hoat chat"), "allergy warning missing");
+                Expect(html.Contains("Hồ sơ an toàn"), "safety profile context missing");
+                Expect(html.Contains("Dị ứng hoạt chất"), "allergy warning missing");
             }),
             new("TC23", "Expert review", "Expert can open recommendation review workflow", async () =>
             {
                 using var client = runtime.CreateClient();
                 await LoginAsync(client, "chuyengia@nhom4.local", "Chuyengia@123", followRedirects: true);
-                var html = await GetStringAsync(client, "/ExpertReviews");
-                Expect(html.Contains("Danh gia de xuat thuoc thay the"), "expert review page missing");
+                var html = await GetStringAsync(client, "/Expert/Reviews");
+                Expect(html.Contains("Đánh giá đề xuất thuốc thay thế"), "expert review page missing");
                 Expect(html.Contains("Panadol 500mg"), "review source drug missing");
             }),
             new("TC24", "RBAC", "Normal user cannot open reports dashboard", async () =>
             {
                 using var client = runtime.CreateClient(allowAutoRedirect: false);
                 await LoginAsync(client, "user@nhom4.local", "User@123", followRedirects: false);
-                using var response = await client.GetAsync("/Reports");
+                using var response = await client.GetAsync("/Admin/Reports");
                 Expect(response.StatusCode == HttpStatusCode.Redirect, "normal user should be redirected from reports");
                 Expect(response.Headers.Location?.ToString().Contains("/Auth/AccessDenied") == true, "reports denial should target access denied");
             }),
@@ -657,27 +657,27 @@ internal static class AcceptanceTests
             {
                 using var client = runtime.CreateClient();
                 await LoginAsync(client, "admin@nhom4.local", "Admin@123", followRedirects: true);
-                var html = await GetStringAsync(client, "/Reports");
-                Expect(html.Contains("Dashboard thuoc thay the"), "dashboard title missing");
-                Expect(html.Contains("Rui ro ton kho"), "stock risk table missing");
-                Expect(html.Contains("Audit log gan day"), "audit log section missing");
+                var html = await GetStringAsync(client, "/Admin/Reports");
+                Expect(html.Contains("Tổng quan hệ thống thuốc thay thế"), "dashboard title missing");
+                Expect(html.Contains("Rủi ro tồn kho"), "stock risk table missing");
+                Expect(html.Contains("Nhật ký kiểm toán gần đây"), "audit log section missing");
             }),
             new("TC26", "External data", "Admin can inspect external data registry", async () =>
             {
                 using var client = runtime.CreateClient();
                 await LoginAsync(client, "admin@nhom4.local", "Admin@123", followRedirects: true);
-                var html = await GetStringAsync(client, "/ExternalData");
+                var html = await GetStringAsync(client, "/Admin/ExternalData");
                 Expect(html.Contains("DrugBank"), "DrugBank source missing");
                 Expect(html.Contains("PubChem"), "PubChem source missing");
-                Expect(html.Contains("Danh dau da dong bo"), "sync action missing");
+                Expect(html.Contains("Đánh dấu đã đồng bộ"), "sync action missing");
             }),
             new("TC27", "Backup", "Admin can download backup metadata", async () =>
             {
                 using var client = runtime.CreateClient();
                 await LoginAsync(client, "admin@nhom4.local", "Admin@123", followRedirects: true);
-                var dashboard = await GetStringAsync(client, "/Reports");
+                var dashboard = await GetStringAsync(client, "/Admin/Reports");
                 var token = ExtractAntiforgeryToken(dashboard);
-                using var response = await client.PostAsync("/Reports/DownloadBackup", new FormUrlEncodedContent(new Dictionary<string, string>
+                using var response = await client.PostAsync("/Admin/Reports/DownloadBackup", new FormUrlEncodedContent(new Dictionary<string, string>
                 {
                     ["__RequestVerificationToken"] = token
                 }));
@@ -690,17 +690,17 @@ internal static class AcceptanceTests
             {
                 using var client = runtime.CreateClient();
                 await LoginAsync(client, "chuyengia@nhom4.local", "Chuyengia@123", followRedirects: true);
-                var reviewPage = await GetStringAsync(client, "/ExpertReviews");
+                var reviewPage = await GetStringAsync(client, "/Expert/Reviews");
                 var token = ExtractAntiforgeryToken(reviewPage);
-                var updated = await PostFormStringAsync(client, "/ExpertReviews/Update", new Dictionary<string, string>
+                var updated = await PostFormStringAsync(client, "/Expert/Reviews/Update", new Dictionary<string, string>
                 {
                     ["__RequestVerificationToken"] = token,
                     ["id"] = "1",
                     ["status"] = "Chap nhan",
                     ["note"] = "Da kiem tra cung hoat chat va ham luong."
                 });
-                Expect(updated.Contains("Da cap nhat danh gia chuyen gia"), "review success evidence missing");
-                Expect(updated.Contains("Chap nhan"), "updated review status missing");
+                Expect(updated.Contains("Đã cập nhật đánh giá chuyên gia"), "review success evidence missing");
+                Expect(updated.Contains("Chấp nhận"), "updated review status missing");
             }),
             new("TC29", "Persistence", "Admin creates a drug in SQL Server", async () =>
             {
@@ -712,9 +712,9 @@ internal static class AcceptanceTests
                 }
 
                 await LoginAsync(client, "admin@nhom4.local", "Admin@123", followRedirects: true);
-                var form = await GetStringAsync(client, "/DrugCatalog/Create");
+                var form = await GetStringAsync(client, "/Admin/DrugCatalog/Create");
                 var token = ExtractAntiforgeryToken(form);
-                var catalog = await PostFormStringAsync(client, "/DrugCatalog/Create", new Dictionary<string, string>
+                var catalog = await PostFormStringAsync(client, "/Admin/DrugCatalog/Create", new Dictionary<string, string>
                 {
                     ["__RequestVerificationToken"] = token,
                     ["Name"] = "Persistence QA 123mg",
@@ -732,35 +732,130 @@ internal static class AcceptanceTests
                     ["Contraindications"] = "Test only."
                 });
                 Expect(catalog.Contains("Persistence QA 123mg"), "created drug missing from catalog");
+            }),
+            new("TC35", "Authentication UI", "Login page never renders demo credentials or role selector", async () =>
+            {
+                using var client = runtime.CreateClient();
+                var html = await GetStringAsync(client, "/Auth/Login");
+                Expect(!html.Contains("@nhom4.local", StringComparison.OrdinalIgnoreCase), "login leaked a demo email");
+                Expect(!html.Contains("Admin@123", StringComparison.Ordinal), "login leaked a demo password");
+                Expect(!html.Contains("Duocsi@123", StringComparison.Ordinal), "login leaked a demo password");
+                Expect(!html.Contains("Chuyengia@123", StringComparison.Ordinal), "login leaked a demo password");
+                Expect(!html.Contains("User@123", StringComparison.Ordinal), "login leaked a demo password");
+                Expect(!html.Contains("<select", StringComparison.OrdinalIgnoreCase), "login must not allow role selection");
+            }),
+            new("TC36", "Localization", "Vietnamese culture is applied to HTML and response headers", async () =>
+            {
+                using var client = runtime.CreateClient();
+                using var response = await client.GetAsync("/");
+                var html = await response.Content.ReadAsStringAsync();
+                Expect(response.IsSuccessStatusCode, "home request failed");
+                Expect(html.Contains("<html lang=\"vi\"", StringComparison.OrdinalIgnoreCase), "html language is not vi");
+                Expect(response.Content.Headers.ContentLanguage.Contains("vi-VN"), "Content-Language is not vi-VN");
+            }),
+            new("TC37", "Role routing", "Every role Area requires authentication", async () =>
+            {
+                using var client = runtime.CreateClient(allowAutoRedirect: false);
+                var areas = new[] { "/Admin", "/Pharmacist", "/Expert", "/User" };
+                foreach (var area in areas)
+                {
+                    using var response = await client.GetAsync(area);
+                    Expect(response.StatusCode == HttpStatusCode.Redirect, $"anonymous request unexpectedly opened {area}");
+                    Expect(response.Headers.Location?.ToString().Contains("/Auth/Login", StringComparison.OrdinalIgnoreCase) == true,
+                        $"{area} did not redirect anonymous request to login");
+                }
+            }),
+            new("TC38", "Role isolation", "Four role Areas enforce all sixteen access directions", async () =>
+            {
+                var roles = new[]
+                {
+                    ("admin@nhom4.local", "Admin@123", "/Admin"),
+                    ("duocsi@nhom4.local", "Duocsi@123", "/Pharmacist"),
+                    ("chuyengia@nhom4.local", "Chuyengia@123", "/Expert"),
+                    ("user@nhom4.local", "User@123", "/User")
+                };
+
+                foreach (var current in roles)
+                {
+                    using var client = runtime.CreateClient(allowAutoRedirect: false);
+                    using (var login = await SubmitLoginAsync(client, current.Item1, current.Item2))
+                    {
+                        Expect(IsRedirect(login.StatusCode), $"{current.Item1} login failed");
+                    }
+
+                    foreach (var target in roles)
+                    {
+                        using var response = await client.GetAsync(target.Item3);
+                        if (string.Equals(current.Item3, target.Item3, StringComparison.OrdinalIgnoreCase))
+                        {
+                            Expect(response.IsSuccessStatusCode, $"{current.Item1} cannot open own Area {target.Item3}");
+                        }
+                        else
+                        {
+                            Expect(response.StatusCode == HttpStatusCode.Redirect,
+                                $"{current.Item1} unexpectedly opened {target.Item3}");
+                            Expect(response.Headers.Location?.ToString().Contains("/Auth/AccessDenied", StringComparison.OrdinalIgnoreCase) == true,
+                                $"cross-role denial for {target.Item3} did not use access denied");
+                        }
+                    }
+                }
+            }),
+            new("TC39", "Navigation isolation", "Public and role shells expose only relevant navigation", async () =>
+            {
+                using var publicClient = runtime.CreateClient();
+                var publicHtml = await GetStringAsync(publicClient, "/");
+                Expect(!publicHtml.Contains("href=\"/Admin", StringComparison.OrdinalIgnoreCase), "public shell leaked Admin navigation");
+                Expect(!publicHtml.Contains("href=\"/Pharmacist", StringComparison.OrdinalIgnoreCase), "public shell leaked Pharmacist navigation");
+                Expect(!publicHtml.Contains("href=\"/Expert", StringComparison.OrdinalIgnoreCase), "public shell leaked Expert navigation");
+
+                using var userClient = runtime.CreateClient();
+                await LoginAsync(userClient, "user@nhom4.local", "User@123", followRedirects: true);
+                var userHtml = await GetStringAsync(userClient, "/User");
+                Expect(userHtml.Contains("Lịch sử tra cứu"), "User navigation missing history");
+                Expect(!userHtml.Contains("href=\"/Admin", StringComparison.OrdinalIgnoreCase), "User shell leaked Admin navigation");
+                Expect(!userHtml.Contains("Kho rủi ro"), "User shell leaked Pharmacist navigation");
+            }),
+            new("TC40", "AI Area route", "Pharmacist detail binds AI request to its Area endpoint", async () =>
+            {
+                using var client = runtime.CreateClient();
+                await LoginAsync(client, "duocsi@nhom4.local", "Duocsi@123", followRedirects: true);
+                var html = await GetStringAsync(client, "/Pharmacist/Workspace/Details/1");
+                Expect(html.Contains("data-endpoint=\"/Pharmacist/Workspace/ExplainAlternative\""), "AI button did not bind Area endpoint");
+                Expect(html.Contains("Giải thích có hỗ trợ AI"), "AI action label is not localized");
             })
         ];
     }
 
     private static async Task<string> LoginAsync(HttpClient client, string email, string password, bool followRedirects)
     {
-        var loginHtml = await GetStringAsync(client, "/Auth/Login");
-        var token = ExtractAntiforgeryToken(loginHtml);
-        var response = await client.PostAsync("/Auth/Login", new FormUrlEncodedContent(new Dictionary<string, string>
-        {
-            ["Email"] = email,
-            ["Password"] = password,
-            ["ReturnUrl"] = "",
-            ["__RequestVerificationToken"] = token
-        }));
+        using var response = await SubmitLoginAsync(client, email, password);
 
         if (!followRedirects || !IsRedirect(response.StatusCode))
         {
-            return await response.Content.ReadAsStringAsync();
+            return WebUtility.HtmlDecode(await response.Content.ReadAsStringAsync());
         }
 
         var location = response.Headers.Location?.ToString() ?? "/";
         return await GetStringAsync(client, location);
     }
 
+    private static async Task<HttpResponseMessage> SubmitLoginAsync(HttpClient client, string email, string password)
+    {
+        var loginHtml = await GetStringAsync(client, "/Auth/Login");
+        var token = ExtractAntiforgeryToken(loginHtml);
+        return await client.PostAsync("/Auth/Login", new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            ["Email"] = email,
+            ["Password"] = password,
+            ["ReturnUrl"] = "",
+            ["__RequestVerificationToken"] = token
+        }));
+    }
+
     private static async Task<string> GetStringAsync(HttpClient client, string path)
     {
         using var response = await client.GetAsync(path);
-        var body = await response.Content.ReadAsStringAsync();
+        var body = WebUtility.HtmlDecode(await response.Content.ReadAsStringAsync());
         Expect(response.IsSuccessStatusCode, $"{path} returned {(int)response.StatusCode}");
         return body;
     }
@@ -768,7 +863,7 @@ internal static class AcceptanceTests
     private static async Task<string> PostFormStringAsync(HttpClient client, string path, Dictionary<string, string> form)
     {
         using var response = await client.PostAsync(path, new FormUrlEncodedContent(form));
-        var body = await response.Content.ReadAsStringAsync();
+        var body = WebUtility.HtmlDecode(await response.Content.ReadAsStringAsync());
         Expect(response.IsSuccessStatusCode, $"{path} returned {(int)response.StatusCode}");
         return body;
     }

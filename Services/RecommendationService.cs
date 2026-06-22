@@ -108,7 +108,7 @@ public sealed class RecommendationService(PharmacyDbContext dbContext) : IRecomm
             Strength = candidate.Strength,
             DosageForm = dosageForm,
             Manufacturer = manufacturer,
-            ActiveIngredient = ingredient?.Name ?? "Chua khai bao",
+            ActiveIngredient = ingredient?.Name ?? "Chưa khai báo",
             Price = candidate.Price,
             StockQuantity = stock,
             PrescriptionRequired = candidate.PrescriptionRequired,

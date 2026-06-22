@@ -5,66 +5,66 @@
 
 <div class="row g-3">
     <div class="col-md-6">
-        <label asp-for="Name" class="form-label">Ten thuoc</label>
+        <label asp-for="Name" class="form-label">Tên thuốc</label>
         <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
     <div class="col-md-3">
-        <label asp-for="Strength" class="form-label">Ham luong</label>
+        <label asp-for="Strength" class="form-label">Hàm lượng</label>
         <input asp-for="Strength" class="form-control" />
         <span asp-validation-for="Strength" class="text-danger"></span>
     </div>
     <div class="col-md-3">
-        <label asp-for="Price" class="form-label">Gia ban</label>
+        <label asp-for="Price" class="form-label">Giá bán</label>
         <input asp-for="Price" class="form-control" />
         <span asp-validation-for="Price" class="text-danger"></span>
     </div>
     <div class="col-md-4">
-        <label asp-for="CategoryId" class="form-label">Danh muc</label>
+        <label asp-for="CategoryId" class="form-label">Danh mục</label>
         <select asp-for="CategoryId" asp-items="Model.Categories" class="form-select"></select>
     </div>
     <div class="col-md-4">
-        <label asp-for="DosageFormId" class="form-label">Dang bao che</label>
+        <label asp-for="DosageFormId" class="form-label">Dạng bào chế</label>
         <select asp-for="DosageFormId" asp-items="Model.DosageForms" class="form-select"></select>
     </div>
     <div class="col-md-4">
-        <label asp-for="UnitId" class="form-label">Don vi</label>
+        <label asp-for="UnitId" class="form-label">Đơn vị</label>
         <select asp-for="UnitId" asp-items="Model.Units" class="form-select"></select>
     </div>
     <div class="col-md-6">
-        <label asp-for="ManufacturerId" class="form-label">Nha san xuat</label>
+        <label asp-for="ManufacturerId" class="form-label">Nhà sản xuất</label>
         <select asp-for="ManufacturerId" asp-items="Model.Manufacturers" class="form-select"></select>
     </div>
     <div class="col-md-3">
-        <label asp-for="ActiveIngredientId" class="form-label">Hoat chat</label>
+        <label asp-for="ActiveIngredientId" class="form-label">Hoạt chất</label>
         <select asp-for="ActiveIngredientId" asp-items="Model.ActiveIngredients" class="form-select"></select>
     </div>
     <div class="col-md-3">
-        <label asp-for="ActiveIngredientStrength" class="form-label">Ham luong hoat chat</label>
+        <label asp-for="ActiveIngredientStrength" class="form-label">Hàm lượng hoạt chất</label>
         <input asp-for="ActiveIngredientStrength" class="form-control" />
     </div>
     <div class="col-md-6">
         <div class="form-check mt-4">
             <input asp-for="PrescriptionRequired" class="form-check-input" />
-            <label asp-for="PrescriptionRequired" class="form-check-label">Can ke don</label>
+            <label asp-for="PrescriptionRequired" class="form-check-label">Cần kê đơn</label>
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-check mt-4">
             <input asp-for="IsActive" class="form-check-input" />
-            <label asp-for="IsActive" class="form-check-label">Dang ban</label>
+            <label asp-for="IsActive" class="form-check-label">Đang bán</label>
         </div>
     </div>
     <div class="col-12">
-        <label asp-for="Description" class="form-label">Mo ta</label>
+        <label asp-for="Description" class="form-label">Mô tả</label>
         <textarea asp-for="Description" class="form-control" rows="2"></textarea>
     </div>
     <div class="col-md-6">
-        <label asp-for="Usage" class="form-label">Cach dung</label>
+        <label asp-for="Usage" class="form-label">Cách dùng</label>
         <textarea asp-for="Usage" class="form-control" rows="2"></textarea>
     </div>
     <div class="col-md-6">
-        <label asp-for="Contraindications" class="form-label">Chong chi dinh</label>
+        <label asp-for="Contraindications" class="form-label">Chống chỉ định</label>
         <textarea asp-for="Contraindications" class="form-control" rows="2"></textarea>
     </div>
 </div>

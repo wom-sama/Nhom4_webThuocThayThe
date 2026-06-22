@@ -27,45 +27,45 @@ internal static class RecommendationScoring
         if (sourceIngredientId is not null && candidateIngredientId == sourceIngredientId)
         {
             score += 45;
-            reasons.Add("Cung hoat chat voi thuoc chinh.");
+            reasons.Add("Cùng hoạt chất với thuốc chính.");
         }
         else if (candidate.CategoryId == source.CategoryId)
         {
             score += 20;
-            reasons.Add("Cung nhom dieu tri, can duoc si xac nhan truoc khi thay the.");
+            reasons.Add("Cùng nhóm điều trị, cần dược sĩ xác nhận trước khi thay thế.");
         }
 
         if (string.Equals(candidate.Strength, source.Strength, StringComparison.OrdinalIgnoreCase))
         {
             score += 20;
-            reasons.Add("Ham luong trung khop.");
+            reasons.Add("Hàm lượng trùng khớp.");
         }
 
         if (candidate.DosageFormId == source.DosageFormId)
         {
             score += 15;
-            reasons.Add("Dang bao che tuong thich.");
+            reasons.Add("Dạng bào chế tương thích.");
         }
 
         if (stock > 0)
         {
             score += 15;
-            reasons.Add("Con hang trong kho kha dung.");
+            reasons.Add("Còn hàng trong kho khả dụng.");
         }
         else
         {
             alerts.Add(new SafetyAlert
             {
                 Severity = "High",
-                Title = "Het hang",
-                Message = "Ung vien thay the hien khong co lo kha dung."
+                Title = "Hết hàng",
+                Message = "Ứng viên thay thế hiện không có lô khả dụng."
             });
         }
 
         if (candidate.Price <= source.Price)
         {
             score += 5;
-            reasons.Add("Gia khong cao hon thuoc chinh.");
+            reasons.Add("Giá không cao hơn thuốc chính.");
         }
 
         if (candidate.PrescriptionRequired)
@@ -74,8 +74,8 @@ internal static class RecommendationScoring
             alerts.Add(new SafetyAlert
             {
                 Severity = "Medium",
-                Title = "Can ke don",
-                Message = "Thuoc can duoc bac si hoac duoc si xac nhan truoc khi tu van."
+                Title = "Cần kê đơn",
+                Message = "Thuốc cần được bác sĩ hoặc dược sĩ xác nhận trước khi tư vấn."
             });
         }
 
@@ -84,7 +84,7 @@ internal static class RecommendationScoring
             alerts.Add(new SafetyAlert
             {
                 Severity = candidate.PrescriptionRequired ? "Medium" : "Low",
-                Title = "Canh bao hoat chat",
+                Title = "Cảnh báo hoạt chất",
                 Message = ingredientWarning
             });
         }
@@ -95,18 +95,19 @@ internal static class RecommendationScoring
             alerts.Add(new SafetyAlert
             {
                 Severity = "High",
-                Title = "Di ung hoat chat",
-                Message = $"{patientDisplayName ?? "Nguoi dung"} co ho so di ung voi hoat chat {ingredientName ?? "nay"}."
+                Title = "Dị ứng hoạt chất",
+                Message = $"{patientDisplayName ?? "Người dùng"} có hồ sơ dị ứng với hoạt chất {ingredientName ?? "này"}."
             });
         }
 
         if (!string.IsNullOrWhiteSpace(candidate.Contraindications) &&
-            candidate.Contraindications.Contains("di ung", StringComparison.OrdinalIgnoreCase))
+            (candidate.Contraindications.Contains("di ung", StringComparison.OrdinalIgnoreCase) ||
+             candidate.Contraindications.Contains("dị ứng", StringComparison.OrdinalIgnoreCase)))
         {
             alerts.Add(new SafetyAlert
             {
                 Severity = "Medium",
-                Title = "Chong chi dinh",
+                Title = "Chống chỉ định",
                 Message = candidate.Contraindications
             });
         }
@@ -118,10 +119,10 @@ internal static class RecommendationScoring
     {
         return score switch
         {
-            >= 85 => "Rat phu hop",
-            >= 70 => "Phu hop",
-            >= 55 => "Can xem xet",
-            _ => "Chi tham khao"
+            >= 85 => "Rất phù hợp",
+            >= 70 => "Phù hợp",
+            >= 55 => "Cần xem xét",
+            _ => "Chỉ tham khảo"
         };
     }
 }
