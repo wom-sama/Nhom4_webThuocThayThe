@@ -1,5 +1,8 @@
 # SQL Server Release Guide
 
+The latest isolated backup/restore evidence is documented in
+[`../sprint-7/sql-backup-restore-drill.md`](../sprint-7/sql-backup-restore-drill.md).
+
 ## Local Development
 
 Prerequisites:
