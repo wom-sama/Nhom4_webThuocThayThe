@@ -137,27 +137,21 @@ public sealed class GeminiAiRecommendationExplanationService(
                 {
                     thinkingLevel = "minimal"
                 },
-                responseFormat = new
+                responseMimeType = "application/json",
+                responseSchema = new
                 {
-                    text = new
+                    type = "object",
+                    properties = new
                     {
-                        mimeType = "APPLICATION_JSON",
-                        schema = new
+                        summary = new { type = "string" },
+                        checkpoints = new
                         {
-                            type = "object",
-                            properties = new
-                            {
-                                summary = new { type = "string" },
-                                checkpoints = new
-                                {
-                                    type = "array",
-                                    items = new { type = "string" }
-                                },
-                                limitations = new { type = "string" }
-                            },
-                            required = new[] { "summary", "checkpoints", "limitations" }
-                        }
-                    }
+                            type = "array",
+                            items = new { type = "string" }
+                        },
+                        limitations = new { type = "string" }
+                    },
+                    required = new[] { "summary", "checkpoints", "limitations" }
                 }
             }
         };

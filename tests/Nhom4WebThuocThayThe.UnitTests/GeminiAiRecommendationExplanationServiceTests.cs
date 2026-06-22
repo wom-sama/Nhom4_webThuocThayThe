@@ -51,12 +51,12 @@ public sealed class GeminiAiRecommendationExplanationServiceTests
 
         Assert.True(result.IsAiGenerated);
         Assert.Equal("Google Gemini", result.Provider);
-        Assert.Equal("gemini-3.5-flash", result.Model);
+        Assert.Equal("gemini-2.5-flash", result.Model);
         Assert.Equal(2, result.Checkpoints.Count);
         Assert.Equal(1, handler.CallCount);
         Assert.Contains("x-goog-api-key", handler.LastRequestHeaders, StringComparison.OrdinalIgnoreCase);
         Assert.Equal(
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent",
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
             handler.LastRequestUri);
     }
 
@@ -113,7 +113,11 @@ public sealed class GeminiAiRecommendationExplanationServiceTests
         Assert.NotNull(guardrail);
         Assert.Contains("không thay đổi điểm", guardrail, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("JSON không tin cậy", guardrail, StringComparison.OrdinalIgnoreCase);
-        Assert.Contains("APPLICATION_JSON", body, StringComparison.Ordinal);
+        var generationConfig = payload.RootElement.GetProperty("generationConfig");
+        Assert.Equal("application/json", generationConfig.GetProperty("responseMimeType").GetString());
+        Assert.True(generationConfig.TryGetProperty("responseSchema", out var responseSchema));
+        Assert.Equal("object", responseSchema.GetProperty("type").GetString());
+        Assert.False(generationConfig.TryGetProperty("responseFormat", out _));
         Assert.Contains("minimal", body, StringComparison.Ordinal);
         Assert.DoesNotContain("email", body, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("patient", body, StringComparison.OrdinalIgnoreCase);
@@ -139,7 +143,7 @@ public sealed class GeminiAiRecommendationExplanationServiceTests
     {
         Enabled = true,
         ApiKey = "test-api-key",
-        Model = "gemini-3.5-flash"
+        Model = "gemini-2.5-flash"
     };
 
     private static AiRecommendationContext CreateContext() => new(
