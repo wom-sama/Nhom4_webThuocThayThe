@@ -1,40 +1,40 @@
 @model Nhom4WebThuocThayThe.ViewModels.Search.DrugSearchPageViewModel
 
 @{
-    ViewData["Title"] = "Tra cuu thuoc";
+    ViewData["Title"] = "Tra cứu thuốc";
 }
 
 <section class="mb-4">
-    <div class="page-kicker">Tra cuu cong khai</div>
-    <h1 class="page-title">Tra cuu thuoc va tinh trang san co</h1>
-    <p class="page-description">Nhap ten thuoc, hoat chat hoac danh muc de xem thuoc phu hop, ton kho va canh bao ke don.</p>
+    <div class="page-kicker">Tra cứu công khai</div>
+    <h1 class="page-title">Tra cứu thuốc và tình trạng sẵn có</h1>
+    <p class="page-description">Nhập tên thuốc, hoạt chất hoặc danh mục để xem thuốc phù hợp, tồn kho và cảnh báo kê đơn.</p>
 </section>
 
 <form method="get" class="app-surface filter-panel mb-4">
     <div>
-        <label asp-for="Keyword" class="form-label">Tu khoa</label>
-        <input asp-for="Keyword" class="form-control" placeholder="Nhap ten thuoc, hoat chat, danh muc..." />
+        <label asp-for="Keyword" class="form-label">Từ khóa</label>
+        <input asp-for="Keyword" class="form-control" placeholder="Nhập tên thuốc, hoạt chất, danh mục..." />
     </div>
     <div>
-        <label asp-for="CategoryId" class="form-label">Danh muc</label>
+        <label asp-for="CategoryId" class="form-label">Danh mục</label>
         <select asp-for="CategoryId" asp-items="Model.Categories" class="form-select">
-            <option value="">Tat ca danh muc</option>
+            <option value="">Tất cả danh mục</option>
         </select>
     </div>
     <div>
-        <button type="submit" class="btn btn-primary w-100">Tim</button>
+        <button type="submit" class="btn btn-primary w-100">Tìm thuốc</button>
     </div>
 </form>
 
 @if (!Model.Results.Any())
 {
-    <div class="empty-state">Khong tim thay thuoc phu hop. Hay thu tim theo hoat chat hoac danh muc dieu tri.</div>
+    <div class="empty-state">Không tìm thấy thuốc phù hợp. Hãy thử tìm theo hoạt chất hoặc danh mục điều trị.</div>
 }
 else
 {
     <div class="section-heading">
-        <h2 class="h4">Ket qua phu hop</h2>
-        <span class="muted-copy">@Model.Results.Count thuoc</span>
+        <h2 class="h4">Kết quả phù hợp</h2>
+        <span class="muted-copy">@Model.Results.Count thuốc</span>
     </div>
 
     <div class="result-grid">
@@ -52,7 +52,7 @@ else
                     </div>
                     @if (item.StockQuantity <= 0)
                     {
-                        <span class="status-badge is-danger">Het hang</span>
+                        <span class="status-badge is-danger">Hết hàng</span>
                     }
                     else
                     {
@@ -63,16 +63,16 @@ else
                     <span>@item.Category</span>
                     @if (item.PrescriptionRequired)
                     {
-                        <span class="status-badge is-warning">Can ke don</span>
+                        <span class="status-badge is-warning">Cần kê đơn</span>
                     }
                     else
                     {
-                        <span class="status-badge is-info">Khong ke don</span>
+                        <span class="status-badge is-info">Không kê đơn</span>
                     }
                 </div>
                 <div class="d-flex justify-content-between align-items-center gap-2">
                     <span class="muted-copy">@item.Price.ToString("N0") VND</span>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Chi tiet</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Chi tiết</a>
                 </div>
             </article>
         }

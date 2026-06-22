@@ -2,54 +2,54 @@
 @model IReadOnlyCollection<Nhom4WebThuocThayThe.ViewModels.Inventory.StockSummaryViewModel>
 
 @{
-    ViewData["Title"] = "Kho thuoc";
+    ViewData["Title"] = "Kho thuốc";
     var batches = ViewBag.Batches as IReadOnlyCollection<BatchListItemViewModel> ?? Array.Empty<BatchListItemViewModel>();
 }
 
 <section class="action-bar">
     <div>
-        <div class="page-kicker">Quan ly kho</div>
-        <h1 class="page-title">Ton kho va lo thuoc</h1>
-        <p class="page-description">Theo doi so luong kha dung, lo het hang, lo qua han va lo can theo doi han su dung.</p>
+        <div class="page-kicker">Quản lý kho</div>
+        <h1 class="page-title">Tồn kho và lô thuốc</h1>
+        <p class="page-description">Theo dõi số lượng khả dụng, lô hết hàng, lô quá hạn và lô cần theo dõi hạn sử dụng.</p>
     </div>
-    <a asp-action="CreateBatch" class="btn btn-primary">+ Them lo thuoc</a>
+    <a asp-action="CreateBatch" class="btn btn-primary">Thêm lô thuốc</a>
 </section>
 
-<section class="metric-grid mb-4" aria-label="Tong quan kho">
+<section class="metric-grid mb-4" aria-label="Tổng quan kho">
     <div class="metric-card">
-        <span>Mat hang</span>
+        <span>Mặt hàng</span>
         <strong>@Model.Count</strong>
-        <span>Thuoc dang quan ly</span>
+        <span>Thuốc đang quản lý</span>
     </div>
     <div class="metric-card">
-        <span>Lo thuoc</span>
+        <span>Lô thuốc</span>
         <strong>@batches.Count</strong>
-        <span>Theo kho va han su dung</span>
+        <span>Theo kho và hạn sử dụng</span>
     </div>
     <div class="metric-card">
-        <span>Het hang</span>
+        <span>Hết hàng</span>
         <strong>@Model.Count(item => item.IsOutOfStock)</strong>
-        <span>Can de xuat thay the</span>
+        <span>Cần đề xuất thay thế</span>
     </div>
     <div class="metric-card">
-        <span>Can han</span>
+        <span>Cận hạn</span>
         <strong>@batches.Count(item => item.IsNearExpiry)</strong>
-        <span>Trong 90 ngay</span>
+        <span>Trong 90 ngày</span>
     </div>
 </section>
 
 <section class="mb-4">
     <div class="section-heading">
-        <h2 class="h4">Ton kho theo thuoc</h2>
+        <h2 class="h4">Tồn kho theo thuốc</h2>
     </div>
     <div class="table-shell">
         <table class="table align-middle">
             <thead>
                 <tr>
-                    <th>Thuoc</th>
-                    <th>Ham luong</th>
-                    <th>Ton kho kha dung</th>
-                    <th>Trang thai</th>
+                    <th>Thuốc</th>
+                    <th>Hàm lượng</th>
+                    <th>Tồn kho khả dụng</th>
+                    <th>Trạng thái</th>
                 </tr>
             </thead>
             <tbody>
@@ -62,11 +62,11 @@
                         <td>
                             @if (item.IsOutOfStock)
                             {
-                                <span class="status-badge is-danger">Het hang</span>
+                                <span class="status-badge is-danger">Hết hàng</span>
                             }
                             else
                             {
-                                <span class="status-badge is-success">Con hang</span>
+                                <span class="status-badge is-success">Còn hàng</span>
                             }
                         </td>
                     </tr>
@@ -78,19 +78,19 @@
 
 <section>
     <div class="section-heading">
-        <h2 class="h4">Danh sach lo thuoc</h2>
+        <h2 class="h4">Danh sách lô thuốc</h2>
     </div>
     <div class="table-shell">
         <table class="table align-middle">
             <thead>
                 <tr>
-                    <th>So lo</th>
-                    <th>Thuoc</th>
+                    <th>Số lô</th>
+                    <th>Thuốc</th>
                     <th>Kho</th>
-                    <th>So luong</th>
-                    <th>Ngay nhap</th>
-                    <th>Han su dung</th>
-                    <th>Trang thai</th>
+                    <th>Số lượng</th>
+                    <th>Ngày nhập</th>
+                    <th>Hạn sử dụng</th>
+                    <th>Trạng thái</th>
                 </tr>
             </thead>
             <tbody>

@@ -24,6 +24,10 @@ temp/
 appsettings.Local.json
 appsettings.*.local.json
 secrets.json
+*TK.txt
+*GitHubPAT.txt
+someeDeploy.txt
+geminiKey.txt
 
 # Node.js
 node_modules/

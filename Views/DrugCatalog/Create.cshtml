@@ -1,21 +1,21 @@
 @model Nhom4WebThuocThayThe.ViewModels.Catalog.DrugFormViewModel
 
 @{
-    ViewData["Title"] = "Them thuoc";
+    ViewData["Title"] = "Thêm thuốc";
 }
 
 <section class="action-bar">
     <div>
-        <div class="page-kicker">Danh muc thuoc</div>
-        <h1 class="page-title">Them thuoc</h1>
+        <div class="page-kicker">Danh mục thuốc</div>
+        <h1 class="page-title">Thêm thuốc</h1>
     </div>
 </section>
 
 <form asp-action="Create" method="post" class="app-surface">
-    <partial name="_DrugForm" model="Model" />
+    <partial name="/Views/DrugCatalog/_DrugForm.cshtml" model="Model" />
     <div class="mt-3">
-        <button type="submit" class="btn btn-primary">Luu</button>
-        <a asp-action="Index" class="btn btn-outline-secondary">Huy</a>
+        <button type="submit" class="btn btn-primary">Lưu</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Hủy</a>
     </div>
 </form>
 

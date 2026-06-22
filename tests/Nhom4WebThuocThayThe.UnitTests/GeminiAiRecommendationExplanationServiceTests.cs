@@ -104,8 +104,15 @@ public sealed class GeminiAiRecommendationExplanationServiceTests
         await service.ExplainAsync(CreateContext());
 
         Assert.NotNull(body);
-        Assert.Contains("khong thay doi score", body, StringComparison.OrdinalIgnoreCase);
-        Assert.Contains("JSON khong tin cay", body, StringComparison.OrdinalIgnoreCase);
+        using var payload = JsonDocument.Parse(body);
+        var guardrail = payload.RootElement
+            .GetProperty("systemInstruction")
+            .GetProperty("parts")[0]
+            .GetProperty("text")
+            .GetString();
+        Assert.NotNull(guardrail);
+        Assert.Contains("không thay đổi điểm", guardrail, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("JSON không tin cậy", guardrail, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("APPLICATION_JSON", body, StringComparison.Ordinal);
         Assert.Contains("minimal", body, StringComparison.Ordinal);
         Assert.DoesNotContain("email", body, StringComparison.OrdinalIgnoreCase);

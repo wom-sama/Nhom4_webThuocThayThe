@@ -19,10 +19,10 @@ document.addEventListener("click", async (event) => {
   }
 
   button.disabled = true;
-  button.textContent = "Dang giai thich...";
+  button.textContent = "Đang giải thích...";
   panel.hidden = false;
   panel.setAttribute("aria-busy", "true");
-  panel.replaceChildren(createText("p", "Dang ket noi dich vu giai thich..."));
+  panel.replaceChildren(createText("p", "Đang kết nối dịch vụ giải thích..."));
 
   const form = new URLSearchParams();
   form.set("sourceId", button.dataset.sourceId ?? "");
@@ -30,7 +30,7 @@ document.addEventListener("click", async (event) => {
   form.set("__RequestVerificationToken", token);
 
   try {
-    const response = await fetch("/Drugs/ExplainAlternative", {
+    const response = await fetch(button.dataset.endpoint ?? "/Drugs/ExplainAlternative", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: form,
@@ -48,13 +48,13 @@ document.addEventListener("click", async (event) => {
     panel.replaceChildren(
       createText(
         "p",
-        "Khong the tai giai thich luc nay. Vui long doc cac ly do va canh bao rule-based o tren."
+        "Không thể tải giải thích lúc này. Vui lòng đọc các lý do và cảnh báo theo bộ quy tắc ở trên."
       )
     );
   } finally {
     panel.removeAttribute("aria-busy");
     button.disabled = false;
-    button.textContent = "Giai thich lai";
+    button.textContent = "Giải thích lại";
   }
 });
 
@@ -62,10 +62,10 @@ function renderAiExplanation(panel, result) {
   const heading = document.createElement("div");
   heading.className = "ai-explanation-heading";
   heading.append(
-    createText("strong", "Giai thich de xuat"),
+    createText("strong", "Giải thích đề xuất"),
     createText(
       "span",
-      result.isAiGenerated ? "AI generated" : "Rule-based fallback",
+      result.isAiGenerated ? "Nội dung do AI hỗ trợ" : "Theo bộ quy tắc",
       result.isAiGenerated ? "status-badge is-info" : "status-badge is-warning"
     )
   );
@@ -78,14 +78,14 @@ function renderAiExplanation(panel, result) {
 
   const metadata = createText(
     "small",
-    `Nguon: ${result.provider ?? "khong xac dinh"} / ${result.model ?? "none"}`,
+    `Nguồn: ${result.provider ?? "không xác định"} / ${result.model ?? "không có"}`,
     "ai-explanation-metadata"
   );
   panel.replaceChildren(
     heading,
-    createText("p", result.summary ?? "Khong co tom tat."),
+    createText("p", result.summary ?? "Không có nội dung tóm tắt."),
     list,
-    createText("p", result.limitations ?? "Chi dung de tham khao.", "ai-explanation-limit"),
+    createText("p", result.limitations ?? "Chỉ dùng để tham khảo.", "ai-explanation-limit"),
     metadata
   );
 }

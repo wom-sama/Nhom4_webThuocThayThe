@@ -44,7 +44,7 @@ public sealed class ExpertReviewService(
         }
 
         item.Status = string.IsNullOrWhiteSpace(status) ? item.Status : status.Trim();
-        item.Reviewer = string.IsNullOrWhiteSpace(reviewer) ? "Chuyen gia" : reviewer.Trim();
+        item.Reviewer = string.IsNullOrWhiteSpace(reviewer) ? "Chuyên gia" : reviewer.Trim();
         item.Note = string.IsNullOrWhiteSpace(note) ? item.Note : note.Trim();
         item.UpdatedAt = DateTimeOffset.Now;
         dbContext.SaveChanges();

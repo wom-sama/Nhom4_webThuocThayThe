@@ -19,13 +19,13 @@ public sealed class ExpertReviewsController(IExpertReviewService expertReviewSer
         if (!expertReviewService.UpdateReview(
                 id,
                 status,
-                User.Identity?.Name ?? "Chuyen gia",
+                User.Identity?.Name ?? "Chuyên gia",
                 note))
         {
             return NotFound();
         }
 
-        TempData["SuccessMessage"] = "Da cap nhat danh gia chuyen gia.";
+        TempData["SuccessMessage"] = "Đã cập nhật đánh giá chuyên gia.";
         return RedirectToAction(nameof(Index));
     }
 }

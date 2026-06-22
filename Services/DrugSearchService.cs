@@ -106,7 +106,7 @@ public sealed class DrugSearchService(
             DosageForm = dosageForm.Name,
             Unit = unit.Name,
             Manufacturer = manufacturer.Name,
-            ActiveIngredient = ingredient?.Name ?? "Chua khai bao",
+            ActiveIngredient = ingredient?.Name ?? "Chưa khai báo",
             ActiveIngredientWarning = ingredient?.Warning,
             StockQuantity = stockQuantity,
             PrescriptionRequired = drug.PrescriptionRequired,

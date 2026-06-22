@@ -1,0 +1,12 @@
+@model IReadOnlyCollection<Nhom4WebThuocThayThe.ViewModels.ExpertReviews.ExpertReviewListItemViewModel>
+@{
+    ViewData["Title"] = "Tổng quan chuyên gia";
+    var pending = Model.Count(item => item.Status == "Cho danh gia");
+    var accepted = Model.Count(item => item.Status == "Chap nhan");
+    var needsReview = Model.Count(item => item.Status == "Can xem xet");
+    var rejected = Model.Count(item => item.Status == "Tu choi");
+}
+
+<section class="mb-4"><div class="page-kicker">Khu vực chuyên gia</div><h1 class="page-title">Hàng chờ đánh giá</h1><p class="page-description">Xem bằng chứng deterministic, ghi nhận quyết định và giữ đầy đủ lịch sử thao tác.</p></section>
+<section class="metric-grid mb-4" aria-label="Tình trạng đánh giá"><article class="metric-card"><span>Chờ đánh giá</span><strong>@pending</strong><span>Cần xử lý</span></article><article class="metric-card"><span>Đã chấp nhận</span><strong>@accepted</strong><span>Có audit trail</span></article><article class="metric-card"><span>Cần xem xét thêm</span><strong>@needsReview</strong><span>Yêu cầu nhận xét</span></article><article class="metric-card"><span>Đã từ chối</span><strong>@rejected</strong><span>Có lý do</span></article></section>
+<section class="app-surface"><div class="section-heading"><div><h2 class="h4">Quyết định chuyên môn</h2><p class="muted-copy mb-0">Chuyên gia không quản lý kho, tài khoản hoặc nguồn dữ liệu.</p></div><a asp-controller="Reviews" asp-action="Index" class="btn btn-primary">Mở hàng chờ</a></div></section>

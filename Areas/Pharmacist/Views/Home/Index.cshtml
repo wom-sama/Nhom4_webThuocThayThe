@@ -1,0 +1,10 @@
+@model IReadOnlyCollection<Nhom4WebThuocThayThe.ViewModels.Inventory.StockSummaryViewModel>
+@{
+    ViewData["Title"] = "Tổng quan dược sĩ";
+    var outOfStock = Model.Count(item => item.IsOutOfStock);
+    var lowStock = Model.Count(item => item.Quantity > 0 && item.Quantity <= 20);
+}
+
+<section class="mb-4"><div class="page-kicker">Khu vực dược sĩ</div><h1 class="page-title">Bàn làm việc dược sĩ</h1><p class="page-description">Tra cứu, so sánh thuốc thay thế và xử lý rủi ro tồn kho trong một giao diện chuyên biệt.</p></section>
+<section class="metric-grid mb-4" aria-label="Tổng quan kho"><article class="metric-card"><span>Thuốc đang theo dõi</span><strong>@Model.Count</strong><span>Dữ liệu kho hiện tại</span></article><article class="metric-card"><span>Hết hàng</span><strong>@outOfStock</strong><span>Cần đề xuất thay thế</span></article><article class="metric-card"><span>Sắp hết hàng</span><strong>@lowStock</strong><span>Tồn kho không quá 20</span></article><article class="metric-card"><span>Phiên chuyên môn</span><strong>Đang hoạt động</strong><span>Mọi quyết định được ghi audit</span></article></section>
+<section class="workflow-grid"><article class="workflow-card"><h2 class="h5">Bàn tra cứu</h2><p>Tìm thuốc, xem tồn kho, lý do xếp hạng và cảnh báo an toàn.</p><a asp-controller="Workspace" asp-action="Index" class="btn btn-primary btn-sm">Mở bàn tra cứu</a></article><article class="workflow-card"><h2 class="h5">Kho rủi ro</h2><p>Theo dõi thuốc hết hàng, số lượng thấp và lô sắp hết hạn.</p><a asp-controller="Inventory" asp-action="Index" class="btn btn-outline-primary btn-sm">Mở kho thuốc</a></article><article class="workflow-card"><h2 class="h5">Ranh giới AI</h2><p>AI chỉ giải thích; điểm, cảnh báo và quyết định chuyên môn không do AI thay đổi.</p></article></section>

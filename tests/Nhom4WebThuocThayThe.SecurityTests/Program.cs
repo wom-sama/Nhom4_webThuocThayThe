@@ -92,7 +92,7 @@ internal sealed class WebAppRuntime : IAsyncDisposable
             StartInfo = new ProcessStartInfo
             {
                 FileName = "dotnet",
-                Arguments = $"run --no-build --project \"{projectPath}\" --urls {baseUri}",
+                Arguments = $"run --no-build --configuration Release --project \"{projectPath}\" --urls {baseUri}",
                 WorkingDirectory = repoRoot.FullName,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
@@ -201,7 +201,7 @@ internal static class SecurityTests
             {
                 using var client = runtime.CreateClient();
                 var html = await LoginAsync(client, "admin@nhom4.local", "Admin@123", followRedirects: true);
-                Expect(html.Contains("Bang dieu khien"), "login with hashed credentials failed");
+                Expect(html.Contains("Tổng quan vận hành"), "login with hashed credentials failed");
             }),
             new("SEC03", "Auth", "Invalid login does not set auth cookie", async () =>
             {

@@ -1,78 +1,70 @@
 @{
-    ViewData["Title"] = "Tong quan";
+    ViewData["Title"] = "Tổng quan";
 }
 
 <section class="mb-4">
-    <div class="page-kicker">He thong de xuat thuoc thay the</div>
-    <h1 class="page-title">Bang dieu khien tra cuu va quan ly thuoc</h1>
+    <div class="page-kicker">Hệ thống đề xuất thuốc thay thế</div>
+    <h1 class="page-title">Tra cứu thuốc rõ ràng, an toàn và có kiểm chứng</h1>
     <p class="page-description">
-        Tap trung vao tra cuu thuoc, tinh trang ton kho va cac du lieu nen tang can cho quy trinh de xuat thuoc thay the khi thuoc chinh khong co san.
+        Tìm thuốc theo tên, hoạt chất hoặc nhóm điều trị; kiểm tra tình trạng sẵn có và tham khảo các lựa chọn thay thế khi thuốc chính không có sẵn.
     </p>
 </section>
 
 <section class="app-surface mb-4">
     <form asp-controller="Drugs" asp-action="Index" method="get" class="quick-search">
         <div>
-            <label for="homeKeyword" class="form-label">Tu khoa tra cuu</label>
-            <input id="homeKeyword" name="keyword" class="form-control form-control-lg" placeholder="Panadol, Paracetamol, khang sinh..." />
+            <label for="homeKeyword" class="form-label">Từ khóa tra cứu</label>
+            <input id="homeKeyword" name="keyword" class="form-control form-control-lg" placeholder="Panadol, Paracetamol, kháng sinh..." />
         </div>
         <div>
-            <label for="homeCategory" class="form-label">Pham vi</label>
+            <label for="homeCategory" class="form-label">Phạm vi</label>
             <select id="homeCategory" class="form-select form-select-lg" disabled>
-                <option>Ten thuoc, hoat chat, danh muc</option>
+                <option>Tên thuốc, hoạt chất, danh mục</option>
             </select>
         </div>
-        <button type="submit" class="btn btn-primary btn-lg">Tim</button>
+        <button type="submit" class="btn btn-primary btn-lg">Tìm thuốc</button>
     </form>
 </section>
 
-<section class="metric-grid mb-4" aria-label="Chi so mau">
+<section class="metric-grid mb-4" aria-label="Thông tin hệ thống">
     <div class="metric-card">
-        <span>Thuoc dang quan ly</span>
+        <span>Thuốc có dữ liệu</span>
         <strong>@ViewBag.DrugCount</strong>
-        <span>Co hoat chat va thong tin duoc ly</span>
+        <span>Kèm hoạt chất và thông tin dược lý</span>
     </div>
     <div class="metric-card">
-        <span>Danh muc</span>
+        <span>Danh mục điều trị</span>
         <strong>@ViewBag.CategoryCount</strong>
-        <span>Phan loai phuc vu tra cuu</span>
+        <span>Phục vụ lọc và so sánh</span>
     </div>
     <div class="metric-card">
-        <span>Lo thuoc</span>
+        <span>Lô đang theo dõi</span>
         <strong>@ViewBag.BatchCount</strong>
-        <span>Co theo doi han su dung</span>
+        <span>Dùng để tính khả dụng hiện tại</span>
     </div>
     <div class="metric-card">
-        <span>Thuoc het hang</span>
+        <span>Thuốc tạm hết</span>
         <strong>@ViewBag.StockoutCount</strong>
-        <span>Can kich hoat de xuat thay the</span>
+        <span>Có thể cần phương án thay thế</span>
     </div>
 </section>
 
-<section class="workflow-grid">
+<section class="workflow-grid" aria-label="Nguyên tắc sử dụng">
     <article class="workflow-card">
-        <h2 class="h5">Tra cuu</h2>
-        <p>Tim thuoc theo ten, hoat chat hoac danh muc va kiem tra ton kho hien tai.</p>
-        <a asp-controller="Drugs" asp-action="Index" class="btn btn-outline-primary btn-sm">Mo tra cuu</a>
+        <h2 class="h5">Tra cứu công khai</h2>
+        <p>Thông tin tồn kho và dữ liệu thuốc được trình bày để hỗ trợ tham khảo, không thay thế tư vấn chuyên môn.</p>
+        <a asp-controller="Drugs" asp-action="Index" class="btn btn-outline-primary btn-sm">Mở tra cứu</a>
     </article>
     <article class="workflow-card">
-        <h2 class="h5">Danh muc</h2>
-        <p>Quan ly du lieu thuoc, hoat chat, dang bao che va thong tin canh bao.</p>
-        <a asp-controller="DrugCatalog" asp-action="Index" class="btn btn-outline-primary btn-sm">Mo danh muc</a>
+        <h2 class="h5">Đề xuất có giải thích</h2>
+        <p>Thứ hạng dựa trên bộ quy tắc; AI chỉ diễn giải kết quả, không kê đơn và không sửa điểm xếp hạng.</p>
     </article>
     <article class="workflow-card">
-        <h2 class="h5">Kho thuoc</h2>
-        <p>Theo doi lo thuoc kha dung, so luong ton va trang thai het hang.</p>
-        <a asp-controller="Inventory" asp-action="Index" class="btn btn-outline-primary btn-sm">Mo kho</a>
-    </article>
-    <article class="workflow-card">
-        <h2 class="h5">Danh gia de xuat</h2>
-        <p>Chuyen gia xem score, ly do va xac nhan de xuat truoc khi tu van.</p>
-        <a asp-controller="ExpertReviews" asp-action="Index" class="btn btn-outline-primary btn-sm">Mo danh gia</a>
-    </article>
-    <article class="workflow-card">
-        <h2 class="h5">Bao cao</h2>
-        <p>Theo doi rui ro ton kho, audit log, nguon du lieu va backup metadata.</p>
-        <a asp-controller="Reports" asp-action="Index" class="btn btn-outline-primary btn-sm">Mo bao cao</a>
+        <h2 class="h5">Phân quyền theo vai trò</h2>
+        <p>Đăng nhập để được chuyển tới khu vực riêng phù hợp với vai trò đã cấp cho tài khoản.</p>
+        @if (!(User.Identity?.IsAuthenticated ?? false))
+        {
+            <a asp-controller="Auth" asp-action="Login" class="btn btn-outline-primary btn-sm">Đăng nhập</a>
+        }
     </article>
 </section>

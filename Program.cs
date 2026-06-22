@@ -1,18 +1,39 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Nhom4WebThuocThayThe.Data;
+using Nhom4WebThuocThayThe.Localization;
 using Nhom4WebThuocThayThe.Models;
 using Nhom4WebThuocThayThe.Services;
 using Nhom4WebThuocThayThe.Services.Ai;
+using System.Globalization;
 using System.IO.Compression;
 using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+builder.Services
+    .AddControllersWithViews()
+    .AddViewLocalization()
+    .AddDataAnnotationsLocalization(options =>
+    {
+        options.DataAnnotationLocalizerProvider = (_, factory) =>
+            factory.Create(typeof(SharedResource));
+    });
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var vietnamese = new CultureInfo("vi-VN");
+    options.DefaultRequestCulture = new RequestCulture(vietnamese);
+    options.SupportedCultures = [vietnamese];
+    options.SupportedUICultures = [vietnamese];
+    options.ApplyCurrentCultureToResponseHeaders = true;
+    options.RequestCultureProviders.Clear();
+});
 builder.Services.AddResponseCompression(options =>
 {
     options.EnableForHttps = true;
@@ -113,6 +134,11 @@ app.UseStaticFiles(new StaticFileOptions
     OnPrepareResponse = context =>
         context.Context.Response.Headers.CacheControl = "public,max-age=604800"
 });
+
+var localizationOptions = app.Services
+    .GetRequiredService<IOptions<RequestLocalizationOptions>>()
+    .Value;
+app.UseRequestLocalization(localizationOptions);
 app.UseRouting();
 
 app.Use(async (context, next) =>
@@ -135,6 +161,10 @@ app.MapGet("/health", async (PharmacyDbContext dbContext) =>
     await dbContext.Database.CanConnectAsync()
         ? Results.Ok(new { status = "healthy", database = "connected" })
         : Results.Problem("Database connection failed."));
+
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "default",

@@ -10,41 +10,41 @@ public sealed class InMemoryPharmacyStore
 
     public List<DrugCategory> Categories { get; } =
     [
-        new() { Id = 1, Name = "Giam dau ha sot", Description = "Thuoc dieu tri dau, sot thong thuong." },
-        new() { Id = 2, Name = "Khang sinh", Description = "Thuoc can ke don va can xac nhan chuyen mon." },
-        new() { Id = 3, Name = "Tieu hoa", Description = "Thuoc ho tro he tieu hoa." },
-        new() { Id = 4, Name = "Di ung", Description = "Thuoc ho tro trieu chung di ung." }
+        new() { Id = 1, Name = "Giảm đau hạ sốt", Description = "Thuốc điều trị đau, sốt thông thường." },
+        new() { Id = 2, Name = "Kháng sinh", Description = "Thuốc cần kê đơn và cần xác nhận chuyên môn." },
+        new() { Id = 3, Name = "Tiêu hóa", Description = "Thuốc hỗ trợ hệ tiêu hóa." },
+        new() { Id = 4, Name = "Dị ứng", Description = "Thuốc hỗ trợ triệu chứng dị ứng." }
     ];
 
     public List<DosageForm> DosageForms { get; } =
     [
-        new() { Id = 1, Name = "Vien nen" },
-        new() { Id = 2, Name = "Vien nang" },
+        new() { Id = 1, Name = "Viên nén" },
+        new() { Id = 2, Name = "Viên nang" },
         new() { Id = 3, Name = "Siro" },
-        new() { Id = 4, Name = "Vien sui" }
+        new() { Id = 4, Name = "Viên sủi" }
     ];
 
     public List<MeasurementUnit> Units { get; } =
     [
-        new() { Id = 1, Name = "Vien" },
-        new() { Id = 2, Name = "Hop" },
+        new() { Id = 1, Name = "Viên" },
+        new() { Id = 2, Name = "Hộp" },
         new() { Id = 3, Name = "Chai" }
     ];
 
     public List<Manufacturer> Manufacturers { get; } =
     [
-        new() { Id = 1, Name = "DHG Pharma", Country = "Viet Nam" },
+        new() { Id = 1, Name = "DHG Pharma", Country = "Việt Nam" },
         new() { Id = 2, Name = "Sanofi", Country = "France" },
-        new() { Id = 3, Name = "Traphaco", Country = "Viet Nam" },
-        new() { Id = 4, Name = "Imexpharm", Country = "Viet Nam" }
+        new() { Id = 3, Name = "Traphaco", Country = "Việt Nam" },
+        new() { Id = 4, Name = "Imexpharm", Country = "Việt Nam" }
     ];
 
     public List<ActiveIngredient> ActiveIngredients { get; } =
     [
-        new() { Id = 1, Name = "Paracetamol", Warning = "Than trong voi benh gan." },
-        new() { Id = 2, Name = "Ibuprofen", Warning = "Than trong voi dau da day." },
-        new() { Id = 3, Name = "Amoxicillin", Warning = "Khang sinh can ke don." },
-        new() { Id = 4, Name = "Cetirizine", Warning = "Co the gay buon ngu." }
+        new() { Id = 1, Name = "Paracetamol", Warning = "Thận trọng với bệnh gan." },
+        new() { Id = 2, Name = "Ibuprofen", Warning = "Thận trọng với đau dạ dày." },
+        new() { Id = 3, Name = "Amoxicillin", Warning = "Kháng sinh cần kê đơn." },
+        new() { Id = 4, Name = "Cetirizine", Warning = "Có thể gây buồn ngủ." }
     ];
 
     public List<Drug> Drugs { get; } =
@@ -59,9 +59,9 @@ public sealed class InMemoryPharmacyStore
             DosageFormId = 1,
             UnitId = 1,
             ManufacturerId = 2,
-            Description = "Thuoc giam dau ha sot chua paracetamol.",
-            Usage = "Dung theo huong dan cua duoc si.",
-            Contraindications = "Qua man voi paracetamol."
+            Description = "Thuốc giảm đau hạ sốt chứa paracetamol.",
+            Usage = "Dùng theo hướng dẫn của dược sĩ.",
+            Contraindications = "Quá mẫn với paracetamol."
         },
         new()
         {
@@ -73,9 +73,9 @@ public sealed class InMemoryPharmacyStore
             DosageFormId = 1,
             UnitId = 1,
             ManufacturerId = 1,
-            Description = "Thuoc giam dau ha sot thay the cung hoat chat.",
-            Usage = "Dung theo huong dan cua duoc si.",
-            Contraindications = "Qua man voi paracetamol."
+            Description = "Thuốc giảm đau hạ sốt thay thế cùng hoạt chất.",
+            Usage = "Dùng theo hướng dẫn của dược sĩ.",
+            Contraindications = "Quá mẫn với paracetamol."
         },
         new()
         {
@@ -87,9 +87,9 @@ public sealed class InMemoryPharmacyStore
             DosageFormId = 2,
             UnitId = 1,
             ManufacturerId = 3,
-            Description = "Thuoc giam dau khang viem non-steroid.",
-            Usage = "Dung sau an.",
-            Contraindications = "Loet da day tien trien."
+            Description = "Thuốc giảm đau kháng viêm không steroid.",
+            Usage = "Dùng sau ăn.",
+            Contraindications = "Loét dạ dày tiến triển."
         },
         new()
         {
@@ -102,9 +102,9 @@ public sealed class InMemoryPharmacyStore
             UnitId = 1,
             ManufacturerId = 1,
             PrescriptionRequired = true,
-            Description = "Khang sinh beta-lactam.",
-            Usage = "Dung theo don bac si.",
-            Contraindications = "Di ung penicillin."
+            Description = "Kháng sinh beta-lactam.",
+            Usage = "Dùng theo đơn bác sĩ.",
+            Contraindications = "Dị ứng penicillin."
         },
         new()
         {
@@ -116,9 +116,9 @@ public sealed class InMemoryPharmacyStore
             DosageFormId = 4,
             UnitId = 1,
             ManufacturerId = 2,
-            Description = "Thuoc giam dau ha sot dang vien sui.",
-            Usage = "Hoa tan trong nuoc truoc khi dung.",
-            Contraindications = "Qua man voi paracetamol."
+            Description = "Thuốc giảm đau hạ sốt dạng viên sủi.",
+            Usage = "Hòa tan trong nước trước khi dùng.",
+            Contraindications = "Quá mẫn với paracetamol."
         },
         new()
         {
@@ -130,9 +130,9 @@ public sealed class InMemoryPharmacyStore
             DosageFormId = 1,
             UnitId = 1,
             ManufacturerId = 1,
-            Description = "Thuoc giam dau ha sot ham luong cao hon.",
-            Usage = "Dung theo huong dan cua duoc si.",
-            Contraindications = "Than trong voi nguoi benh gan."
+            Description = "Thuốc giảm đau hạ sốt hàm lượng cao hơn.",
+            Usage = "Dùng theo hướng dẫn của dược sĩ.",
+            Contraindications = "Thận trọng với người bệnh gan."
         },
         new()
         {
@@ -144,9 +144,9 @@ public sealed class InMemoryPharmacyStore
             DosageFormId = 1,
             UnitId = 1,
             ManufacturerId = 4,
-            Description = "Thuoc khang histamine ho tro trieu chung di ung.",
-            Usage = "Dung mot lan moi ngay theo huong dan.",
-            Contraindications = "Qua man voi cetirizine."
+            Description = "Thuốc kháng histamine hỗ trợ triệu chứng dị ứng.",
+            Usage = "Dùng một lần mỗi ngày theo hướng dẫn.",
+            Contraindications = "Quá mẫn với cetirizine."
         }
     ];
 
@@ -163,8 +163,8 @@ public sealed class InMemoryPharmacyStore
 
     public List<Warehouse> Warehouses { get; } =
     [
-        new() { Id = 1, Name = "Kho trung tam", Address = "Quan 1" },
-        new() { Id = 2, Name = "Quay ban le", Address = "Nha thuoc so 1" }
+        new() { Id = 1, Name = "Kho trung tâm", Address = "Quận 1" },
+        new() { Id = 2, Name = "Quầy bán lẻ", Address = "Nhà thuốc số 1" }
     ];
 
     public List<DrugBatch> Batches { get; } =
@@ -183,16 +183,16 @@ public sealed class InMemoryPharmacyStore
         new()
         {
             Email = "user@nhom4.local",
-            DisplayName = "Nguoi dung mac dinh",
+            DisplayName = "Người dùng mặc định",
             AllergyActiveIngredientIdsCsv = "2",
-            ClinicalNote = "Di ung voi nhom NSAID, uu tien canh bao ibuprofen."
+            ClinicalNote = "Dị ứng với nhóm NSAID, ưu tiên cảnh báo ibuprofen."
         },
         new()
         {
             Email = "duocsi@nhom4.local",
-            DisplayName = "Ho so kiem thu duoc si",
+            DisplayName = "Hồ sơ kiểm thử dược sĩ",
             AllergyActiveIngredientIdsCsv = "1",
-            ClinicalNote = "Ho so mau dung de kiem tra canh bao paracetamol."
+            ClinicalNote = "Hồ sơ mẫu dùng để kiểm tra cảnh báo paracetamol."
         }
     ];
 
@@ -203,26 +203,26 @@ public sealed class InMemoryPharmacyStore
             Id = 1,
             Name = "DrugBank",
             SourceUrl = "https://go.drugbank.com/",
-            MappingStatus = "San sang mapping",
+            MappingStatus = "Sẵn sàng ánh xạ",
             LastSyncDate = new DateOnly(2026, 5, 20),
-            Purpose = "Thong tin thuoc, hoat chat, chi dinh va tuong tac."
+            Purpose = "Thông tin thuốc, hoạt chất, chỉ định và tương tác."
         },
         new()
         {
             Id = 2,
             Name = "PubChem",
             SourceUrl = "https://pubchem.ncbi.nlm.nih.gov/",
-            MappingStatus = "Dang danh gia",
-            Purpose = "Doi chieu compound, CID va cau truc hoa hoc."
+            MappingStatus = "Đang đánh giá",
+            Purpose = "Đối chiếu hợp chất, CID và cấu trúc hóa học."
         },
         new()
         {
             Id = 3,
             Name = "ATC Index",
             SourceUrl = "https://www.whocc.no/atc_ddd_index/",
-            MappingStatus = "Da mapping mau",
+            MappingStatus = "Đã ánh xạ mẫu",
             LastSyncDate = new DateOnly(2026, 5, 25),
-            Purpose = "Phan loai nhom dieu tri va ho tro loc ung vien thay the."
+            Purpose = "Phân loại nhóm điều trị và hỗ trợ lọc ứng viên thay thế."
         }
     ];
 
@@ -233,27 +233,27 @@ public sealed class InMemoryPharmacyStore
             Id = 1,
             CreatedAt = new DateTimeOffset(2026, 5, 26, 9, 10, 0, TimeSpan.FromHours(7)),
             Actor = "System",
-            Action = "Seed data",
-            Entity = "Catalog",
-            Detail = "Khoi tao du lieu thuoc, lo thuoc va hoat chat."
+            Action = "Khởi tạo dữ liệu",
+            Entity = "Danh mục",
+            Detail = "Khởi tạo dữ liệu thuốc, lô thuốc và hoạt chất."
         },
         new()
         {
             Id = 2,
             CreatedAt = new DateTimeOffset(2026, 5, 26, 11, 30, 0, TimeSpan.FromHours(7)),
             Actor = "QC",
-            Action = "Regression",
-            Entity = "Search",
-            Detail = "Bo acceptance test nen tang dat 20/20."
+            Action = "Kiểm thử hồi quy",
+            Entity = "Tra cứu",
+            Detail = "Bộ kiểm thử chấp nhận nền tảng đạt 20/20."
         },
         new()
         {
             Id = 3,
             CreatedAt = new DateTimeOffset(2026, 5, 26, 14, 5, 0, TimeSpan.FromHours(7)),
             Actor = "System",
-            Action = "Performance test",
-            Entity = "Application",
-            Detail = "Bo performance realtime dat 8/8."
+            Action = "Kiểm thử hiệu năng",
+            Entity = "Ứng dụng",
+            Detail = "Bộ kiểm thử hiệu năng thời gian thực đạt 8/8."
         }
     ];
 
@@ -266,8 +266,8 @@ public sealed class InMemoryPharmacyStore
             RecommendedDrugId = 2,
             Score = 100,
             Status = "Cho danh gia",
-            Reviewer = "Chua gan",
-            Note = "Cung hoat chat, cung ham luong, con hang.",
+            Reviewer = "Chưa gán",
+            Note = "Cùng hoạt chất, cùng hàm lượng, còn hàng.",
             UpdatedAt = new DateTimeOffset(2026, 6, 20, 10, 0, 0, TimeSpan.FromHours(7))
         },
         new()
@@ -277,8 +277,8 @@ public sealed class InMemoryPharmacyStore
             RecommendedDrugId = 5,
             Score = 80,
             Status = "Can xem xet",
-            Reviewer = "Chuyen gia mau",
-            Note = "Cung hoat chat va ham luong nhung khac dang bao che.",
+            Reviewer = "Chuyên gia mẫu",
+            Note = "Cùng hoạt chất và hàm lượng nhưng khác dạng bào chế.",
             UpdatedAt = new DateTimeOffset(2026, 6, 20, 10, 10, 0, TimeSpan.FromHours(7))
         }
     ];

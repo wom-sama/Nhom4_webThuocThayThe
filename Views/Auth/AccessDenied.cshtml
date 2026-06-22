@@ -1,13 +1,13 @@
 @{
-    ViewData["Title"] = "Khong co quyen";
+    ViewData["Title"] = T["AccessDenied.Title"];
 }
 
 <section class="app-surface access-panel">
-    <div class="page-kicker">Phan quyen</div>
-    <h1 class="page-title">Khong co quyen truy cap</h1>
-    <p class="page-description">Tai khoan hien tai khong co vai tro phu hop cho chuc nang nay. Hay dung tai khoan duoc si hoac admin neu can quan ly danh muc va kho.</p>
+    <div class="page-kicker">@T["AccessDenied.Kicker"]</div>
+    <h1 class="page-title">@T["AccessDenied.Heading"]</h1>
+    <p class="page-description">@T["AccessDenied.Description"]</p>
     <div class="d-flex flex-wrap gap-2">
-        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Ve tong quan</a>
-        <a asp-controller="Drugs" asp-action="Index" class="btn btn-outline-primary">Mo tra cuu</a>
+        <a asp-area="" asp-controller="Home" asp-action="Index" class="btn btn-secondary">@T["Navigation.Overview"]</a>
+        <a asp-area="" asp-controller="Drugs" asp-action="Index" class="btn btn-outline-primary">@T["Navigation.DrugSearch"]</a>
     </div>
 </section>
