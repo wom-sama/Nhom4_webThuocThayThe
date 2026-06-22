@@ -42,8 +42,9 @@ public sealed class GeminiAiRecommendationExplanationService(
         {
             using var request = new HttpRequestMessage(
                 HttpMethod.Post,
-                new Uri($"./{Uri.EscapeDataString(_options.Model)}:generateContent", UriKind.Relative));
-            request.Headers.Add("x-goog-api-key", _options.ApiKey);
+                new Uri(
+                    $"./{Uri.EscapeDataString(_options.Model)}:generateContent?key={Uri.EscapeDataString(_options.ApiKey)}",
+                    UriKind.Relative));
             request.Content = JsonContent.Create(CreateRequest(context), options: JsonOptions);
 
             using var response = await httpClient.SendAsync(request, timeout.Token);

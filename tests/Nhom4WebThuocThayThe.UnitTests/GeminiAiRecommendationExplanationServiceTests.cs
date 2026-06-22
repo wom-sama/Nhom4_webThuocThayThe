@@ -54,9 +54,9 @@ public sealed class GeminiAiRecommendationExplanationServiceTests
         Assert.Equal("gemini-2.5-flash", result.Model);
         Assert.Equal(2, result.Checkpoints.Count);
         Assert.Equal(1, handler.CallCount);
-        Assert.Contains("x-goog-api-key", handler.LastRequestHeaders, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("x-goog-api-key", handler.LastRequestHeaders, StringComparison.OrdinalIgnoreCase);
         Assert.Equal(
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=test-api-key",
             handler.LastRequestUri);
     }
 
