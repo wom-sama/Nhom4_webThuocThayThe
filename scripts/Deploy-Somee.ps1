@@ -16,6 +16,8 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
+$retryLimit = $MaxAttempts
+$retainStaging = $KeepStaging.IsPresent
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $artifactsRoot = [IO.Path]::GetFullPath((Join-Path $repoRoot "artifacts"))
@@ -135,8 +137,13 @@ foreach ($path in @($stagingRoot, $backupRoot, $manifestPath)) {
 if (Test-Path -LiteralPath $stagingRoot) {
     Remove-Item -LiteralPath $stagingRoot -Recurse -Force
 }
-function Remove-StagingUnlessKept {
-    if (-not $KeepStaging -and (Test-Path -LiteralPath $stagingRoot)) {
+function Remove-StagingDirectory {
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    param()
+
+    if (-not $retainStaging -and
+        (Test-Path -LiteralPath $stagingRoot) -and
+        $PSCmdlet.ShouldProcess($stagingRoot, "Remove deployment staging directory")) {
         Remove-Item -LiteralPath $stagingRoot -Recurse -Force
     }
 }
@@ -222,7 +229,7 @@ if ($DryRun) {
         Manifest = $manifestPath
         SecretsCopied = $false
     }
-    Remove-StagingUnlessKept
+    Remove-StagingDirectory
     return $result
 }
 
@@ -243,7 +250,7 @@ function Get-FtpUri([string]$RelativePath = "") {
     return "ftp://$ftpAuthority/$encodedPath"
 }
 
-function New-FtpRequest([string]$RelativePath, [string]$Method) {
+function Get-FtpRequest([string]$RelativePath, [string]$Method) {
     $request = [System.Net.FtpWebRequest]::Create((Get-FtpUri $RelativePath))
     $request.Method = $Method
     $request.Credentials = $credential
@@ -257,12 +264,12 @@ function New-FtpRequest([string]$RelativePath, [string]$Method) {
 }
 
 function Invoke-WithRetry([scriptblock]$Operation, [string]$Label) {
-    for ($attempt = 1; $attempt -le $MaxAttempts; $attempt++) {
+    for ($attempt = 1; $attempt -le $retryLimit; $attempt++) {
         try {
             & $Operation
             return $attempt - 1
         } catch {
-            if ($attempt -eq $MaxAttempts) {
+            if ($attempt -eq $retryLimit) {
                 throw
             }
             $delaySeconds = [Math]::Min(30, 4 * $attempt)
@@ -272,8 +279,8 @@ function Invoke-WithRetry([scriptblock]$Operation, [string]$Label) {
     }
 }
 
-function Get-FtpNames {
-    $request = New-FtpRequest "" ([System.Net.WebRequestMethods+Ftp]::ListDirectory)
+function Get-FtpName {
+    $request = Get-FtpRequest "" ([System.Net.WebRequestMethods+Ftp]::ListDirectory)
     $response = $request.GetResponse()
     try {
         $reader = New-Object IO.StreamReader($response.GetResponseStream())
@@ -287,25 +294,25 @@ function Get-FtpNames {
     }
 }
 
-function Download-FtpFile([string]$RelativePath, [string]$LocalPath) {
-    $request = New-FtpRequest $RelativePath ([System.Net.WebRequestMethods+Ftp]::DownloadFile)
+function Receive-FtpFile([string]$RelativePath, [string]$LocalPath) {
+    $request = Get-FtpRequest $RelativePath ([System.Net.WebRequestMethods+Ftp]::DownloadFile)
     $response = $request.GetResponse()
     try {
-        $input = $response.GetResponseStream()
+        $responseStream = $response.GetResponseStream()
         $output = [IO.File]::Create($LocalPath)
         try {
-            $input.CopyTo($output)
+            $responseStream.CopyTo($output)
         } finally {
             $output.Dispose()
-            $input.Dispose()
+            $responseStream.Dispose()
         }
     } finally {
         $response.Dispose()
     }
 }
 
-function Upload-FtpBytes([string]$RelativePath, [byte[]]$Bytes) {
-    $request = New-FtpRequest $RelativePath ([System.Net.WebRequestMethods+Ftp]::UploadFile)
+function Send-FtpContent([string]$RelativePath, [byte[]]$Bytes) {
+    $request = Get-FtpRequest $RelativePath ([System.Net.WebRequestMethods+Ftp]::UploadFile)
     $request.ContentLength = $Bytes.Length
     $stream = $null
     $response = $null
@@ -319,20 +326,20 @@ function Upload-FtpBytes([string]$RelativePath, [byte[]]$Bytes) {
         $response = $null
     } finally {
         if ($null -ne $stream) {
-            try { $stream.Dispose() } catch { }
+            try { $stream.Dispose() } catch { Write-Warning "FTP request stream disposal failed: $($_.Exception.Message)" }
         }
         if ($null -ne $response) {
-            try { $response.Dispose() } catch { }
+            try { $response.Dispose() } catch { Write-Warning "FTP response disposal failed: $($_.Exception.Message)" }
         }
     }
 }
 
-function Upload-FtpFile([string]$RelativePath, [string]$LocalPath) {
-    Upload-FtpBytes $RelativePath ([IO.File]::ReadAllBytes($LocalPath))
+function Send-FtpFile([string]$RelativePath, [string]$LocalPath) {
+    Send-FtpContent $RelativePath ([IO.File]::ReadAllBytes($LocalPath))
 }
 
-function Ensure-FtpDirectory([string]$RelativePath) {
-    $request = New-FtpRequest $RelativePath ([System.Net.WebRequestMethods+Ftp]::MakeDirectory)
+function Initialize-FtpDirectory([string]$RelativePath) {
+    $request = Get-FtpRequest $RelativePath ([System.Net.WebRequestMethods+Ftp]::MakeDirectory)
     try {
         $response = $request.GetResponse()
         $response.Dispose()
@@ -349,8 +356,18 @@ function Ensure-FtpDirectory([string]$RelativePath) {
     }
 }
 
-function Remove-FtpFile([string]$RelativePath, [switch]$IgnoreMissing) {
-    $request = New-FtpRequest $RelativePath ([System.Net.WebRequestMethods+Ftp]::DeleteFile)
+function Remove-FtpFile {
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    param(
+        [string]$RelativePath,
+        [switch]$IgnoreMissing
+    )
+
+    if (-not $PSCmdlet.ShouldProcess($RelativePath, "Delete FTP file")) {
+        return
+    }
+
+    $request = Get-FtpRequest $RelativePath ([System.Net.WebRequestMethods+Ftp]::DeleteFile)
     try {
         $response = $request.GetResponse()
         $response.Dispose()
@@ -368,21 +385,21 @@ function Remove-FtpFile([string]$RelativePath, [switch]$IgnoreMissing) {
 }
 
 $remoteNames = @()
-$preflightRetries = Invoke-WithRetry { $script:remoteNames = @(Get-FtpNames) } "list remote root"
+$preflightRetries = Invoke-WithRetry { $script:remoteNames = @(Get-FtpName) } "list remote root"
 New-Item -ItemType Directory -Path $backupRoot -Force | Out-Null
 $remoteNames | Set-Content -LiteralPath (Join-Path $backupRoot "remote-root.txt") -Encoding UTF8
 $backupFiles = @()
 foreach ($name in @("web.config", "default.asp")) {
     if ($remoteNames -contains $name) {
         $localBackup = Join-Path $backupRoot $name
-        $preflightRetries += Invoke-WithRetry { Download-FtpFile $name $localBackup } "backup $name"
+        $preflightRetries += Invoke-WithRetry { Receive-FtpFile $name $localBackup } "backup $name"
         $backupFiles += $name
     }
 }
 
 $offlineBytes = [Text.Encoding]::UTF8.GetBytes(
     "<!doctype html><html><body><h1>Deployment in progress</h1></body></html>")
-[void](Invoke-WithRetry { Upload-FtpBytes "app_offline.htm" $offlineBytes } "enable maintenance")
+[void](Invoke-WithRetry { Send-FtpContent "app_offline.htm" $offlineBytes } "enable maintenance")
 
 $retryCount = $preflightRetries
 $uploadedCount = 0
@@ -392,19 +409,19 @@ try {
         Sort-Object { $_.FullName.Length })
     foreach ($directory in $directories) {
         $relativePath = (Get-StagingRelativePath $directory.FullName).TrimEnd("/")
-        $retryCount += Invoke-WithRetry { Ensure-FtpDirectory $relativePath } "mkdir $relativePath"
+        $retryCount += Invoke-WithRetry { Initialize-FtpDirectory $relativePath } "mkdir $relativePath"
         Start-Sleep -Milliseconds ([Math]::Min($PacingMilliseconds, 350))
     }
 
     $payloadFiles = @($stagedFiles | Where-Object { $_.Name -ne "web.config" })
     foreach ($file in $payloadFiles) {
         $relativePath = Get-StagingRelativePath $file.FullName
-        $retryCount += Invoke-WithRetry { Upload-FtpFile $relativePath $file.FullName } "upload $relativePath"
+        $retryCount += Invoke-WithRetry { Send-FtpFile $relativePath $file.FullName } "upload $relativePath"
         $uploadedCount++
         Start-Sleep -Milliseconds $PacingMilliseconds
     }
 
-    $retryCount += Invoke-WithRetry { Upload-FtpFile "web.config" $webConfigPath } "upload web.config"
+    $retryCount += Invoke-WithRetry { Send-FtpFile "web.config" $webConfigPath } "upload web.config"
     $uploadedCount++
     $retryCount += Invoke-WithRetry { Remove-FtpFile "default.asp" -IgnoreMissing } "remove default.asp"
 } catch {
@@ -412,7 +429,7 @@ try {
     $webConfigBackup = Join-Path $backupRoot "web.config"
     if (Test-Path -LiteralPath $webConfigBackup) {
         try {
-            [void](Invoke-WithRetry { Upload-FtpFile "web.config" $webConfigBackup } "restore web.config")
+            [void](Invoke-WithRetry { Send-FtpFile "web.config" $webConfigBackup } "restore web.config")
         } catch {
             Write-Warning "The previous web.config could not be restored."
         }
@@ -428,13 +445,13 @@ try {
     }
 }
 if ($null -ne $deploymentError) {
-    Remove-StagingUnlessKept
+    Remove-StagingDirectory
     throw $deploymentError
 }
 
 $siteUri = [Uri]$settings["SITE_URL"]
 if (-not $siteUri.IsAbsoluteUri -or [string]::IsNullOrWhiteSpace($siteUri.Host)) {
-    Remove-StagingUnlessKept
+    Remove-StagingDirectory
     throw "SITE_URL must be an absolute URL."
 }
 $publicBaseUrl = "https://$($siteUri.Host)"
@@ -454,7 +471,7 @@ for ($attempt = 1; $attempt -le $HealthAttempts; $attempt++) {
     Start-Sleep -Seconds 5
 }
 if (-not $healthPassed) {
-    Remove-StagingUnlessKept
+    Remove-StagingDirectory
     throw "Deployment upload completed, but the HTTPS health gate did not pass."
 }
 
@@ -469,5 +486,5 @@ $result = [pscustomobject]@{
     Manifest = $manifestPath
     Health = "healthy/database connected"
 }
-Remove-StagingUnlessKept
+Remove-StagingDirectory
 return $result
