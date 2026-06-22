@@ -3,6 +3,7 @@ param(
     [string]$PublishDirectory = ".\artifacts\somee-publish",
     [string]$ConfigurationFile = $env:SOMEE_DEPLOY_FILE,
     [string]$GeminiKeyFile = $env:GEMINI_KEY_FILE,
+    [string]$UserAccountsFile = $env:N4WTT_ACCOUNTS_FILE,
     [ValidateRange(0, 10000)]
     [int]$PacingMilliseconds = 850,
     [ValidateRange(1, 10)]
@@ -124,6 +125,68 @@ if (-not $DisableAi) {
     }
 }
 
+if ([string]::IsNullOrWhiteSpace($UserAccountsFile)) {
+    throw "Set N4WTT_ACCOUNTS_FILE or pass -UserAccountsFile with an untracked production account file."
+}
+$accountsPath = if ([IO.Path]::IsPathRooted($UserAccountsFile)) {
+    [IO.Path]::GetFullPath($UserAccountsFile)
+} else {
+    [IO.Path]::GetFullPath((Join-Path (Get-Location) $UserAccountsFile))
+}
+if (-not (Test-Path -LiteralPath $accountsPath -PathType Leaf)) {
+    throw "Production account file was not found."
+}
+if ($accountsPath.StartsWith($publishPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+    throw "The production account file must stay outside the publish directory."
+}
+
+$accountSettings = Read-KeyValueFile $accountsPath
+$accountDefinitions = @(
+    @{ Prefix = "ADMIN"; Role = "Admin" },
+    @{ Prefix = "PHARMACIST"; Role = "Pharmacist" },
+    @{ Prefix = "EXPERT"; Role = "Expert" },
+    @{ Prefix = "USER"; Role = "User" }
+)
+$productionAccounts = @()
+foreach ($definition in $accountDefinitions) {
+    $emailKey = "$($definition.Prefix)_EMAIL"
+    $displayNameKey = "$($definition.Prefix)_DISPLAY_NAME"
+    $passwordKey = "$($definition.Prefix)_PASSWORD"
+    if ([string]::IsNullOrWhiteSpace($accountSettings[$emailKey]) -or
+        [string]::IsNullOrWhiteSpace($accountSettings[$displayNameKey]) -or
+        [string]::IsNullOrWhiteSpace($accountSettings[$passwordKey])) {
+        throw "Missing production account setting for $($definition.Prefix)."
+    }
+
+    $salt = New-Object byte[] 16
+    $random = [Security.Cryptography.RandomNumberGenerator]::Create()
+    try {
+        $random.GetBytes($salt)
+    } finally {
+        $random.Dispose()
+    }
+    $derive = [Security.Cryptography.Rfc2898DeriveBytes]::new(
+        $accountSettings[$passwordKey],
+        $salt,
+        100000,
+        [Security.Cryptography.HashAlgorithmName]::SHA256)
+    try {
+        $hash = $derive.GetBytes(32)
+    } finally {
+        $derive.Dispose()
+    }
+    $productionAccounts += [ordered]@{
+        Email = $accountSettings[$emailKey]
+        DisplayName = $accountSettings[$displayNameKey]
+        Role = $definition.Role
+        PasswordSalt = [Convert]::ToBase64String($salt)
+        PasswordHash = [Convert]::ToBase64String($hash)
+        IsLocked = $false
+    }
+}
+$accountsJson = ConvertTo-Json -InputObject $productionAccounts -Depth 5 -Compress
+$encodedAccounts = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($accountsJson))
+
 $timestamp = [DateTime]::UtcNow.ToString("yyyyMMdd-HHmmss")
 $stagingRoot = [IO.Path]::GetFullPath((Join-Path $artifactsRoot "somee-deploy-staging"))
 $backupRoot = [IO.Path]::GetFullPath((Join-Path $artifactsRoot "somee-predeploy-backup\$timestamp"))
@@ -173,6 +236,7 @@ $runtimeValues = [ordered]@{
     "AI__Gemini__Enabled" = if ($DisableAi) { "false" } else { "true" }
     "AI__Gemini__ApiKey" = $geminiKey
     "AI__Gemini__Model" = "gemini-2.5-flash"
+    "Authentication__EncodedAccounts" = $encodedAccounts
 }
 foreach ($name in $runtimeValues.Keys) {
     $node = $environmentNode.SelectSingleNode("environmentVariable[@name='$name']")
@@ -194,7 +258,7 @@ try {
     $writer.Dispose()
 }
 
-$secretFileNames = @("someeDeploy.txt", "geminiKey.txt", "jiraTK.txt")
+$secretFileNames = @("someeDeploy.txt", "geminiKey.txt", "jiraTK.txt", "n4wttProductionAccounts.txt")
 $secretFiles = @(Get-ChildItem -LiteralPath $stagingRoot -Recurse -File |
     Where-Object { $secretFileNames -contains $_.Name })
 if ($secretFiles.Count -gt 0) {

@@ -1,70 +1,60 @@
+@model Nhom4WebThuocThayThe.ViewModels.Home.HomeDashboardViewModel
+
 @{
     ViewData["Title"] = "Tổng quan";
 }
 
-<section class="mb-4">
-    <div class="page-kicker">Hệ thống đề xuất thuốc thay thế</div>
-    <h1 class="page-title">Tra cứu thuốc rõ ràng, an toàn và có kiểm chứng</h1>
+<section class="page-intro mb-4">
+    <div class="page-kicker">Tra cứu thuốc thay thế</div>
+    <h1 class="page-title">Tìm thuốc và phương án thay thế</h1>
     <p class="page-description">
-        Tìm thuốc theo tên, hoạt chất hoặc nhóm điều trị; kiểm tra tình trạng sẵn có và tham khảo các lựa chọn thay thế khi thuốc chính không có sẵn.
+        Nhập tên thuốc hoặc hoạt chất để kiểm tra tồn kho, cảnh báo và lựa chọn thay thế phù hợp.
     </p>
 </section>
 
-<section class="app-surface mb-4">
+<section class="app-surface search-surface mb-4" aria-labelledby="public-search-heading">
+    <div class="section-heading search-heading">
+        <div>
+            <h2 id="public-search-heading" class="h4">Tìm thuốc</h2>
+        </div>
+    </div>
     <form asp-controller="Drugs" asp-action="Index" method="get" class="quick-search">
         <div>
-            <label for="homeKeyword" class="form-label">Từ khóa tra cứu</label>
-            <input id="homeKeyword" name="keyword" class="form-control form-control-lg" placeholder="Panadol, Paracetamol, kháng sinh..." />
+            <label for="homeKeyword" class="form-label">Tên thuốc hoặc hoạt chất</label>
+            <input id="homeKeyword" name="keyword" class="form-control form-control-lg" placeholder="Ví dụ: Paracetamol" autocomplete="off" />
         </div>
         <div>
-            <label for="homeCategory" class="form-label">Phạm vi</label>
-            <select id="homeCategory" class="form-select form-select-lg" disabled>
-                <option>Tên thuốc, hoạt chất, danh mục</option>
+            <label for="homeCategory" class="form-label">Nhóm thuốc</label>
+            <select id="homeCategory" name="categoryId" class="form-select form-select-lg">
+                <option value="">Tất cả nhóm thuốc</option>
+                @foreach (var category in Model.Categories)
+                {
+                    <option value="@category.Value">@category.Text</option>
+                }
             </select>
         </div>
-        <button type="submit" class="btn btn-primary btn-lg">Tìm thuốc</button>
+        <button type="submit" class="btn btn-primary btn-lg icon-button-label">
+            <i data-lucide="search" class="app-icon" aria-hidden="true"></i>
+            <span>Tra cứu</span>
+        </button>
     </form>
 </section>
 
-<section class="metric-grid mb-4" aria-label="Thông tin hệ thống">
-    <div class="metric-card">
-        <span>Thuốc có dữ liệu</span>
-        <strong>@ViewBag.DrugCount</strong>
-        <span>Kèm hoạt chất và thông tin dược lý</span>
-    </div>
-    <div class="metric-card">
-        <span>Danh mục điều trị</span>
-        <strong>@ViewBag.CategoryCount</strong>
-        <span>Phục vụ lọc và so sánh</span>
-    </div>
-    <div class="metric-card">
-        <span>Lô đang theo dõi</span>
-        <strong>@ViewBag.BatchCount</strong>
-        <span>Dùng để tính khả dụng hiện tại</span>
-    </div>
-    <div class="metric-card">
-        <span>Thuốc tạm hết</span>
-        <strong>@ViewBag.StockoutCount</strong>
-        <span>Có thể cần phương án thay thế</span>
-    </div>
-</section>
-
-<section class="workflow-grid" aria-label="Nguyên tắc sử dụng">
-    <article class="workflow-card">
-        <h2 class="h5">Tra cứu công khai</h2>
-        <p>Thông tin tồn kho và dữ liệu thuốc được trình bày để hỗ trợ tham khảo, không thay thế tư vấn chuyên môn.</p>
-        <a asp-controller="Drugs" asp-action="Index" class="btn btn-outline-primary btn-sm">Mở tra cứu</a>
+<section class="metric-strip mb-4" aria-label="Thông tin hệ thống">
+    <article class="metric-card metric-card-compact">
+        <div class="metric-label"><i data-lucide="pill" class="app-icon" aria-hidden="true"></i><span>Thuốc có dữ liệu</span></div>
+        <strong>@Model.DrugCount</strong>
     </article>
-    <article class="workflow-card">
-        <h2 class="h5">Đề xuất có giải thích</h2>
-        <p>Thứ hạng dựa trên bộ quy tắc; AI chỉ diễn giải kết quả, không kê đơn và không sửa điểm xếp hạng.</p>
+    <article class="metric-card metric-card-compact">
+        <div class="metric-label"><i data-lucide="list-filter" class="app-icon" aria-hidden="true"></i><span>Nhóm điều trị</span></div>
+        <strong>@Model.CategoryCount</strong>
     </article>
-    <article class="workflow-card">
-        <h2 class="h5">Phân quyền theo vai trò</h2>
-        <p>Đăng nhập để được chuyển tới khu vực riêng phù hợp với vai trò đã cấp cho tài khoản.</p>
-        @if (!(User.Identity?.IsAuthenticated ?? false))
-        {
-            <a asp-controller="Auth" asp-action="Login" class="btn btn-outline-primary btn-sm">Đăng nhập</a>
-        }
+    <article class="metric-card metric-card-compact">
+        <div class="metric-label"><i data-lucide="package-check" class="app-icon" aria-hidden="true"></i><span>Lô đang theo dõi</span></div>
+        <strong>@Model.BatchCount</strong>
+    </article>
+    <article class="metric-card metric-card-compact metric-card-alert">
+        <div class="metric-label"><i data-lucide="package-x" class="app-icon" aria-hidden="true"></i><span>Thuốc tạm hết</span></div>
+        <strong>@Model.StockoutCount</strong>
     </article>
 </section>

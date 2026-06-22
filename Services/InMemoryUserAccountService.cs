@@ -8,7 +8,23 @@ public sealed class InMemoryUserAccountService : IUserAccountService
     private const int PasswordHashIterations = 100_000;
     private const int PasswordHashBytes = 32;
 
-    private readonly List<AppUser> _users =
+    private readonly List<AppUser> _users;
+
+    public InMemoryUserAccountService()
+        : this(CreateDemoUsers())
+    {
+    }
+
+    public InMemoryUserAccountService(IEnumerable<AppUser> users)
+    {
+        _users = users.ToList();
+        if (_users.Count == 0)
+        {
+            throw new InvalidOperationException("At least one user account is required.");
+        }
+    }
+
+    private static IReadOnlyCollection<AppUser> CreateDemoUsers() =>
     [
         new()
         {

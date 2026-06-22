@@ -7,6 +7,17 @@
     var rejected = Model.Count(item => item.Status == "Tu choi");
 }
 
-<section class="mb-4"><div class="page-kicker">Khu vực chuyên gia</div><h1 class="page-title">Hàng chờ đánh giá</h1><p class="page-description">Xem bằng chứng deterministic, ghi nhận quyết định và giữ đầy đủ lịch sử thao tác.</p></section>
-<section class="metric-grid mb-4" aria-label="Tình trạng đánh giá"><article class="metric-card"><span>Chờ đánh giá</span><strong>@pending</strong><span>Cần xử lý</span></article><article class="metric-card"><span>Đã chấp nhận</span><strong>@accepted</strong><span>Có audit trail</span></article><article class="metric-card"><span>Cần xem xét thêm</span><strong>@needsReview</strong><span>Yêu cầu nhận xét</span></article><article class="metric-card"><span>Đã từ chối</span><strong>@rejected</strong><span>Có lý do</span></article></section>
-<section class="app-surface"><div class="section-heading"><div><h2 class="h4">Quyết định chuyên môn</h2><p class="muted-copy mb-0">Chuyên gia không quản lý kho, tài khoản hoặc nguồn dữ liệu.</p></div><a asp-controller="Reviews" asp-action="Index" class="btn btn-primary">Mở hàng chờ</a></div></section>
+<section class="mb-4"><div class="page-kicker">Khu vực chuyên gia</div><h1 class="page-title">Hàng đợi thẩm định</h1><p class="page-description">Đọc bằng chứng, ghi nhận quyết định và giữ đầy đủ lịch sử thao tác.</p></section>
+
+<section class="quick-action-grid mb-4" aria-label="Tác vụ chuyên gia">
+    <a asp-controller="Reviews" asp-action="Index" class="quick-action"><i data-lucide="clipboard-list" class="quick-action-icon" aria-hidden="true"></i><span><strong>Chờ thẩm định</strong><small>@pending hồ sơ cần xử lý</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i></a>
+    <a asp-controller="Reviews" asp-action="Index" class="quick-action"><i data-lucide="book-open-check" class="quick-action-icon" aria-hidden="true"></i><span><strong>Bằng chứng</strong><small>Điểm và lý do deterministic</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i></a>
+    <a asp-controller="Reviews" asp-action="Index" class="quick-action"><i data-lucide="history" class="quick-action-icon" aria-hidden="true"></i><span><strong>Lịch sử quyết định</strong><small>Audit actor và thời gian</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i></a>
+</section>
+
+<section class="metric-grid" aria-label="Tình trạng đánh giá">
+    <article class="metric-card metric-card-alert"><div class="metric-label"><i data-lucide="clock-3" class="app-icon" aria-hidden="true"></i><span>Chờ đánh giá</span></div><strong>@pending</strong><span>Cần xử lý</span></article>
+    <article class="metric-card"><div class="metric-label"><i data-lucide="badge-check" class="app-icon" aria-hidden="true"></i><span>Đã chấp nhận</span></div><strong>@accepted</strong><span>Có audit trail</span></article>
+    <article class="metric-card"><div class="metric-label"><i data-lucide="search-check" class="app-icon" aria-hidden="true"></i><span>Cần xem thêm</span></div><strong>@needsReview</strong><span>Yêu cầu nhận xét</span></article>
+    <article class="metric-card"><div class="metric-label"><i data-lucide="circle-x" class="app-icon" aria-hidden="true"></i><span>Đã từ chối</span></div><strong>@rejected</strong><span>Có lý do</span></article>
+</section>

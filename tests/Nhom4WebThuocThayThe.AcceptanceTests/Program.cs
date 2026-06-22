@@ -323,7 +323,7 @@ internal sealed class WebAppRuntime : IAsyncDisposable
             StartInfo = new ProcessStartInfo
             {
                 FileName = "dotnet",
-                Arguments = $"run --no-build --configuration Release --project \"{projectPath}\" --urls {baseUri}",
+                Arguments = $"run --no-build --no-launch-profile --configuration Release --project \"{projectPath}\" --urls {baseUri}",
                 WorkingDirectory = repoRoot.FullName,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
@@ -332,6 +332,8 @@ internal sealed class WebAppRuntime : IAsyncDisposable
             },
             EnableRaisingEvents = true
         };
+
+        process.StartInfo.Environment["ASPNETCORE_ENVIRONMENT"] = "Testing";
 
         process.OutputDataReceived += (_, args) =>
         {
@@ -423,7 +425,7 @@ internal static class AcceptanceTests
             {
                 using var client = runtime.CreateClient();
                 var html = await GetStringAsync(client, "/");
-                Expect(html.Contains("Tra cứu thuốc rõ ràng, an toàn và có kiểm chứng"), "public home title missing");
+                Expect(html.Contains("Tìm thuốc và phương án thay thế"), "public home title missing");
                 Expect(html.Contains("skip-link"), "skip link missing");
             }),
             new("TC02", "Search", "Search finds medicine by active ingredient", async () =>
@@ -743,6 +745,7 @@ internal static class AcceptanceTests
                 Expect(!html.Contains("Chuyengia@123", StringComparison.Ordinal), "login leaked a demo password");
                 Expect(!html.Contains("User@123", StringComparison.Ordinal), "login leaked a demo password");
                 Expect(!html.Contains("<select", StringComparison.OrdinalIgnoreCase), "login must not allow role selection");
+                Expect(!html.Contains("auth-benefits", StringComparison.OrdinalIgnoreCase), "login still renders verbose benefit bullets");
             }),
             new("TC36", "Localization", "Vietnamese culture is applied to HTML and response headers", async () =>
             {
@@ -789,6 +792,8 @@ internal static class AcceptanceTests
                         if (string.Equals(current.Item3, target.Item3, StringComparison.OrdinalIgnoreCase))
                         {
                             Expect(response.IsSuccessStatusCode, $"{current.Item1} cannot open own Area {target.Item3}");
+                            var ownAreaHtml = await response.Content.ReadAsStringAsync();
+                            Expect(ownAreaHtml.Contains("quick-action-grid"), $"quick actions missing for {target.Item3}");
                         }
                         else
                         {
@@ -821,7 +826,56 @@ internal static class AcceptanceTests
                 await LoginAsync(client, "duocsi@nhom4.local", "Duocsi@123", followRedirects: true);
                 var html = await GetStringAsync(client, "/Pharmacist/Workspace/Details/1");
                 Expect(html.Contains("data-endpoint=\"/Pharmacist/Workspace/ExplainAlternative\""), "AI button did not bind Area endpoint");
-                Expect(html.Contains("Giải thích có hỗ trợ AI"), "AI action label is not localized");
+                Expect(html.Contains("Giải thích bằng AI (tùy chọn)"), "AI action label is not localized");
+            }),
+            new("TC41", "Home usability", "Home category filter is functional and submitted", async () =>
+            {
+                using var client = runtime.CreateClient();
+                var html = await GetStringAsync(client, "/");
+                Expect(html.Contains("id=\"homeCategory\""), "home category control missing");
+                Expect(html.Contains("name=\"categoryId\""), "home category is not submitted");
+                Expect(!Regex.IsMatch(html, "<select[^>]*id=\"homeCategory\"[^>]*disabled", RegexOptions.IgnoreCase),
+                    "home category still appears interactive but disabled");
+                Expect(html.Contains("Tất cả nhóm thuốc"), "category all-option missing");
+                Expect(html.Contains("metric-strip"), "compact home metric strip missing");
+                Expect(!html.Contains("workflow-card"), "home still renders verbose workflow cards");
+            }),
+            new("TC42", "Decision-first detail", "Availability and alternatives precede pharmacology detail", async () =>
+            {
+                using var client = runtime.CreateClient();
+                var html = await GetStringAsync(client, "/Drugs/Details/1");
+                var decisionIndex = html.IndexOf("decision-summary", StringComparison.Ordinal);
+                var pharmacologyIndex = html.IndexOf("detail-information", StringComparison.Ordinal);
+                Expect(decisionIndex >= 0, "decision summary missing");
+                Expect(pharmacologyIndex > decisionIndex, "pharmacology appears before the primary decision");
+                Expect(html.Contains("recommendation-signals"), "top decision signals missing");
+                Expect(html.Contains("reason-disclosure"), "progressive reason disclosure missing");
+            }),
+            new("TC43", "Role quick actions", "Every role dashboard defines task-oriented quick actions", async () =>
+            {
+                var viewPaths = new[]
+                {
+                    Path.Combine("Areas", "Admin", "Views", "Home", "Index.cshtml"),
+                    Path.Combine("Areas", "Pharmacist", "Views", "Home", "Index.cshtml"),
+                    Path.Combine("Areas", "Expert", "Views", "Home", "Index.cshtml"),
+                    Path.Combine("Areas", "User", "Views", "Home", "Index.cshtml")
+                };
+                foreach (var relativePath in viewPaths)
+                {
+                    var source = await File.ReadAllTextAsync(Path.Combine(runtime.RepoRoot.FullName, relativePath));
+                    Expect(source.Contains("quick-action-grid"), $"quick actions missing in {relativePath}");
+                    Expect(source.Contains("data-lucide="), $"Lucide contract missing in {relativePath}");
+                }
+            }),
+            new("TC44", "Icon runtime", "Self-hosted Lucide asset is published and referenced", async () =>
+            {
+                using var client = runtime.CreateClient();
+                var home = await GetStringAsync(client, "/");
+                Expect(home.Contains("/lib/lucide/lucide.min.js"), "Lucide runtime is not referenced");
+                using var response = await client.GetAsync("/lib/lucide/lucide.min.js");
+                var bytes = await response.Content.ReadAsByteArrayAsync();
+                Expect(response.IsSuccessStatusCode, "Lucide runtime was not served");
+                Expect(bytes.Length > 100_000, "Lucide runtime appears incomplete");
             })
         ];
     }
