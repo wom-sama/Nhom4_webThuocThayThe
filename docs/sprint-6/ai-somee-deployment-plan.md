@@ -21,7 +21,7 @@ at most 1.5 seconds and at most 1 percent errors. A real-host test must be rerun
 
 ## AI boundary
 
-The external provider is Google Gemini `gemini-3.5-flash`, called only when the user requests an
+The external provider is Google Gemini `gemini-2.5-flash`, called only when the user requests an
 explanation. The deterministic recommendation service remains the source of score, stock and safety
 alerts. AI has no database access, no tool calls, no write permission and no approval permission.
 
@@ -46,7 +46,7 @@ must be stored only as a runtime secret and never in Git, Jira comments, logs or
 ```text
 AI__Gemini__Enabled=true
 AI__Gemini__ApiKey=<Google AI Studio authorization key>
-AI__Gemini__Model=gemini-3.5-flash
+AI__Gemini__Model=gemini-2.5-flash
 ```
 
 Docker maps the untracked `.env` values `AI_GEMINI_ENABLED`, `GEMINI_API_KEY` and
