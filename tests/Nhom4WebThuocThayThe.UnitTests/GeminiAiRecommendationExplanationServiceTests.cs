@@ -61,6 +61,32 @@ public sealed class GeminiAiRecommendationExplanationServiceTests
     }
 
     [Theory]
+    [InlineData("Here is the JSON requested:\n{\"summary\":\"Hop le.\",\"checkpoints\":[\"Con hang.\"],\"limitations\":\"Can duoc si xac nhan.\"}")]
+    [InlineData("```json\n{\"summary\":\"Hop le.\",\"checkpoints\":[\"Con hang.\"],\"limitations\":\"Can duoc si xac nhan.\"}\n```")]
+    public async Task StructuredResponseCanBeExtractedFromProviderWrapperText(string providerText)
+    {
+        var envelope = JsonSerializer.Serialize(new
+        {
+            candidates = new[]
+            {
+                new { content = new { parts = new[] { new { text = providerText } } } }
+            }
+        });
+        var handler = new StubHandler(_ => new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new StringContent(envelope, Encoding.UTF8, "application/json")
+        });
+        var service = CreateService(handler, EnabledOptions());
+
+        var result = await service.ExplainAsync(CreateContext());
+
+        Assert.True(result.IsAiGenerated);
+        Assert.Equal("Google Gemini", result.Provider);
+        Assert.Equal("Hop le.", result.Summary);
+        Assert.Single(result.Checkpoints);
+    }
+
+    [Theory]
     [InlineData(HttpStatusCode.TooManyRequests)]
     [InlineData(HttpStatusCode.InternalServerError)]
     public async Task ProviderFailureReturnsSafeFallback(HttpStatusCode statusCode)
