@@ -63,7 +63,7 @@ public sealed class GeminiAiRecommendationExplanationService(
                 return CreateFallback(context, "AI không tạo được nội dung an toàn; đang hiển thị giải thích theo bộ quy tắc.");
             }
 
-            var output = JsonSerializer.Deserialize<StructuredExplanation>(text, JsonOptions);
+            var output = ParseStructuredExplanation(text);
             var result = ValidateAndMap(output);
             if (result is null)
             {
@@ -183,6 +183,78 @@ public sealed class GeminiAiRecommendationExplanationService(
             true,
             "Google Gemini",
             _options.Model);
+    }
+
+    private static StructuredExplanation? ParseStructuredExplanation(string text)
+    {
+        try
+        {
+            return JsonSerializer.Deserialize<StructuredExplanation>(text, JsonOptions);
+        }
+        catch (JsonException)
+        {
+            var json = ExtractJsonObject(text);
+            return json is null ? null : JsonSerializer.Deserialize<StructuredExplanation>(json, JsonOptions);
+        }
+    }
+
+    private static string? ExtractJsonObject(string text)
+    {
+        var start = text.IndexOf('{', StringComparison.Ordinal);
+        if (start < 0)
+        {
+            return null;
+        }
+
+        var depth = 0;
+        var inString = false;
+        var escaped = false;
+        for (var index = start; index < text.Length; index++)
+        {
+            var current = text[index];
+            if (inString)
+            {
+                if (escaped)
+                {
+                    escaped = false;
+                    continue;
+                }
+
+                if (current == '\\')
+                {
+                    escaped = true;
+                    continue;
+                }
+
+                if (current == '"')
+                {
+                    inString = false;
+                }
+
+                continue;
+            }
+
+            if (current == '"')
+            {
+                inString = true;
+                continue;
+            }
+
+            if (current == '{')
+            {
+                depth++;
+            }
+            else if (current == '}')
+            {
+                depth--;
+                if (depth == 0)
+                {
+                    return text[start..(index + 1)];
+                }
+            }
+        }
+
+        return null;
     }
 
     private static AiExplanationResult CreateFallback(AiRecommendationContext context, string status)
