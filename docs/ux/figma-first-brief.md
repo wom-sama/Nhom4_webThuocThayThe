@@ -5,11 +5,12 @@ Jira epic: `N4WTT-206`
 The design source of truth is a versioned Figma file. Repository documents define requirements and
 acceptance criteria; they do not replace the approved Figma frames.
 
-## Approved design candidate
+## Design candidate under review
 
 - Figma Design file: [N4WTT – S8 UI Design](https://www.figma.com/design/fu43wNGxTFRMghHrlH9lhI/N4WTT-%E2%80%93-S8-UI-Design)
 - File key: `fu43wNGxTFRMghHrlH9lhI`
 - Authoring method: manual Figma Design; no Figma AI credits or Make generation.
+- Owner approval: pending `N4WTT-212`; this candidate does not authorize implementation yet.
 - Interactive reference only: [Pharmacy Web App UI Design](https://www.figma.com/make/UOQ4LcUQnhG6yArGXS9aYS/Pharmacy-Web-App-UI-Design)
 - Repository handoff: `docs/ux/figma-s8/`
 
