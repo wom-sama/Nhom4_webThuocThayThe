@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3300" height="1900" viewBox="0 0 3300 1900">
+  <rect width="3300" height="1900" fill="#E7EEF1"/>
+  <g font-family="Inter, Arial, sans-serif">
+    <text x="56" y="62" fill="#102A33" font-size="30" font-weight="800">N4WTT · Public Experience V3 · Bootstrap 12-column</text>
+    <text x="56" y="96" fill="#5C7078" font-size="16">Home/search · results · decision detail · secure login</text>
+
+    <!-- Home -->
+    <g transform="translate(56,132)">
+      <rect width="760" height="720" rx="8" fill="#F5F8F9" stroke="#B8C8CE"/>
+      <rect width="760" height="66" rx="8" fill="#FFFFFF"/><rect x="24" y="14" width="42" height="38" rx="7" fill="#0F766E"/>
+      <text x="34" y="40" fill="#FFFFFF" font-size="17" font-weight="800">Rx</text><text x="78" y="31" fill="#102A33" font-size="16" font-weight="700">Web thuốc thay thế</text><text x="78" y="49" fill="#71858D" font-size="11">Nhóm 4</text>
+      <text x="288" y="39" fill="#344A53" font-size="14" font-weight="600">Tổng quan</text><text x="390" y="39" fill="#344A53" font-size="14" font-weight="600">Tra cứu thuốc</text>
+      <rect x="645" y="15" width="91" height="36" rx="7" fill="#0F766E"/><text x="663" y="39" fill="#FFFFFF" font-size="13" font-weight="700">Đăng nhập</text>
+      <rect y="66" width="760" height="4" fill="#0F766E"/>
+
+      <text x="34" y="126" fill="#0F766E" font-size="13" font-weight="800">TRA CỨU THUỐC THAY THẾ</text>
+      <text x="34" y="170" fill="#102A33" font-size="31" font-weight="800">Quyết định nhanh,</text><text x="34" y="207" fill="#102A33" font-size="31" font-weight="800">thông tin rõ ràng.</text>
+      <text x="34" y="240" fill="#5C7078" font-size="15">Kiểm tra tồn kho, cảnh báo và phương án thay thế.</text>
+      <rect x="34" y="272" width="692" height="164" rx="8" fill="#FFFFFF" stroke="#C5D3D8"/>
+      <text x="58" y="306" fill="#102A33" font-size="18" font-weight="700">Tìm thuốc</text>
+      <text x="58" y="337" fill="#5C7078" font-size="12" font-weight="600">TÊN THUỐC HOẶC HOẠT CHẤT</text>
+      <rect x="58" y="350" width="410" height="48" rx="7" fill="#FFFFFF" stroke="#AFC0C7"/><text x="76" y="380" fill="#8A9AA1" font-size="14">Ví dụ: Paracetamol</text>
+      <rect x="480" y="350" width="142" height="48" rx="7" fill="#FFFFFF" stroke="#AFC0C7"/><text x="497" y="380" fill="#344A53" font-size="13">Tất cả nhóm</text>
+      <rect x="634" y="350" width="68" height="48" rx="7" fill="#0F766E"/><text x="651" y="380" fill="#FFFFFF" font-size="13" font-weight="700">Tìm</text>
+      <g transform="translate(34,470)">
+        <rect width="162" height="92" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/><text x="20" y="33" fill="#5C7078" font-size="12">THUỐC</text><text x="20" y="68" fill="#102A33" font-size="28" font-weight="800">7</text>
+        <rect x="176" width="162" height="92" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/><text x="196" y="33" fill="#5C7078" font-size="12">NHÓM ĐIỀU TRỊ</text><text x="196" y="68" fill="#102A33" font-size="28" font-weight="800">4</text>
+        <rect x="352" width="162" height="92" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/><text x="372" y="33" fill="#5C7078" font-size="12">LÔ KHẢ DỤNG</text><text x="372" y="68" fill="#102A33" font-size="28" font-weight="800">11</text>
+        <rect x="528" width="164" height="92" rx="8" fill="#FDECEC" stroke="#F0B6B1"/><text x="548" y="33" fill="#8C3A33" font-size="12">TẠM HẾT</text><text x="548" y="68" fill="#B42318" font-size="28" font-weight="800">1</text>
+      </g>
+      <rect x="34" y="590" width="692" height="76" rx="8" fill="#EAF4FF" stroke="#AFD1F0"/>
+      <text x="56" y="622" fill="#1769AA" font-size="14" font-weight="700">Dữ liệu quyết định luôn ưu tiên tồn kho và an toàn</text><text x="56" y="647" fill="#4D6570" font-size="13">AI chỉ diễn giải khi được yêu cầu, không thay đổi xếp hạng.</text>
+      <text x="34" y="704" fill="#71858D" font-size="12">FRAME A · HOME / SEARCH</text>
+    </g>
+
+    <!-- Results -->
+    <g transform="translate(842,132)">
+      <rect width="760" height="720" rx="8" fill="#F5F8F9" stroke="#B8C8CE"/>
+      <rect width="760" height="66" rx="8" fill="#FFFFFF"/><rect y="66" width="760" height="4" fill="#0F766E"/>
+      <text x="30" y="40" fill="#102A33" font-size="18" font-weight="800">Rx · Tra cứu thuốc</text><text x="642" y="40" fill="#0F766E" font-size="13" font-weight="700">Đăng nhập</text>
+      <text x="30" y="121" fill="#102A33" font-size="27" font-weight="800">Kết quả cho “Paracetamol”</text><text x="30" y="150" fill="#5C7078" font-size="14">4 thuốc · sắp xếp theo khả dụng</text>
+      <rect x="30" y="174" width="700" height="82" rx="8" fill="#FFFFFF" stroke="#C5D3D8"/>
+      <rect x="48" y="191" width="386" height="48" rx="7" fill="#FFFFFF" stroke="#AFC0C7"/><text x="66" y="221" fill="#344A53" font-size="14">Paracetamol</text>
+      <rect x="446" y="191" width="166" height="48" rx="7" fill="#FFFFFF" stroke="#AFC0C7"/><text x="462" y="221" fill="#344A53" font-size="13">Tất cả nhóm</text>
+      <rect x="624" y="191" width="86" height="48" rx="7" fill="#0F766E"/><text x="647" y="221" fill="#FFFFFF" font-size="13" font-weight="700">Lọc</text>
+      <g transform="translate(30,282)">
+        <rect width="700" height="88" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/>
+        <text x="18" y="30" fill="#102A33" font-size="17" font-weight="700">Paracetamol DHG 500mg</text><text x="18" y="55" fill="#5C7078" font-size="13">500mg · Viên nén · DHG Pharma</text><text x="18" y="76" fill="#344A53" font-size="13" font-weight="700">1.800 VND</text>
+        <rect x="438" y="18" width="102" height="30" rx="6" fill="#EAF7EF"/><text x="458" y="38" fill="#1D7A46" font-size="13" font-weight="700">Còn 120</text>
+        <rect x="552" y="18" width="124" height="44" rx="7" fill="#FFFFFF" stroke="#0F766E"/><text x="576" y="45" fill="#0F766E" font-size="13" font-weight="700">Chi tiết →</text>
+        <rect y="100" width="700" height="88" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/>
+        <text x="18" y="130" fill="#102A33" font-size="17" font-weight="700">Efferalgan 500mg</text><text x="18" y="155" fill="#5C7078" font-size="13">500mg · Viên sủi · Sanofi</text><text x="18" y="176" fill="#344A53" font-size="13" font-weight="700">3.000 VND</text>
+        <rect x="438" y="118" width="92" height="30" rx="6" fill="#EAF7EF"/><text x="458" y="138" fill="#1D7A46" font-size="13" font-weight="700">Còn 55</text><rect x="552" y="118" width="124" height="44" rx="7" fill="#FFFFFF" stroke="#0F766E"/><text x="576" y="145" fill="#0F766E" font-size="13" font-weight="700">Chi tiết →</text>
+        <rect y="200" width="700" height="88" rx="8" fill="#FFFFFF" stroke="#E8B8B3"/>
+        <rect width="5" height="88" rx="2" fill="#B42318"/>
+        <text x="18" y="230" fill="#102A33" font-size="17" font-weight="700">Panadol 500mg</text><text x="18" y="255" fill="#5C7078" font-size="13">500mg · Viên nén · Sanofi</text><text x="18" y="276" fill="#344A53" font-size="13" font-weight="700">2.500 VND</text>
+        <rect x="438" y="218" width="92" height="30" rx="6" fill="#FDECEC"/><text x="456" y="238" fill="#B42318" font-size="13" font-weight="700">Hết hàng</text><rect x="552" y="218" width="124" height="44" rx="7" fill="#0F766E"/><text x="576" y="245" fill="#FFFFFF" font-size="13" font-weight="700">Thay thế →</text>
+        <rect y="300" width="700" height="88" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/>
+        <text x="18" y="330" fill="#102A33" font-size="17" font-weight="700">Hapacol 650mg</text><text x="18" y="355" fill="#5C7078" font-size="13">650mg · Viên nén · DHG Pharma</text><text x="18" y="376" fill="#344A53" font-size="13" font-weight="700">2.200 VND</text>
+        <rect x="438" y="318" width="92" height="30" rx="6" fill="#EAF7EF"/><text x="458" y="338" fill="#1D7A46" font-size="13" font-weight="700">Còn 25</text><rect x="552" y="318" width="124" height="44" rx="7" fill="#FFFFFF" stroke="#0F766E"/><text x="576" y="345" fill="#0F766E" font-size="13" font-weight="700">Chi tiết →</text>
+      </g>
+      <text x="30" y="704" fill="#71858D" font-size="12">FRAME B · RESULTS / DECISION ROWS</text>
+    </g>
+
+    <!-- Detail -->
+    <g transform="translate(1628,132)">
+      <rect width="1020" height="1000" rx="8" fill="#F5F8F9" stroke="#B8C8CE"/>
+      <rect width="1020" height="66" rx="8" fill="#FFFFFF"/><rect y="66" width="1020" height="4" fill="#0F766E"/>
+      <text x="30" y="40" fill="#102A33" font-size="18" font-weight="800">Rx · Hồ sơ thuốc</text><text x="887" y="40" fill="#0F766E" font-size="13" font-weight="700">Đăng nhập</text>
+      <text x="30" y="124" fill="#102A33" font-size="28" font-weight="800">Panadol 500mg</text><text x="30" y="151" fill="#5C7078" font-size="14">500mg · Viên nén · Sanofi</text>
+      <rect x="820" y="100" width="168" height="44" rx="7" fill="#FFFFFF" stroke="#AFC0C7"/><text x="860" y="128" fill="#344A53" font-size="13" font-weight="700">← Quay lại</text>
+      <rect x="30" y="180" width="958" height="104" rx="8" fill="#FFF8F7" stroke="#E8B8B3"/><rect x="30" y="180" width="6" height="104" rx="3" fill="#B42318"/>
+      <text x="58" y="214" fill="#8C3A33" font-size="12" font-weight="800">TÌNH TRẠNG HIỆN TẠI</text><text x="58" y="247" fill="#102A33" font-size="22" font-weight="700">Hết hàng · 3 phương án thay thế</text><text x="58" y="270" fill="#5C7078" font-size="13">Ưu tiên cùng hoạt chất, còn hàng và không có cảnh báo cao.</text>
+      <rect x="824" y="210" width="138" height="44" rx="7" fill="#0F766E"/><text x="854" y="237" fill="#FFFFFF" font-size="13" font-weight="700">Xem đề xuất</text>
+      <rect x="30" y="308" width="338" height="560" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/>
+      <text x="54" y="348" fill="#102A33" font-size="20" font-weight="700">Thông tin thuốc</text><rect x="236" y="326" width="106" height="28" rx="6" fill="#EAF4FF"/><text x="254" y="345" fill="#1769AA" font-size="12" font-weight="700">Không kê đơn</text>
+      <text x="54" y="392" fill="#5C7078" font-size="13" font-weight="700">HOẠT CHẤT</text><text x="54" y="420" fill="#102A33" font-size="15" font-weight="700">Paracetamol</text><text x="54" y="445" fill="#A15C00" font-size="13">Thận trọng với bệnh gan</text>
+      <line x1="54" y1="470" x2="342" y2="470" stroke="#E1E8EB"/>
+      <text x="54" y="505" fill="#5C7078" font-size="13" font-weight="700">NHÓM THUỐC</text><text x="54" y="532" fill="#102A33" font-size="15">Giảm đau hạ sốt</text>
+      <line x1="54" y1="556" x2="342" y2="556" stroke="#E1E8EB"/>
+      <text x="54" y="592" fill="#5C7078" font-size="13" font-weight="700">GIÁ THAM KHẢO</text><text x="54" y="620" fill="#102A33" font-size="16" font-weight="700">2.500 VND / Viên</text>
+      <rect x="54" y="664" width="288" height="50" rx="7" fill="#F5F8F9" stroke="#CBD7DC"/><text x="76" y="695" fill="#344A53" font-size="14" font-weight="700">Thông tin dược lý chi tiết</text>
+      <rect x="392" y="308" width="596" height="560" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/>
+      <text x="416" y="348" fill="#102A33" font-size="20" font-weight="700">Phương án thay thế</text><text x="416" y="374" fill="#5C7078" font-size="13">Xếp hạng theo quy tắc, tồn kho và cảnh báo.</text>
+      <rect x="416" y="398" width="548" height="180" rx="8" fill="#FFFFFF" stroke="#91CDBF"/>
+      <text x="438" y="432" fill="#102A33" font-size="17" font-weight="700">Paracetamol DHG 500mg</text><text x="438" y="456" fill="#5C7078" font-size="13">500mg · Viên nén · DHG Pharma</text>
+      <rect x="438" y="476" width="92" height="28" rx="6" fill="#EAF7EF"/><text x="456" y="495" fill="#1D7A46" font-size="12" font-weight="700">Còn 120</text><rect x="540" y="476" width="148" height="28" rx="6" fill="#EAF7EF"/><text x="558" y="495" fill="#1D7A46" font-size="12" font-weight="700">Không cảnh báo cao</text>
+      <rect x="846" y="416" width="94" height="70" rx="8" fill="#E7F7F3"/><text x="874" y="447" fill="#0F766E" font-size="23" font-weight="800">100</text><text x="860" y="470" fill="#344A53" font-size="11">Rất phù hợp</text>
+      <text x="438" y="538" fill="#344A53" font-size="13">Cùng hoạt chất · Hàm lượng trùng · Dạng tương thích</text>
+      <rect x="438" y="548" width="174" height="36" rx="7" fill="#FFFFFF" stroke="#AFC0C7"/><text x="458" y="571" fill="#344A53" font-size="12" font-weight="700">Giải thích bằng Gemini</text>
+      <rect x="416" y="596" width="548" height="112" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/>
+      <text x="438" y="630" fill="#102A33" font-size="16" font-weight="700">Hapacol 650mg</text><text x="438" y="654" fill="#5C7078" font-size="13">Còn 25 · Điểm 80 · Không cảnh báo cao</text><text x="900" y="647" fill="#0F766E" font-size="13" font-weight="700">Mở →</text>
+      <rect x="416" y="724" width="548" height="112" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/>
+      <text x="438" y="758" fill="#102A33" font-size="16" font-weight="700">Efferalgan 500mg</text><text x="438" y="782" fill="#5C7078" font-size="13">Còn 55 · Điểm 80 · Không cảnh báo cao</text><text x="900" y="775" fill="#0F766E" font-size="13" font-weight="700">Mở →</text>
+      <rect x="30" y="890" width="958" height="66" rx="8" fill="#EAF4FF" stroke="#AFD1F0"/><text x="52" y="918" fill="#1769AA" font-size="13" font-weight="700">Gemini chỉ diễn giải kết quả rule-based</text><text x="52" y="940" fill="#4D6570" font-size="12">Điểm, cảnh báo và quyết định chuyên môn vẫn là nguồn chính.</text>
+      <text x="30" y="984" fill="#71858D" font-size="12">FRAME C · DECISION-FIRST DETAIL</text>
+    </g>
+
+    <!-- Login -->
+    <g transform="translate(56,890)">
+      <rect width="1546" height="780" rx="8" fill="#F5F8F9" stroke="#B8C8CE"/>
+      <rect width="1546" height="66" rx="8" fill="#FFFFFF"/><rect y="66" width="1546" height="4" fill="#0F766E"/>
+      <text x="30" y="40" fill="#102A33" font-size="18" font-weight="800">Rx · Web thuốc thay thế</text><text x="1380" y="40" fill="#344A53" font-size="13" font-weight="700">Tra cứu thuốc</text>
+      <rect x="88" y="126" width="1370" height="538" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/>
+      <rect x="88" y="126" width="522" height="538" rx="8" fill="#102A33"/>
+      <rect x="130" y="176" width="52" height="48" rx="8" fill="#0F766E"/><text x="142" y="207" fill="#FFFFFF" font-size="20" font-weight="800">Rx</text>
+      <text x="130" y="278" fill="#9FE4D8" font-size="13" font-weight="800">PHIÊN LÀM VIỆC AN TOÀN</text><text x="130" y="326" fill="#FFFFFF" font-size="31" font-weight="800">Đăng nhập theo</text><text x="130" y="365" fill="#FFFFFF" font-size="31" font-weight="800">vai trò được cấp.</text>
+      <text x="130" y="412" fill="#D7E4E8" font-size="15">Điều hướng tới đúng không gian nghiệp vụ</text><text x="130" y="438" fill="#D7E4E8" font-size="15">và bảo vệ phiên sau 30 phút không hoạt động.</text>
+      <rect x="130" y="494" width="342" height="46" rx="7" fill="#163A45"/><text x="154" y="523" fill="#FFFFFF" font-size="13">✓ Cookie HttpOnly · CSRF · RBAC server-side</text>
+      <text x="130" y="600" fill="#9CB0B7" font-size="12">Không hiển thị tài khoản mẫu trên giao diện.</text>
+      <text x="680" y="204" fill="#102A33" font-size="28" font-weight="800">Đăng nhập hệ thống</text><text x="680" y="235" fill="#5C7078" font-size="14">Sử dụng tài khoản production được cấp.</text>
+      <text x="680" y="292" fill="#344A53" font-size="13" font-weight="700">EMAIL</text><rect x="680" y="308" width="550" height="50" rx="7" fill="#FFFFFF" stroke="#AFC0C7"/><text x="700" y="339" fill="#8A9AA1" font-size="14">ten@donvi.vn</text>
+      <text x="680" y="400" fill="#344A53" font-size="13" font-weight="700">MẬT KHẨU</text><rect x="680" y="416" width="550" height="50" rx="7" fill="#FFFFFF" stroke="#AFC0C7"/><text x="700" y="447" fill="#8A9AA1" font-size="18">••••••••••</text>
+      <rect x="680" y="500" width="550" height="50" rx="7" fill="#0F766E"/><text x="904" y="531" fill="#FFFFFF" font-size="15" font-weight="800">Đăng nhập</text>
+      <text x="680" y="588" fill="#71858D" font-size="12">Thông tin đăng nhập không được chia sẻ hoặc ghi vào ảnh chụp.</text>
+      <text x="88" y="704" fill="#71858D" font-size="12">FRAME D · SECURE LOGIN</text>
+    </g>
+  </g>
+</svg>

@@ -51,13 +51,52 @@ public sealed class GeminiAiRecommendationExplanationServiceTests
 
         Assert.True(result.IsAiGenerated);
         Assert.Equal("Google Gemini", result.Provider);
-        Assert.Equal("gemini-2.5-flash", result.Model);
+        Assert.Equal("gemini-2.5-flash-lite", result.Model);
         Assert.Equal(2, result.Checkpoints.Count);
         Assert.Equal(1, handler.CallCount);
         Assert.DoesNotContain("x-goog-api-key", handler.LastRequestHeaders, StringComparison.OrdinalIgnoreCase);
         Assert.Equal(
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=test-api-key",
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=test-api-key",
             handler.LastRequestUri);
+    }
+
+    [Fact]
+    public async Task TransientProviderFailureIsRetriedBeforeReturningAiResult()
+    {
+        var structured = JsonSerializer.Serialize(new
+        {
+            summary = "Ung vien phu hop.",
+            checkpoints = new[] { "Con hang." },
+            limitations = "Can duoc si xac nhan."
+        });
+        var envelope = JsonSerializer.Serialize(new
+        {
+            candidates = new[]
+            {
+                new { content = new { parts = new[] { new { text = structured } } } }
+            }
+        });
+        var providerCalls = 0;
+        var handler = new StubHandler(_ =>
+        {
+            providerCalls++;
+            return providerCalls == 1
+                ? new HttpResponseMessage(HttpStatusCode.ServiceUnavailable)
+                : new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(envelope, Encoding.UTF8, "application/json")
+                };
+        });
+        var options = EnabledOptions();
+        options.MaxAttempts = 2;
+        options.RetryBaseMilliseconds = 1;
+        var service = CreateService(handler, options);
+
+        var result = await service.ExplainAsync(CreateContext());
+
+        Assert.True(result.IsAiGenerated);
+        Assert.Equal("Google Gemini", result.Provider);
+        Assert.Equal(2, handler.CallCount);
     }
 
     [Theory]
@@ -169,7 +208,9 @@ public sealed class GeminiAiRecommendationExplanationServiceTests
     {
         Enabled = true,
         ApiKey = "test-api-key",
-        Model = "gemini-2.5-flash"
+        Model = "gemini-2.5-flash-lite",
+        MaxAttempts = 1,
+        RetryBaseMilliseconds = 1
     };
 
     private static AiRecommendationContext CreateContext() => new(

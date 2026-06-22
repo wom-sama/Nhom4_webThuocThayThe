@@ -7,7 +7,7 @@
     var rejected = Model.Count(item => item.Status == "Tu choi");
 }
 
-<section class="mb-4"><div class="page-kicker">Khu vực chuyên gia</div><h1 class="page-title">Hàng đợi thẩm định</h1><p class="page-description">Đọc bằng chứng, ghi nhận quyết định và giữ đầy đủ lịch sử thao tác.</p></section>
+<section class="workspace-heading mb-4"><div class="page-kicker"><span class="live-dot" aria-hidden="true"></span>Khu vực chuyên gia</div><h1 class="page-title">Hàng đợi thẩm định</h1><p class="page-description">@pending hồ sơ đang chờ quyết định có lưu vết.</p></section>
 
 <section class="quick-action-grid mb-4" aria-label="Tác vụ chuyên gia">
     <a asp-controller="Reviews" asp-action="Index" class="quick-action"><i data-lucide="clipboard-list" class="quick-action-icon" aria-hidden="true"></i><span><strong>Chờ thẩm định</strong><small>@pending hồ sơ cần xử lý</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i></a>

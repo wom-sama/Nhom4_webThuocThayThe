@@ -4,16 +4,19 @@
     ViewData["Title"] = "Tra cứu thuốc";
 }
 
-<section class="mb-4">
-    <div class="page-kicker">Tra cứu công khai</div>
+<section class="workspace-heading public-results-heading mb-4">
+    <div class="page-kicker"><span class="live-dot" aria-hidden="true"></span>Tra cứu công khai</div>
     <h1 class="page-title">Tra cứu thuốc và tình trạng sẵn có</h1>
-    <p class="page-description">Nhập tên thuốc, hoạt chất hoặc danh mục để xem thuốc phù hợp, tồn kho và cảnh báo kê đơn.</p>
+    <p class="page-description">Kết quả ưu tiên trạng thái kho và cảnh báo cần xử lý.</p>
 </section>
 
-<form method="get" class="app-surface filter-panel mb-4">
-    <div>
+<form method="get" class="app-surface filter-panel filter-panel-v3 mb-4">
+    <div class="search-field-primary">
         <label asp-for="Keyword" class="form-label">Từ khóa</label>
-        <input asp-for="Keyword" class="form-control" placeholder="Nhập tên thuốc, hoạt chất, danh mục..." />
+        <div class="input-icon-wrap">
+            <i data-lucide="search" class="app-icon" aria-hidden="true"></i>
+            <input asp-for="Keyword" class="form-control" placeholder="Tên thuốc hoặc hoạt chất" />
+        </div>
     </div>
     <div>
         <label asp-for="CategoryId" class="form-label">Danh mục</label>
@@ -22,7 +25,7 @@
         </select>
     </div>
     <div>
-        <button type="submit" class="btn btn-primary w-100">Tìm thuốc</button>
+        <button type="submit" class="btn btn-primary w-100 icon-button-label"><i data-lucide="search" class="app-icon" aria-hidden="true"></i><span>Tìm thuốc</span></button>
     </div>
 </form>
 
@@ -32,24 +35,43 @@
 }
 else
 {
-    <div class="section-heading">
-        <h2 class="h4">Kết quả phù hợp</h2>
-        <span class="muted-copy">@Model.Results.Count thuốc</span>
+    <div class="section-heading result-heading-v3">
+        <div>
+            <h2 class="h4">Kết quả phù hợp</h2>
+            <span class="muted-copy">Sắp xếp theo dữ liệu hiện có</span>
+        </div>
+        <span class="result-count">@Model.Results.Count thuốc</span>
     </div>
 
-    <div class="result-grid">
+    <div class="result-grid result-list-v3">
         @foreach (var item in Model.Results)
         {
-            <article class="drug-card">
-                <div class="drug-card-header">
-                    <div>
-                        <h2 class="drug-title">@item.Name</h2>
-                        <div class="drug-meta">
-                            <span>@item.Strength</span>
-                            <span>@item.DosageForm</span>
-                            <span>@item.Manufacturer</span>
+            <article class="drug-card drug-result-row @(item.StockQuantity <= 0 ? "is-stockout" : "is-available")">
+                <div class="drug-result-status" aria-hidden="true"><i data-lucide="@(item.StockQuantity <= 0 ? "package-x" : "package-check")"></i></div>
+                <div class="drug-result-main">
+                    <div class="drug-card-header">
+                        <div>
+                            <h2 class="drug-title">@item.Name</h2>
+                            <div class="drug-meta">
+                                <span>@item.Strength</span>
+                                <span>@item.Category</span>
+                                <span>@item.DosageForm</span>
+                                <span>@item.Manufacturer</span>
+                            </div>
                         </div>
                     </div>
+                    <div class="drug-meta drug-result-tags">
+                        @if (item.PrescriptionRequired)
+                        {
+                            <span class="status-badge is-warning">Cần kê đơn</span>
+                        }
+                        else
+                        {
+                            <span class="status-badge is-info">Không kê đơn</span>
+                        }
+                    </div>
+                </div>
+                <div class="drug-result-decision">
                     @if (item.StockQuantity <= 0)
                     {
                         <span class="status-badge is-danger">Hết hàng</span>
@@ -58,21 +80,8 @@ else
                     {
                         <span class="status-badge is-success">@item.StockQuantity trong kho</span>
                     }
-                </div>
-                <div class="drug-meta">
-                    <span>@item.Category</span>
-                    @if (item.PrescriptionRequired)
-                    {
-                        <span class="status-badge is-warning">Cần kê đơn</span>
-                    }
-                    else
-                    {
-                        <span class="status-badge is-info">Không kê đơn</span>
-                    }
-                </div>
-                <div class="d-flex justify-content-between align-items-center gap-2">
-                    <span class="muted-copy">@item.Price.ToString("N0") VND</span>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Chi tiết</a>
+                    <strong class="drug-result-price">@item.Price.ToString("N0") VND</strong>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary icon-button-label"><span>Chi tiết</span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i></a>
                 </div>
             </article>
         }

@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3000" height="1800" viewBox="0 0 3000 1800">
+  <rect width="3000" height="1800" fill="#E7EEF1"/>
+  <g font-family="Inter, Arial, sans-serif">
+    <text x="56" y="62" fill="#102A33" font-size="30" font-weight="800">N4WTT · Role Workspaces &amp; Mobile V3</text>
+    <text x="56" y="96" fill="#5C7078" font-size="16">Task groups, dense tables, status hierarchy and responsive offcanvas navigation</text>
+
+    <!-- Admin desktop -->
+    <g transform="translate(56,132)">
+      <rect width="1760" height="900" rx="8" fill="#F5F8F9" stroke="#B8C8CE"/>
+      <rect width="250" height="900" rx="8" fill="#102A33"/>
+      <rect x="28" y="24" width="48" height="44" rx="8" fill="#0F766E"/><text x="39" y="53" fill="#FFFFFF" font-size="19" font-weight="800">Rx</text><text x="90" y="43" fill="#FFFFFF" font-size="16" font-weight="800">Quản trị</text><text x="90" y="62" fill="#9CB0B7" font-size="11">N4WTT workspace</text>
+      <text x="28" y="122" fill="#71858D" font-size="11" font-weight="700">VẬN HÀNH</text>
+      <rect x="16" y="142" width="218" height="44" rx="7" fill="#163A45"/><text x="48" y="170" fill="#FFFFFF" font-size="14" font-weight="700">Tổng quan</text>
+      <text x="48" y="224" fill="#D7E4E8" font-size="14">Danh mục thuốc</text><text x="48" y="272" fill="#D7E4E8" font-size="14">Kho và lô thuốc</text><text x="48" y="320" fill="#D7E4E8" font-size="14">Nguồn dữ liệu</text><text x="48" y="368" fill="#D7E4E8" font-size="14">Báo cáo &amp; backup</text>
+      <line x1="24" y1="414" x2="226" y2="414" stroke="#294A55"/>
+      <text x="28" y="454" fill="#71858D" font-size="11" font-weight="700">PHIÊN</text><text x="48" y="494" fill="#D7E4E8" font-size="13">Admin production</text>
+      <rect x="28" y="832" width="194" height="42" rx="7" fill="#163A45"/><text x="76" y="858" fill="#FFFFFF" font-size="13" font-weight="700">Đăng xuất</text>
+
+      <rect x="250" width="1510" height="70" rx="8" fill="#FFFFFF"/>
+      <text x="286" y="42" fill="#102A33" font-size="16" font-weight="700">Tổng quan vận hành</text><rect x="1452" y="17" width="270" height="38" rx="7" fill="#F5F8F9" stroke="#CBD7DC"/><text x="1480" y="41" fill="#5C7078" font-size="13">Tìm tác vụ hoặc dữ liệu...</text>
+      <text x="286" y="132" fill="#0F766E" font-size="12" font-weight="800">KHU VỰC QUẢN TRỊ</text><text x="286" y="176" fill="#102A33" font-size="30" font-weight="800">Vận hành hệ thống</text><text x="286" y="206" fill="#5C7078" font-size="14">Giám sát dữ liệu, kho, audit và khả năng phục hồi.</text>
+      <g transform="translate(286,242)">
+        <rect width="332" height="112" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/><text x="22" y="32" fill="#5C7078" font-size="12" font-weight="700">THUỐC THEO DÕI</text><text x="22" y="76" fill="#102A33" font-size="30" font-weight="800">7</text><text x="238" y="76" fill="#1D7A46" font-size="13" font-weight="700">Ổn định</text>
+        <rect x="348" width="332" height="112" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/><text x="370" y="32" fill="#5C7078" font-size="12" font-weight="700">LÔ KHẢ DỤNG</text><text x="370" y="76" fill="#102A33" font-size="30" font-weight="800">11</text><text x="584" y="76" fill="#1769AA" font-size="13" font-weight="700">Đang theo dõi</text>
+        <rect x="696" width="332" height="112" rx="8" fill="#FFF8F7" stroke="#E8B8B3"/><text x="718" y="32" fill="#8C3A33" font-size="12" font-weight="700">HẾT HÀNG</text><text x="718" y="76" fill="#B42318" font-size="30" font-weight="800">1</text><text x="914" y="76" fill="#B42318" font-size="13" font-weight="700">Cần xử lý</text>
+        <rect x="1044" width="332" height="112" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/><text x="1066" y="32" fill="#5C7078" font-size="12" font-weight="700">AUDIT HÔM NAY</text><text x="1066" y="76" fill="#102A33" font-size="30" font-weight="800">8</text><text x="1254" y="76" fill="#1D7A46" font-size="13" font-weight="700">Không lỗi</text>
+      </g>
+      <text x="286" y="410" fill="#102A33" font-size="20" font-weight="700">Tác vụ ưu tiên</text>
+      <g transform="translate(286,434)">
+        <rect width="320" height="104" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/><rect width="6" height="104" rx="3" fill="#0F766E"/><text x="28" y="36" fill="#102A33" font-size="16" font-weight="700">Danh mục thuốc</text><text x="28" y="64" fill="#5C7078" font-size="13">Kiểm tra và cập nhật dữ liệu chuẩn</text><text x="272" y="64" fill="#0F766E" font-size="18">→</text>
+        <rect x="336" width="320" height="104" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/><rect x="336" width="6" height="104" rx="3" fill="#1769AA"/><text x="364" y="36" fill="#102A33" font-size="16" font-weight="700">Kho và lô thuốc</text><text x="364" y="64" fill="#5C7078" font-size="13">Xử lý tồn kho và hạn sử dụng</text><text x="608" y="64" fill="#0F766E" font-size="18">→</text>
+        <rect x="672" width="320" height="104" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/><rect x="672" width="6" height="104" rx="3" fill="#A15C00"/><text x="700" y="36" fill="#102A33" font-size="16" font-weight="700">Nguồn dữ liệu</text><text x="700" y="64" fill="#5C7078" font-size="13">Xác nhận trạng thái đồng bộ</text><text x="944" y="64" fill="#0F766E" font-size="18">→</text>
+        <rect x="1008" width="368" height="104" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/><rect x="1008" width="6" height="104" rx="3" fill="#1D7A46"/><text x="1036" y="36" fill="#102A33" font-size="16" font-weight="700">Backup &amp; audit</text><text x="1036" y="64" fill="#5C7078" font-size="13">Tải snapshot và xem lịch sử</text><text x="1328" y="64" fill="#0F766E" font-size="18">→</text>
+      </g>
+      <rect x="286" y="580" width="900" height="258" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/>
+      <text x="312" y="620" fill="#102A33" font-size="19" font-weight="700">Rủi ro tồn kho</text><text x="1070" y="620" fill="#0F766E" font-size="13" font-weight="700">Xem tất cả →</text>
+      <rect x="312" y="646" width="848" height="42" fill="#F5F8F9"/><text x="332" y="672" fill="#5C7078" font-size="12" font-weight="700">THUỐC</text><text x="672" y="672" fill="#5C7078" font-size="12" font-weight="700">TỒN</text><text x="820" y="672" fill="#5C7078" font-size="12" font-weight="700">TRẠNG THÁI</text><text x="1034" y="672" fill="#5C7078" font-size="12" font-weight="700">HÀNH ĐỘNG</text>
+      <text x="332" y="724" fill="#102A33" font-size="14" font-weight="700">Panadol 500mg</text><text x="672" y="724" fill="#B42318" font-size="14" font-weight="700">0</text><rect x="820" y="704" width="96" height="28" rx="6" fill="#FDECEC"/><text x="838" y="723" fill="#B42318" font-size="12" font-weight="700">Hết hàng</text><text x="1034" y="724" fill="#0F766E" font-size="13" font-weight="700">Xử lý →</text>
+      <line x1="312" y1="750" x2="1160" y2="750" stroke="#E1E8EB"/>
+      <text x="332" y="792" fill="#102A33" font-size="14" font-weight="700">Hapacol 650mg</text><text x="672" y="792" fill="#A15C00" font-size="14" font-weight="700">25</text><rect x="820" y="772" width="116" height="28" rx="6" fill="#FFF7E5"/><text x="838" y="791" fill="#A15C00" font-size="12" font-weight="700">Sắp hết</text><text x="1034" y="792" fill="#0F766E" font-size="13" font-weight="700">Xem kho →</text>
+      <rect x="1206" y="580" width="516" height="258" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/>
+      <text x="1232" y="620" fill="#102A33" font-size="19" font-weight="700">Hoạt động gần đây</text>
+      <circle cx="1244" cy="670" r="6" fill="#1D7A46"/><text x="1264" y="674" fill="#344A53" font-size="13">Backup JSON đã tạo</text><text x="1576" y="674" fill="#71858D" font-size="12">2 phút</text>
+      <line x1="1244" y1="682" x2="1244" y2="714" stroke="#CBD7DC"/>
+      <circle cx="1244" cy="726" r="6" fill="#1769AA"/><text x="1264" y="730" fill="#344A53" font-size="13">Nguồn dữ liệu đã đồng bộ</text><text x="1576" y="730" fill="#71858D" font-size="12">12 phút</text>
+      <line x1="1244" y1="738" x2="1244" y2="770" stroke="#CBD7DC"/>
+      <circle cx="1244" cy="782" r="6" fill="#0F766E"/><text x="1264" y="786" fill="#344A53" font-size="13">Lô QA được thêm vào kho</text><text x="1576" y="786" fill="#71858D" font-size="12">18 phút</text>
+      <text x="286" y="878" fill="#71858D" font-size="12">FRAME A · ADMIN DESKTOP · other roles reuse shell, not content</text>
+    </g>
+
+    <!-- Role variants -->
+    <g transform="translate(56,1070)">
+      <text x="0" y="28" fill="#102A33" font-size="23" font-weight="800">Role-specific task contract</text>
+      <g transform="translate(0,54)">
+        <rect width="420" height="220" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/><rect width="420" height="8" rx="4" fill="#1769AA"/><text x="24" y="48" fill="#1769AA" font-size="13" font-weight="800">PHARMACIST</text><text x="24" y="84" fill="#102A33" font-size="21" font-weight="700">Xử lý hàng đợi hết hàng</text><text x="24" y="118" fill="#5C7078" font-size="14">So sánh thay thế · Kho rủi ro</text><rect x="24" y="146" width="166" height="42" rx="7" fill="#1769AA"/><text x="48" y="172" fill="#FFFFFF" font-size="13" font-weight="700">Mở workspace</text>
+        <rect x="440" width="420" height="220" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/><rect x="440" width="420" height="8" rx="4" fill="#A15C00"/><text x="464" y="48" fill="#A15C00" font-size="13" font-weight="800">EXPERT</text><text x="464" y="84" fill="#102A33" font-size="21" font-weight="700">Hàng đợi thẩm định</text><text x="464" y="118" fill="#5C7078" font-size="14">Bằng chứng · Quyết định · Audit</text><rect x="464" y="146" width="166" height="42" rx="7" fill="#A15C00"/><text x="488" y="172" fill="#FFFFFF" font-size="13" font-weight="700">Mở đánh giá</text>
+        <rect x="880" width="420" height="220" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/><rect x="880" width="420" height="8" rx="4" fill="#0F766E"/><text x="904" y="48" fill="#0F766E" font-size="13" font-weight="800">USER</text><text x="904" y="84" fill="#102A33" font-size="21" font-weight="700">Tra cứu cá nhân</text><text x="904" y="118" fill="#5C7078" font-size="14">Tìm thuốc · Lịch sử · Đã lưu</text><rect x="904" y="146" width="166" height="42" rx="7" fill="#0F766E"/><text x="928" y="172" fill="#FFFFFF" font-size="13" font-weight="700">Bắt đầu tra cứu</text>
+      </g>
+    </g>
+
+    <!-- Mobile -->
+    <g transform="translate(1880,132)">
+      <text x="0" y="28" fill="#102A33" font-size="23" font-weight="800">390 px mobile contract</text>
+      <rect y="54" width="390" height="780" rx="24" fill="#F5F8F9" stroke="#9EB1B9" stroke-width="3"/>
+      <rect y="54" width="390" height="64" rx="24" fill="#FFFFFF"/><rect x="18" y="68" width="40" height="38" rx="7" fill="#0F766E"/><text x="28" y="93" fill="#FFFFFF" font-size="16" font-weight="800">Rx</text><text x="70" y="92" fill="#102A33" font-size="15" font-weight="700">Tra cứu thuốc</text><rect x="330" y="72" width="42" height="34" rx="7" fill="#E8EEF1"/><text x="344" y="94" fill="#344A53" font-size="16">☰</text>
+      <text x="18" y="158" fill="#0F766E" font-size="11" font-weight="800">TRA CỨU THUỐC THAY THẾ</text><text x="18" y="193" fill="#102A33" font-size="24" font-weight="800">Tìm thuốc nhanh</text>
+      <rect x="18" y="218" width="354" height="48" rx="7" fill="#FFFFFF" stroke="#AFC0C7"/><text x="34" y="248" fill="#8A9AA1" font-size="13">Tên thuốc hoặc hoạt chất</text>
+      <rect x="18" y="278" width="238" height="46" rx="7" fill="#FFFFFF" stroke="#AFC0C7"/><text x="34" y="307" fill="#344A53" font-size="12">Tất cả nhóm</text><rect x="268" y="278" width="104" height="46" rx="7" fill="#0F766E"/><text x="294" y="307" fill="#FFFFFF" font-size="13" font-weight="700">Tra cứu</text>
+      <text x="18" y="365" fill="#102A33" font-size="18" font-weight="700">Kết quả</text><text x="332" y="365" fill="#71858D" font-size="12">4 thuốc</text>
+      <rect x="18" y="386" width="354" height="118" rx="8" fill="#FFFFFF" stroke="#91CDBF"/><text x="34" y="416" fill="#102A33" font-size="15" font-weight="700">Paracetamol DHG 500mg</text><text x="34" y="440" fill="#5C7078" font-size="12">500mg · Viên nén</text><rect x="34" y="454" width="88" height="28" rx="6" fill="#EAF7EF"/><text x="50" y="473" fill="#1D7A46" font-size="12" font-weight="700">Còn 120</text><text x="280" y="474" fill="#0F766E" font-size="13" font-weight="700">Chi tiết →</text>
+      <rect x="18" y="516" width="354" height="118" rx="8" fill="#FFF8F7" stroke="#E8B8B3"/><rect x="18" y="516" width="5" height="118" rx="2" fill="#B42318"/><text x="34" y="546" fill="#102A33" font-size="15" font-weight="700">Panadol 500mg</text><text x="34" y="570" fill="#5C7078" font-size="12">500mg · Viên nén</text><rect x="34" y="584" width="90" height="28" rx="6" fill="#FDECEC"/><text x="51" y="603" fill="#B42318" font-size="12" font-weight="700">Hết hàng</text><text x="270" y="604" fill="#0F766E" font-size="13" font-weight="700">Thay thế →</text>
+      <rect x="18" y="654" width="354" height="78" rx="8" fill="#EAF4FF" stroke="#AFD1F0"/><text x="34" y="682" fill="#1769AA" font-size="12" font-weight="700">AI không thay đổi điểm hoặc cảnh báo</text><text x="34" y="706" fill="#4D6570" font-size="11">Giải thích Gemini là tùy chọn.</text>
+      <text x="18" y="766" fill="#71858D" font-size="11">No horizontal overflow · 44px controls</text>
+
+      <rect x="430" y="54" width="390" height="780" rx="24" fill="#F5F8F9" stroke="#9EB1B9" stroke-width="3"/>
+      <rect x="430" y="54" width="390" height="64" rx="24" fill="#FFFFFF"/><text x="454" y="93" fill="#102A33" font-size="15" font-weight="700">Panadol 500mg</text><text x="762" y="93" fill="#0F766E" font-size="13">←</text>
+      <rect x="448" y="140" width="354" height="118" rx="8" fill="#FFF8F7" stroke="#E8B8B3"/><rect x="448" y="140" width="5" height="118" rx="2" fill="#B42318"/><text x="468" y="170" fill="#8C3A33" font-size="11" font-weight="800">TÌNH TRẠNG</text><text x="468" y="202" fill="#102A33" font-size="20" font-weight="700">Hết hàng</text><text x="468" y="228" fill="#5C7078" font-size="12">3 phương án thay thế</text>
+      <text x="448" y="302" fill="#102A33" font-size="18" font-weight="700">Đề xuất tốt nhất</text>
+      <rect x="448" y="322" width="354" height="246" rx="8" fill="#FFFFFF" stroke="#91CDBF"/><text x="468" y="356" fill="#102A33" font-size="15" font-weight="700">Paracetamol DHG 500mg</text><text x="468" y="380" fill="#5C7078" font-size="12">500mg · Viên nén · DHG</text><rect x="694" y="342" width="84" height="62" rx="8" fill="#E7F7F3"/><text x="720" y="370" fill="#0F766E" font-size="22" font-weight="800">100</text><text x="707" y="392" fill="#344A53" font-size="10">Rất phù hợp</text><rect x="468" y="408" width="88" height="28" rx="6" fill="#EAF7EF"/><text x="484" y="427" fill="#1D7A46" font-size="12" font-weight="700">Còn 120</text><text x="468" y="462" fill="#344A53" font-size="12">Cùng hoạt chất · Trùng hàm lượng</text><rect x="468" y="492" width="198" height="40" rx="7" fill="#FFFFFF" stroke="#AFC0C7"/><text x="490" y="517" fill="#344A53" font-size="12" font-weight="700">Giải thích bằng Gemini</text>
+      <rect x="448" y="584" width="354" height="72" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/><text x="468" y="614" fill="#102A33" font-size="14" font-weight="700">Hapacol 650mg</text><text x="468" y="638" fill="#5C7078" font-size="12">Điểm 80 · Còn 25</text><text x="754" y="625" fill="#0F766E" font-size="13">→</text>
+      <rect x="448" y="668" width="354" height="72" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/><text x="468" y="698" fill="#102A33" font-size="14" font-weight="700">Efferalgan 500mg</text><text x="468" y="722" fill="#5C7078" font-size="12">Điểm 80 · Còn 55</text><text x="754" y="709" fill="#0F766E" font-size="13">→</text>
+      <text x="448" y="766" fill="#71858D" font-size="11">Decision-first · compact alternatives</text>
+    </g>
+  </g>
+</svg>

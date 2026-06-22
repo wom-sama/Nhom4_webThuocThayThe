@@ -13,6 +13,7 @@ public sealed class GeminiAiRecommendationExplanationService(
     : IAiRecommendationExplanationService
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+    private static readonly SemaphoreSlim ProviderGate = new(1, 1);
     private readonly GeminiOptions _options = options.Value;
 
     public bool IsEnabled =>
@@ -37,46 +38,69 @@ public sealed class GeminiAiRecommendationExplanationService(
 
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         timeout.CancelAfter(TimeSpan.FromSeconds(Math.Clamp(_options.TimeoutSeconds, 2, 30)));
+        var gateEntered = false;
 
         try
         {
-            using var request = new HttpRequestMessage(
-                HttpMethod.Post,
-                new Uri(
-                    $"./{Uri.EscapeDataString(_options.Model)}:generateContent?key={Uri.EscapeDataString(_options.ApiKey)}",
-                    UriKind.Relative));
-            request.Content = JsonContent.Create(CreateRequest(context), options: JsonOptions);
+            await ProviderGate.WaitAsync(timeout.Token);
+            gateEntered = true;
 
-            using var response = await httpClient.SendAsync(request, timeout.Token);
-            if (!response.IsSuccessStatusCode)
+            if (cache.TryGetValue(cacheKey, out cached) && cached is not null)
             {
-                logger.LogWarning(
-                    "Gemini explanation request failed with HTTP {StatusCode}.",
-                    (int)response.StatusCode);
-                return CreateFallback(context, "AI tạm thời không phản hồi; đang hiển thị giải thích theo bộ quy tắc.");
+                return cached;
             }
 
-            var envelope = await response.Content.ReadFromJsonAsync<GeminiResponse>(JsonOptions, timeout.Token);
-            var text = envelope?.Candidates?.FirstOrDefault()?.Content?.Parts?.FirstOrDefault()?.Text;
-            if (string.IsNullOrWhiteSpace(text))
+            var maxAttempts = Math.Clamp(_options.MaxAttempts, 1, 3);
+            for (var attempt = 1; attempt <= maxAttempts; attempt++)
             {
-                logger.LogWarning("Gemini returned an empty or blocked explanation response.");
-                return CreateFallback(context, "AI không tạo được nội dung an toàn; đang hiển thị giải thích theo bộ quy tắc.");
+                using var request = CreateHttpRequest(context);
+                using var response = await httpClient.SendAsync(request, timeout.Token);
+                if (!response.IsSuccessStatusCode)
+                {
+                    if (attempt < maxAttempts && IsTransient(response.StatusCode))
+                    {
+                        var delay = GetRetryDelay(response, attempt);
+                        logger.LogWarning(
+                            "Gemini attempt {Attempt}/{MaxAttempts} returned HTTP {StatusCode}; retrying in {DelayMilliseconds} ms.",
+                            attempt,
+                            maxAttempts,
+                            (int)response.StatusCode,
+                            delay.TotalMilliseconds);
+                        await Task.Delay(delay, timeout.Token);
+                        continue;
+                    }
+
+                    logger.LogWarning(
+                        "Gemini explanation failed after {Attempt} attempt(s) with HTTP {StatusCode}.",
+                        attempt,
+                        (int)response.StatusCode);
+                    return CreateFallback(context, "AI tạm thời không phản hồi; đang hiển thị giải thích theo bộ quy tắc.");
+                }
+
+                var envelope = await response.Content.ReadFromJsonAsync<GeminiResponse>(JsonOptions, timeout.Token);
+                var text = envelope?.Candidates?.FirstOrDefault()?.Content?.Parts?.FirstOrDefault()?.Text;
+                if (string.IsNullOrWhiteSpace(text))
+                {
+                    logger.LogWarning("Gemini returned an empty or blocked explanation response.");
+                    return CreateFallback(context, "AI không tạo được nội dung an toàn; đang hiển thị giải thích theo bộ quy tắc.");
+                }
+
+                var output = ParseStructuredExplanation(text);
+                var result = ValidateAndMap(output);
+                if (result is null)
+                {
+                    logger.LogWarning("Gemini returned an invalid structured explanation.");
+                    return CreateFallback(context, "Phản hồi AI không đúng cấu trúc; đang hiển thị giải thích theo bộ quy tắc.");
+                }
+
+                cache.Set(
+                    cacheKey,
+                    result,
+                    TimeSpan.FromMinutes(Math.Clamp(_options.CacheMinutes, 1, 60)));
+                return result;
             }
 
-            var output = ParseStructuredExplanation(text);
-            var result = ValidateAndMap(output);
-            if (result is null)
-            {
-                logger.LogWarning("Gemini returned an invalid structured explanation.");
-                return CreateFallback(context, "Phản hồi AI không đúng cấu trúc; đang hiển thị giải thích theo bộ quy tắc.");
-            }
-
-            cache.Set(
-                cacheKey,
-                result,
-                TimeSpan.FromMinutes(Math.Clamp(_options.CacheMinutes, 1, 60)));
-            return result;
+            return CreateFallback(context, "AI tạm thời không phản hồi; đang hiển thị giải thích theo bộ quy tắc.");
         }
         catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
         {
@@ -98,6 +122,41 @@ public sealed class GeminiAiRecommendationExplanationService(
             logger.LogWarning(exception, "Gemini explanation provider configuration is invalid.");
             return CreateFallback(context, "Cấu hình AI không hợp lệ; đang hiển thị giải thích theo bộ quy tắc.");
         }
+        finally
+        {
+            if (gateEntered)
+            {
+                ProviderGate.Release();
+            }
+        }
+    }
+
+    private HttpRequestMessage CreateHttpRequest(AiRecommendationContext context)
+    {
+        var request = new HttpRequestMessage(
+            HttpMethod.Post,
+            new Uri(
+                $"./{Uri.EscapeDataString(_options.Model)}:generateContent?key={Uri.EscapeDataString(_options.ApiKey)}",
+                UriKind.Relative));
+        request.Content = JsonContent.Create(CreateRequest(context), options: JsonOptions);
+        return request;
+    }
+
+    private static bool IsTransient(System.Net.HttpStatusCode statusCode) =>
+        statusCode == System.Net.HttpStatusCode.TooManyRequests || (int)statusCode >= 500;
+
+    private TimeSpan GetRetryDelay(HttpResponseMessage response, int attempt)
+    {
+        var providerDelay = response.Headers.RetryAfter?.Delta;
+        if (providerDelay.HasValue &&
+            providerDelay.Value > TimeSpan.Zero &&
+            providerDelay.Value <= TimeSpan.FromSeconds(3))
+        {
+            return providerDelay.Value;
+        }
+
+        var baseMilliseconds = Math.Clamp(_options.RetryBaseMilliseconds, 100, 2000);
+        return TimeSpan.FromMilliseconds(baseMilliseconds * Math.Pow(2, attempt - 1));
     }
 
     private object CreateRequest(AiRecommendationContext context)
@@ -135,7 +194,7 @@ public sealed class GeminiAiRecommendationExplanationService(
             generationConfig = new
             {
                 temperature = 0.1,
-                maxOutputTokens = Math.Clamp(_options.MaxOutputTokens, 128, 800),
+                maxOutputTokens = Math.Clamp(_options.MaxOutputTokens, 128, 400),
                 responseMimeType = "application/json",
                 responseSchema = new
                 {

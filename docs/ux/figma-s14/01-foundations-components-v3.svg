@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1400" viewBox="0 0 2200 1400">
+  <rect width="2200" height="1400" fill="#EEF3F5"/>
+  <rect x="40" y="40" width="2120" height="1320" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/>
+  <rect x="40" y="40" width="2120" height="116" rx="8" fill="#102A33"/>
+  <text x="84" y="88" fill="#9FE4D8" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">N4WTT · S14 · UI V3</text>
+  <text x="84" y="130" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="700">Professional Bootstrap Foundations &amp; Components</text>
+  <text x="1840" y="112" fill="#D7E4E8" font-family="Inter, Arial, sans-serif" font-size="15">N4WTT-256 · 23/06/2026</text>
+
+  <g font-family="Inter, Arial, sans-serif">
+    <text x="84" y="214" fill="#102A33" font-size="25" font-weight="700">01 · Product principles</text>
+    <g font-size="16">
+      <rect x="84" y="242" width="475" height="112" rx="8" fill="#E7F7F3" stroke="#7CCBBA"/>
+      <text x="110" y="280" fill="#0F766E" font-weight="700">TASK FIRST</text><text x="110" y="311" fill="#344A53">Search and decisions stay above explanation.</text><text x="110" y="337" fill="#344A53">One strong CTA per workflow.</text>
+      <rect x="575" y="242" width="475" height="112" rx="8" fill="#EAF4FF" stroke="#8EC2F5"/>
+      <text x="601" y="280" fill="#1769AA" font-weight="700">SCAN FAST</text><text x="601" y="311" fill="#344A53">Status, stock, score and safety align in rows.</text><text x="601" y="337" fill="#344A53">Details disclose progressively.</text>
+      <rect x="1066" y="242" width="475" height="112" rx="8" fill="#FFF7E5" stroke="#E9C66F"/>
+      <text x="1092" y="280" fill="#A15C00" font-weight="700">SAFE BY DEFAULT</text><text x="1092" y="311" fill="#344A53">AI remains optional and visibly secondary.</text><text x="1092" y="337" fill="#344A53">Warnings never collapse away.</text>
+      <rect x="1557" y="242" width="519" height="112" rx="8" fill="#F4F6F8" stroke="#C5D0D5"/>
+      <text x="1583" y="280" fill="#344A53" font-weight="700">DENSE, NOT CROWDED</text><text x="1583" y="311" fill="#344A53">8px radius, 12-column grid, 44px controls.</text><text x="1583" y="337" fill="#344A53">No nested card stacks or decorative gradients.</text>
+    </g>
+
+    <text x="84" y="414" fill="#102A33" font-size="25" font-weight="700">02 · Semantic color tokens</text>
+    <g font-size="15">
+      <rect x="84" y="442" width="232" height="92" rx="8" fill="#102A33"/><text x="106" y="478" fill="#FFFFFF" font-weight="700">INK / NAV</text><text x="106" y="508" fill="#D7E4E8">#102A33</text>
+      <rect x="330" y="442" width="232" height="92" rx="8" fill="#0F766E"/><text x="352" y="478" fill="#FFFFFF" font-weight="700">PRIMARY</text><text x="352" y="508" fill="#D7FAF3">#0F766E</text>
+      <rect x="576" y="442" width="232" height="92" rx="8" fill="#1769AA"/><text x="598" y="478" fill="#FFFFFF" font-weight="700">INFO</text><text x="598" y="508" fill="#EAF4FF">#1769AA</text>
+      <rect x="822" y="442" width="232" height="92" rx="8" fill="#1D7A46"/><text x="844" y="478" fill="#FFFFFF" font-weight="700">AVAILABLE</text><text x="844" y="508" fill="#EAF7EF">#1D7A46</text>
+      <rect x="1068" y="442" width="232" height="92" rx="8" fill="#A15C00"/><text x="1090" y="478" fill="#FFFFFF" font-weight="700">CAUTION</text><text x="1090" y="508" fill="#FFF7E5">#A15C00</text>
+      <rect x="1314" y="442" width="232" height="92" rx="8" fill="#B42318"/><text x="1336" y="478" fill="#FFFFFF" font-weight="700">CRITICAL</text><text x="1336" y="508" fill="#FDECEC">#B42318</text>
+      <rect x="1560" y="442" width="232" height="92" rx="8" fill="#EEF3F5" stroke="#CBD7DC"/><text x="1582" y="478" fill="#344A53" font-weight="700">CANVAS</text><text x="1582" y="508" fill="#5C7078">#EEF3F5</text>
+      <rect x="1806" y="442" width="270" height="92" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/><text x="1828" y="478" fill="#344A53" font-weight="700">SURFACE</text><text x="1828" y="508" fill="#5C7078">#FFFFFF · border #CBD7DC</text>
+    </g>
+
+    <text x="84" y="594" fill="#102A33" font-size="25" font-weight="700">03 · Type, spacing and elevation</text>
+    <rect x="84" y="622" width="650" height="224" rx="8" fill="#F8FAFB" stroke="#CBD7DC"/>
+    <text x="112" y="666" fill="#102A33" font-size="34" font-weight="750">Page title · 34/42</text>
+    <text x="112" y="710" fill="#102A33" font-size="24" font-weight="700">Section title · 24/32</text>
+    <text x="112" y="750" fill="#344A53" font-size="18" font-weight="600">Body strong · 18/26</text>
+    <text x="112" y="786" fill="#5C7078" font-size="16">Body · 16/24 · zero letter spacing</text>
+    <text x="112" y="820" fill="#71858D" font-size="14">Supporting · 14/20</text>
+    <rect x="754" y="622" width="650" height="224" rx="8" fill="#F8FAFB" stroke="#CBD7DC"/>
+    <text x="782" y="664" fill="#102A33" font-size="17" font-weight="700">8px base spacing</text>
+    <g fill="#0F766E"><rect x="782" y="690" width="24" height="28"/><rect x="830" y="690" width="48" height="28"/><rect x="902" y="690" width="72" height="28"/><rect x="998" y="690" width="96" height="28"/><rect x="1118" y="690" width="144" height="28"/></g>
+    <g fill="#5C7078" font-size="14"><text x="785" y="742">8</text><text x="846" y="742">16</text><text x="926" y="742">24</text><text x="1032" y="742">32</text><text x="1176" y="742">48</text></g>
+    <text x="782" y="786" fill="#344A53" font-size="15">Card radius 8 · input radius 7 · chip radius 6</text>
+    <text x="782" y="818" fill="#344A53" font-size="15">Shadow: 0 12 32 rgba(16,42,51,.08)</text>
+    <rect x="1424" y="622" width="652" height="224" rx="8" fill="#F8FAFB" stroke="#CBD7DC"/>
+    <text x="1452" y="664" fill="#102A33" font-size="17" font-weight="700">12-column responsive grid</text>
+    <g fill="#D9E6E9"><rect x="1452" y="694" width="32" height="96"/><rect x="1496" y="694" width="32" height="96"/><rect x="1540" y="694" width="32" height="96"/><rect x="1584" y="694" width="32" height="96"/><rect x="1628" y="694" width="32" height="96"/><rect x="1672" y="694" width="32" height="96"/><rect x="1716" y="694" width="32" height="96"/><rect x="1760" y="694" width="32" height="96"/><rect x="1804" y="694" width="32" height="96"/><rect x="1848" y="694" width="32" height="96"/><rect x="1892" y="694" width="32" height="96"/><rect x="1936" y="694" width="32" height="96"/></g>
+    <text x="1452" y="822" fill="#5C7078" font-size="14">Container 1320 · gutters 24 · mobile gutters 16</text>
+
+    <text x="84" y="906" fill="#102A33" font-size="25" font-weight="700">04 · Bootstrap component contract</text>
+    <rect x="84" y="936" width="1992" height="340" rx="8" fill="#F8FAFB" stroke="#CBD7DC"/>
+    <text x="112" y="976" fill="#344A53" font-size="15" font-weight="700">BUTTONS</text>
+    <rect x="112" y="996" width="158" height="46" rx="7" fill="#0F766E"/><text x="149" y="1025" fill="#FFFFFF" font-size="15" font-weight="700">Tra cứu</text>
+    <rect x="286" y="996" width="174" height="46" rx="7" fill="#FFFFFF" stroke="#0F766E"/><text x="320" y="1025" fill="#0F766E" font-size="15" font-weight="700">Xem chi tiết</text>
+    <rect x="476" y="996" width="150" height="46" rx="7" fill="#E8EEF1"/><text x="516" y="1025" fill="#344A53" font-size="15" font-weight="700">Quay lại</text>
+    <text x="112" y="1086" fill="#344A53" font-size="15" font-weight="700">INPUTS</text>
+    <rect x="112" y="1106" width="514" height="48" rx="7" fill="#FFFFFF" stroke="#AFC0C7"/><text x="132" y="1136" fill="#71858D" font-size="15">Tên thuốc hoặc hoạt chất</text>
+    <text x="682" y="976" fill="#344A53" font-size="15" font-weight="700">BADGES &amp; STATUS</text>
+    <rect x="682" y="996" width="116" height="34" rx="6" fill="#EAF7EF"/><text x="704" y="1018" fill="#1D7A46" font-size="14" font-weight="700">Còn 120</text>
+    <rect x="812" y="996" width="106" height="34" rx="6" fill="#FDECEC"/><text x="835" y="1018" fill="#B42318" font-size="14" font-weight="700">Hết hàng</text>
+    <rect x="932" y="996" width="142" height="34" rx="6" fill="#EAF4FF"/><text x="954" y="1018" fill="#1769AA" font-size="14" font-weight="700">Không kê đơn</text>
+    <rect x="1088" y="996" width="162" height="34" rx="6" fill="#FFF7E5"/><text x="1110" y="1018" fill="#A15C00" font-size="14" font-weight="700">Cần thận trọng</text>
+    <text x="682" y="1086" fill="#344A53" font-size="15" font-weight="700">FOCUS / VALIDATION</text>
+    <rect x="682" y="1106" width="252" height="48" rx="7" fill="#FFFFFF" stroke="#0F766E" stroke-width="3"/><text x="702" y="1136" fill="#344A53" font-size="15">Focus visible</text>
+    <rect x="950" y="1106" width="300" height="48" rx="7" fill="#FFFFFF" stroke="#B42318"/><text x="970" y="1136" fill="#B42318" font-size="15">Validation error</text>
+    <text x="1306" y="976" fill="#344A53" font-size="15" font-weight="700">DECISION ROW</text>
+    <rect x="1306" y="996" width="726" height="158" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/>
+    <text x="1330" y="1032" fill="#102A33" font-size="18" font-weight="700">Paracetamol DHG 500mg</text>
+    <text x="1330" y="1061" fill="#5C7078" font-size="14">500mg · Viên nén · DHG Pharma</text>
+    <rect x="1330" y="1080" width="100" height="30" rx="6" fill="#EAF7EF"/><text x="1350" y="1100" fill="#1D7A46" font-size="13" font-weight="700">Còn 120</text>
+    <rect x="1442" y="1080" width="148" height="30" rx="6" fill="#EAF7EF"/><text x="1460" y="1100" fill="#1D7A46" font-size="13" font-weight="700">Không cảnh báo cao</text>
+    <rect x="1878" y="1020" width="126" height="78" rx="8" fill="#E7F7F3" stroke="#7CCBBA"/><text x="1920" y="1053" fill="#0F766E" font-size="25" font-weight="800">100</text><text x="1901" y="1078" fill="#344A53" font-size="13">Rất phù hợp</text>
+  </g>
+</svg>

@@ -235,7 +235,12 @@ $runtimeValues = [ordered]@{
     "ConnectionStrings__PharmacyDatabase" = $settings["SQL_CONNECTION_STRING"]
     "AI__Gemini__Enabled" = if ($DisableAi) { "false" } else { "true" }
     "AI__Gemini__ApiKey" = $geminiKey
-    "AI__Gemini__Model" = "gemini-2.5-flash"
+    "AI__Gemini__Model" = "gemini-2.5-flash-lite"
+    "AI__Gemini__TimeoutSeconds" = "20"
+    "AI__Gemini__CacheMinutes" = "30"
+    "AI__Gemini__MaxOutputTokens" = "320"
+    "AI__Gemini__MaxAttempts" = "3"
+    "AI__Gemini__RetryBaseMilliseconds" = "750"
     "Authentication__EncodedAccounts" = $encodedAccounts
 }
 foreach ($name in $runtimeValues.Keys) {
