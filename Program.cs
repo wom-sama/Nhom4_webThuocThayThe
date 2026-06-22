@@ -101,11 +101,16 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("InventoryManager", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Pharmacist));
     options.AddPolicy("ExpertReviewer", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Expert, AppRoles.Pharmacist));
 });
-if (builder.Environment.IsProduction())
+var encodedAccounts = builder.Configuration["Authentication:EncodedAccounts"];
+if (!string.IsNullOrWhiteSpace(encodedAccounts))
 {
-    var accounts = ConfiguredUserAccountLoader.Load(
-        builder.Configuration["Authentication:EncodedAccounts"]);
+    var accounts = ConfiguredUserAccountLoader.Load(encodedAccounts);
     builder.Services.AddSingleton<IUserAccountService>(new InMemoryUserAccountService(accounts));
+}
+else if (builder.Environment.IsProduction())
+{
+    throw new InvalidOperationException(
+        "Production authentication is not configured. Set Authentication__EncodedAccounts.");
 }
 else
 {

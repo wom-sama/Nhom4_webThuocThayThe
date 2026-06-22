@@ -5,7 +5,7 @@
     var lowStock = Model.Count(item => item.Quantity > 0 && item.Quantity <= 20);
 }
 
-<section class="mb-4"><div class="page-kicker">Khu vực dược sĩ</div><h1 class="page-title">Bàn làm việc dược sĩ</h1><p class="page-description">Xử lý thuốc hết hàng, so sánh phương án và theo dõi rủi ro tồn kho.</p></section>
+<section class="workspace-heading mb-4"><div class="page-kicker"><span class="live-dot" aria-hidden="true"></span>Khu vực dược sĩ</div><h1 class="page-title">Bàn làm việc dược sĩ</h1><p class="page-description">@outOfStock thuốc hết hàng và @lowStock thuốc sắp hết cần theo dõi.</p></section>
 
 <section class="quick-action-grid mb-4" aria-label="Tác vụ dược sĩ">
     <a asp-controller="Workspace" asp-action="Index" class="quick-action"><i data-lucide="package-x" class="quick-action-icon" aria-hidden="true"></i><span><strong>Hàng đợi hết hàng</strong><small>@outOfStock thuốc cần xử lý</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i></a>

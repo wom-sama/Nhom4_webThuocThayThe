@@ -4,24 +4,35 @@
     ViewData["Title"] = "Tổng quan";
 }
 
-<section class="page-intro mb-4">
-    <div class="page-kicker">Tra cứu thuốc thay thế</div>
-    <h1 class="page-title">Tìm thuốc và phương án thay thế</h1>
-    <p class="page-description">
-        Nhập tên thuốc hoặc hoạt chất để kiểm tra tồn kho, cảnh báo và lựa chọn thay thế phù hợp.
-    </p>
+<section class="page-intro public-command-intro mb-4">
+    <div class="page-kicker"><span class="live-dot" aria-hidden="true"></span>Tra cứu thuốc thay thế</div>
+    <div class="public-command-heading">
+        <div>
+            <h1 class="page-title">Tìm thuốc và phương án thay thế</h1>
+            <p class="page-description">Kiểm tra tồn kho, cảnh báo và lựa chọn phù hợp trong một lần tra cứu.</p>
+        </div>
+        <div class="public-trust-line" aria-label="Phạm vi hỗ trợ">
+            <span><i data-lucide="database" class="app-icon" aria-hidden="true"></i>Dữ liệu có nguồn</span>
+            <span><i data-lucide="shield-check" class="app-icon" aria-hidden="true"></i>Cảnh báo rõ ràng</span>
+        </div>
+    </div>
 </section>
 
-<section class="app-surface search-surface mb-4" aria-labelledby="public-search-heading">
+<section class="app-surface search-surface search-surface-v3 mb-4" aria-labelledby="public-search-heading">
     <div class="section-heading search-heading">
         <div>
             <h2 id="public-search-heading" class="h4">Tìm thuốc</h2>
+            <span class="muted-copy">Tên thương mại, hoạt chất hoặc nhóm điều trị</span>
         </div>
+        <span class="status-badge is-success"><i data-lucide="circle-check" class="app-icon" aria-hidden="true"></i>Sẵn sàng</span>
     </div>
     <form asp-controller="Drugs" asp-action="Index" method="get" class="quick-search">
-        <div>
+        <div class="search-field-primary">
             <label for="homeKeyword" class="form-label">Tên thuốc hoặc hoạt chất</label>
-            <input id="homeKeyword" name="keyword" class="form-control form-control-lg" placeholder="Ví dụ: Paracetamol" autocomplete="off" />
+            <div class="input-icon-wrap">
+                <i data-lucide="search" class="app-icon" aria-hidden="true"></i>
+                <input id="homeKeyword" name="keyword" class="form-control form-control-lg" placeholder="Ví dụ: Paracetamol" autocomplete="off" />
+            </div>
         </div>
         <div>
             <label for="homeCategory" class="form-label">Nhóm thuốc</label>
@@ -40,16 +51,16 @@
     </form>
 </section>
 
-<section class="metric-strip mb-4" aria-label="Thông tin hệ thống">
-    <article class="metric-card metric-card-compact">
+<section class="metric-strip metric-strip-v3 mb-4" aria-label="Thông tin hệ thống">
+    <article class="metric-card metric-card-compact metric-card-data">
         <div class="metric-label"><i data-lucide="pill" class="app-icon" aria-hidden="true"></i><span>Thuốc có dữ liệu</span></div>
         <strong>@Model.DrugCount</strong>
     </article>
-    <article class="metric-card metric-card-compact">
+    <article class="metric-card metric-card-compact metric-card-data">
         <div class="metric-label"><i data-lucide="list-filter" class="app-icon" aria-hidden="true"></i><span>Nhóm điều trị</span></div>
         <strong>@Model.CategoryCount</strong>
     </article>
-    <article class="metric-card metric-card-compact">
+    <article class="metric-card metric-card-compact metric-card-data">
         <div class="metric-label"><i data-lucide="package-check" class="app-icon" aria-hidden="true"></i><span>Lô đang theo dõi</span></div>
         <strong>@Model.BatchCount</strong>
     </article>
