@@ -1,0 +1,380 @@
+{
+  "generatedAt": "2026-06-22T04:44:40.726Z",
+  "baseUrl": "https://nnhom4web.somee.com",
+  "scans": [
+    {
+      "browser": "chrome",
+      "version": "149.0.7827.115",
+      "viewport": {
+        "name": "desktop",
+        "width": 1440,
+        "height": 900
+      },
+      "route": "/",
+      "status": 200,
+      "horizontalOverflow": false,
+      "violations": []
+    },
+    {
+      "browser": "chrome",
+      "version": "149.0.7827.115",
+      "viewport": {
+        "name": "desktop",
+        "width": 1440,
+        "height": 900
+      },
+      "route": "/Drugs?keyword=para",
+      "status": 200,
+      "horizontalOverflow": false,
+      "violations": []
+    },
+    {
+      "browser": "chrome",
+      "version": "149.0.7827.115",
+      "viewport": {
+        "name": "desktop",
+        "width": 1440,
+        "height": 900
+      },
+      "route": "/Drugs/Details/1",
+      "status": 200,
+      "horizontalOverflow": false,
+      "violations": []
+    },
+    {
+      "browser": "chrome",
+      "version": "149.0.7827.115",
+      "viewport": {
+        "name": "desktop",
+        "width": 1440,
+        "height": 900
+      },
+      "route": "/Auth/Login",
+      "status": 200,
+      "horizontalOverflow": false,
+      "violations": []
+    },
+    {
+      "browser": "chrome",
+      "version": "149.0.7827.115",
+      "viewport": {
+        "name": "mobile",
+        "width": 390,
+        "height": 844
+      },
+      "route": "/",
+      "status": 200,
+      "horizontalOverflow": false,
+      "violations": []
+    },
+    {
+      "browser": "chrome",
+      "version": "149.0.7827.115",
+      "viewport": {
+        "name": "mobile",
+        "width": 390,
+        "height": 844
+      },
+      "route": "/Drugs?keyword=para",
+      "status": 200,
+      "horizontalOverflow": false,
+      "violations": []
+    },
+    {
+      "browser": "chrome",
+      "version": "149.0.7827.115",
+      "viewport": {
+        "name": "mobile",
+        "width": 390,
+        "height": 844
+      },
+      "route": "/Drugs/Details/1",
+      "status": 200,
+      "horizontalOverflow": false,
+      "violations": []
+    },
+    {
+      "browser": "chrome",
+      "version": "149.0.7827.115",
+      "viewport": {
+        "name": "mobile",
+        "width": 390,
+        "height": 844
+      },
+      "route": "/Auth/Login",
+      "status": 200,
+      "horizontalOverflow": false,
+      "violations": []
+    },
+    {
+      "browser": "edge",
+      "version": "149.0.4022.80",
+      "viewport": {
+        "name": "desktop",
+        "width": 1440,
+        "height": 900
+      },
+      "route": "/",
+      "status": 200,
+      "horizontalOverflow": false,
+      "violations": []
+    },
+    {
+      "browser": "edge",
+      "version": "149.0.4022.80",
+      "viewport": {
+        "name": "desktop",
+        "width": 1440,
+        "height": 900
+      },
+      "route": "/Drugs?keyword=para",
+      "status": 200,
+      "horizontalOverflow": false,
+      "violations": []
+    },
+    {
+      "browser": "edge",
+      "version": "149.0.4022.80",
+      "viewport": {
+        "name": "desktop",
+        "width": 1440,
+        "height": 900
+      },
+      "route": "/Drugs/Details/1",
+      "status": 200,
+      "horizontalOverflow": false,
+      "violations": []
+    },
+    {
+      "browser": "edge",
+      "version": "149.0.4022.80",
+      "viewport": {
+        "name": "desktop",
+        "width": 1440,
+        "height": 900
+      },
+      "route": "/Auth/Login",
+      "status": 200,
+      "horizontalOverflow": false,
+      "violations": []
+    },
+    {
+      "browser": "edge",
+      "version": "149.0.4022.80",
+      "viewport": {
+        "name": "mobile",
+        "width": 390,
+        "height": 844
+      },
+      "route": "/",
+      "status": 200,
+      "horizontalOverflow": false,
+      "violations": []
+    },
+    {
+      "browser": "edge",
+      "version": "149.0.4022.80",
+      "viewport": {
+        "name": "mobile",
+        "width": 390,
+        "height": 844
+      },
+      "route": "/Drugs?keyword=para",
+      "status": 200,
+      "horizontalOverflow": false,
+      "violations": []
+    },
+    {
+      "browser": "edge",
+      "version": "149.0.4022.80",
+      "viewport": {
+        "name": "mobile",
+        "width": 390,
+        "height": 844
+      },
+      "route": "/Drugs/Details/1",
+      "status": 200,
+      "horizontalOverflow": false,
+      "violations": []
+    },
+    {
+      "browser": "edge",
+      "version": "149.0.4022.80",
+      "viewport": {
+        "name": "mobile",
+        "width": 390,
+        "height": 844
+      },
+      "route": "/Auth/Login",
+      "status": 200,
+      "horizontalOverflow": false,
+      "violations": []
+    },
+    {
+      "browser": "firefox",
+      "version": "151.0",
+      "viewport": {
+        "name": "desktop",
+        "width": 1440,
+        "height": 900
+      },
+      "route": "/",
+      "status": 200,
+      "horizontalOverflow": false,
+      "violations": []
+    },
+    {
+      "browser": "firefox",
+      "version": "151.0",
+      "viewport": {
+        "name": "desktop",
+        "width": 1440,
+        "height": 900
+      },
+      "route": "/Drugs?keyword=para",
+      "status": 200,
+      "horizontalOverflow": false,
+      "violations": []
+    },
+    {
+      "browser": "firefox",
+      "version": "151.0",
+      "viewport": {
+        "name": "desktop",
+        "width": 1440,
+        "height": 900
+      },
+      "route": "/Drugs/Details/1",
+      "status": 200,
+      "horizontalOverflow": false,
+      "violations": []
+    },
+    {
+      "browser": "firefox",
+      "version": "151.0",
+      "viewport": {
+        "name": "desktop",
+        "width": 1440,
+        "height": 900
+      },
+      "route": "/Auth/Login",
+      "status": 200,
+      "horizontalOverflow": false,
+      "violations": []
+    },
+    {
+      "browser": "firefox",
+      "version": "151.0",
+      "viewport": {
+        "name": "mobile",
+        "width": 390,
+        "height": 844
+      },
+      "route": "/",
+      "status": 200,
+      "horizontalOverflow": false,
+      "violations": []
+    },
+    {
+      "browser": "firefox",
+      "version": "151.0",
+      "viewport": {
+        "name": "mobile",
+        "width": 390,
+        "height": 844
+      },
+      "route": "/Drugs?keyword=para",
+      "status": 200,
+      "horizontalOverflow": false,
+      "violations": []
+    },
+    {
+      "browser": "firefox",
+      "version": "151.0",
+      "viewport": {
+        "name": "mobile",
+        "width": 390,
+        "height": 844
+      },
+      "route": "/Drugs/Details/1",
+      "status": 200,
+      "horizontalOverflow": false,
+      "violations": []
+    },
+    {
+      "browser": "firefox",
+      "version": "151.0",
+      "viewport": {
+        "name": "mobile",
+        "width": 390,
+        "height": 844
+      },
+      "route": "/Auth/Login",
+      "status": 200,
+      "horizontalOverflow": false,
+      "violations": []
+    }
+  ],
+  "focusChecks": [
+    {
+      "browser": "chrome",
+      "viewport": "desktop",
+      "tag": "A",
+      "href": "#main-content",
+      "visible": true,
+      "outlineStyle": "auto",
+      "outlineWidth": "1px",
+      "boxShadow": "none"
+    },
+    {
+      "browser": "chrome",
+      "viewport": "mobile",
+      "tag": "A",
+      "href": "#main-content",
+      "visible": true,
+      "outlineStyle": "auto",
+      "outlineWidth": "1px",
+      "boxShadow": "none"
+    },
+    {
+      "browser": "edge",
+      "viewport": "desktop",
+      "tag": "A",
+      "href": "#main-content",
+      "visible": true,
+      "outlineStyle": "auto",
+      "outlineWidth": "1px",
+      "boxShadow": "none"
+    },
+    {
+      "browser": "edge",
+      "viewport": "mobile",
+      "tag": "A",
+      "href": "#main-content",
+      "visible": true,
+      "outlineStyle": "auto",
+      "outlineWidth": "1px",
+      "boxShadow": "none"
+    },
+    {
+      "browser": "firefox",
+      "viewport": "desktop",
+      "tag": "A",
+      "href": "#main-content",
+      "visible": true,
+      "outlineStyle": "auto",
+      "outlineWidth": "1px",
+      "boxShadow": "none"
+    },
+    {
+      "browser": "firefox",
+      "viewport": "mobile",
+      "tag": "A",
+      "href": "#main-content",
+      "visible": true,
+      "outlineStyle": "auto",
+      "outlineWidth": "1px",
+      "boxShadow": "none"
+    }
+  ]
+}
