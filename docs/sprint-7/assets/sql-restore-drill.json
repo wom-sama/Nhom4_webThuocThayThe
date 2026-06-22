@@ -1,0 +1,20 @@
+﻿{
+    "GeneratedAtUtc":  "2026-06-22T05:01:36.9238335Z",
+    "SqlImage":  "mcr.microsoft.com/mssql/server:2022-latest",
+    "SourceDatabase":  "N4WTT_Restore_Source",
+    "TargetDatabase":  "N4WTT_Restore_Validation",
+    "CountColumns":  "Drugs,Batches,Categories,EFMigrations",
+    "SourceCounts":  "7,7,4,1",
+    "TargetCounts":  "7,7,4,1",
+    "CountsMatch":  true,
+    "BackupVerifiedWithChecksum":  true,
+    "DbccCheckDbPassed":  true,
+    "BackupBytes":  528384,
+    "BackupSha256":  "bd36c2c22af0277177146455c521cf69cc27caf12fcd33cb8b69dc7cd1fb6ab3",
+    "RestoreSeconds":  0.815,
+    "ConnectivitySeconds":  0.127,
+    "MeasuredRpo":  "0 for transactions committed before the backup",
+    "TargetOperationalRpo":  "24 hours for the course demo",
+    "TargetOperationalRto":  "10 minutes",
+    "SecretsRecorded":  false
+}
