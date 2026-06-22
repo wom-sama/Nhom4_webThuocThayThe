@@ -889,7 +889,11 @@ internal static class AcceptanceTests
                 Expect(home.Contains("public-command-intro"), "V3 public command hierarchy missing");
                 Expect(home.Contains("ui-v3"), "V3 shell marker missing");
                 Expect(login.Contains("auth-trust-panel"), "V3 login trust panel missing");
+                Expect(!login.Contains("Điều hướng theo vai trò"), "login still renders verbose role-routing chip");
+                Expect(!login.Contains("Phiên tự hết hạn"), "login still renders verbose session chip");
+                Expect(!home.Contains("Dữ liệu có nguồn"), "home still renders verbose trust chip");
                 Expect(results.Contains("result-list-v3"), "V3 decision result list missing");
+                Expect(!results.Contains("Sắp xếp theo dữ liệu hiện có"), "results still render verbose sorting copy");
                 Expect(detail.Contains("is-primary-recommendation"), "primary recommendation is not highlighted");
             })
         ];

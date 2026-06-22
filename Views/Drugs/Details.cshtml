@@ -32,16 +32,6 @@
                 <text>Còn @Model.StockQuantity đơn vị khả dụng</text>
             }
         </h2>
-        <p class="mb-0">
-            @if (Model.StockQuantity <= 0)
-            {
-                <text>Ưu tiên phương án còn hàng, cùng hoạt chất và không có cảnh báo an toàn nghiêm trọng.</text>
-            }
-            else
-            {
-                <text>Số lượng được tính từ các lô còn hạn sử dụng và còn tồn kho.</text>
-            }
-        </p>
     </div>
     @if (Model.StockQuantity <= 0 && hasAlternatives)
     {
@@ -56,7 +46,6 @@
         <div class="section-heading">
             <div>
                 <h2 class="h4">Thông tin thuốc</h2>
-                <p class="muted-copy mb-0">Dữ liệu dược lý và hướng dẫn tham khảo.</p>
             </div>
             @if (Model.PrescriptionRequired)
             {
@@ -74,7 +63,7 @@
             <div class="detail-row"><dt>Giá tham khảo</dt><dd>@Model.Price.ToString("N0") VND / @Model.Unit</dd></div>
         </dl>
 
-        <details class="pharmacology-disclosure" open>
+        <details class="pharmacology-disclosure">
             <summary><span><i data-lucide="book-open" class="app-icon" aria-hidden="true"></i>Thông tin dược lý chi tiết</span><i data-lucide="chevron-down" class="app-icon disclosure-chevron" aria-hidden="true"></i></summary>
             <dl class="detail-list mt-3">
                 <div class="detail-row"><dt>Mô tả</dt><dd>@Model.Description</dd></div>
@@ -88,7 +77,6 @@
         <div class="section-heading">
             <div>
                 <h2 id="recommendations-heading" class="h4">Thuốc thay thế đề xuất</h2>
-                <p class="muted-copy mb-0">Xếp hạng theo quy tắc, tồn kho và cảnh báo.</p>
             </div>
             <span class="status-badge @(Model.StockQuantity <= 0 ? "is-danger" : "is-success")">
                 @(Model.StockQuantity <= 0 ? "Hết hàng" : $"Còn {Model.StockQuantity}")

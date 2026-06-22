@@ -9,17 +9,11 @@
         <div class="auth-trust-icon" aria-hidden="true"><i data-lucide="shield-check"></i></div>
         <div class="page-kicker">@T["Auth.Kicker"]</div>
         <h1 class="page-title">@T["Auth.Heading"]</h1>
-        <p>Đăng nhập một lần để vào đúng khu vực nghiệp vụ theo vai trò đã được cấp.</p>
-        <div class="auth-trust-status">
-            <span><i data-lucide="route" class="app-icon" aria-hidden="true"></i>Điều hướng theo vai trò</span>
-            <span><i data-lucide="timer" class="app-icon" aria-hidden="true"></i>Phiên tự hết hạn</span>
-        </div>
     </div>
 
     <form asp-action="Login" method="post" class="app-surface auth-panel">
         <input type="hidden" asp-for="ReturnUrl" />
         <div class="auth-form-heading">
-            <span class="status-badge is-success"><span class="live-dot" aria-hidden="true"></span>Hệ thống sẵn sàng</span>
             <h2>Truy cập không gian làm việc</h2>
         </div>
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -37,7 +31,6 @@
         </div>
 
         <button type="submit" class="btn btn-primary btn-lg w-100 icon-button-label"><i data-lucide="log-in" class="app-icon" aria-hidden="true"></i><span>@T["Common.SignIn"]</span></button>
-        <p class="auth-security-note"><i data-lucide="lock-keyhole" class="app-icon" aria-hidden="true"></i>@T["Auth.SecurityNote"]</p>
     </form>
 </section>
 
