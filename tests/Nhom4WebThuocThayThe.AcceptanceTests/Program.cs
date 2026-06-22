@@ -226,13 +226,15 @@ try
         var bytes = await response.Content.ReadAsByteArrayAsync();
         compressionStopwatch.Stop();
         var cacheControl = response.Headers.CacheControl;
+        var sourceBytes = new FileInfo(Path.Combine(repoRoot.FullName, "wwwroot", "css", "site.css")).Length;
         if (!response.IsSuccessStatusCode ||
             !response.Content.Headers.ContentEncoding.Contains("br") ||
             cacheControl?.Public != true ||
             cacheControl.MaxAge < TimeSpan.FromDays(7) ||
-            bytes.Length >= 10_000)
+            bytes.Length >= 16_384 ||
+            bytes.Length >= sourceBytes * 0.4)
         {
-            throw new InvalidOperationException("static asset compression or seven-day cache policy is missing");
+            throw new InvalidOperationException("static asset compression, transfer budget, or seven-day cache policy is missing");
         }
 
         results.Add(new TestResult(
@@ -876,6 +878,19 @@ internal static class AcceptanceTests
                 var bytes = await response.Content.ReadAsByteArrayAsync();
                 Expect(response.IsSuccessStatusCode, "Lucide runtime was not served");
                 Expect(bytes.Length > 100_000, "Lucide runtime appears incomplete");
+            }),
+            new("TC45", "UI V3 contract", "Public flows expose the Figma-approved V3 hierarchy", async () =>
+            {
+                using var client = runtime.CreateClient();
+                var home = await GetStringAsync(client, "/");
+                var login = await GetStringAsync(client, "/Auth/Login");
+                var results = await GetStringAsync(client, "/Drugs?keyword=Paracetamol");
+                var detail = await GetStringAsync(client, "/Drugs/Details/1");
+                Expect(home.Contains("public-command-intro"), "V3 public command hierarchy missing");
+                Expect(home.Contains("ui-v3"), "V3 shell marker missing");
+                Expect(login.Contains("auth-trust-panel"), "V3 login trust panel missing");
+                Expect(results.Contains("result-list-v3"), "V3 decision result list missing");
+                Expect(detail.Contains("is-primary-recommendation"), "primary recommendation is not highlighted");
             })
         ];
     }

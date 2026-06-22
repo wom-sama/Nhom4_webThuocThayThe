@@ -5,7 +5,7 @@
     var hasAlternatives = Model.Alternatives.Any();
 }
 
-<section class="action-bar">
+<section class="action-bar drug-detail-heading">
     <div>
         <div class="page-kicker">Hồ sơ thuốc</div>
         <h1 class="page-title">@Model.Name</h1>
@@ -51,7 +51,7 @@
     }
 </section>
 
-<section class="detail-grid">
+<section class="detail-grid detail-grid-v3">
     <div class="app-surface detail-information">
         <div class="section-heading">
             <div>
@@ -110,12 +110,18 @@
         else
         {
             <form id="ai-explanation-token" class="visually-hidden" aria-hidden="true">@Html.AntiForgeryToken()</form>
-            <div class="stack-list">
+            <div class="stack-list recommendation-list-v3">
+                @{ var recommendationIndex = 0; }
                 @foreach (var item in Model.Alternatives)
                 {
                     var primaryReasons = item.Reasons.Take(3).ToArray();
                     var additionalReasons = item.Reasons.Skip(3).ToArray();
-                    <article class="recommendation-card">
+                    var isPrimaryRecommendation = recommendationIndex == 0;
+                    <article class="recommendation-card @(isPrimaryRecommendation ? "is-primary-recommendation" : string.Empty)">
+                        @if (isPrimaryRecommendation)
+                        {
+                            <div class="recommendation-rank"><i data-lucide="badge-check" class="app-icon" aria-hidden="true"></i>Ưu tiên số 1</div>
+                        }
                         <div class="recommendation-topline">
                             <div>
                                 <a asp-action="Details" asp-route-id="@item.Id"><strong>@item.Name</strong></a>
@@ -161,6 +167,7 @@
                             <div id="ai-explanation-@item.Id" class="ai-explanation-panel" aria-live="polite" hidden></div>
                         </div>
                     </article>
+                    recommendationIndex++;
                 }
             </div>
             <p class="ai-safety-note"><i data-lucide="info" class="app-icon" aria-hidden="true"></i>AI chỉ diễn giải kết quả khi được yêu cầu; điểm, cảnh báo và quyết định chuyên môn vẫn là nguồn chính.</p>

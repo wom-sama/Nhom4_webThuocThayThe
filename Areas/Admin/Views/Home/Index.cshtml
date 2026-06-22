@@ -3,7 +3,7 @@
     ViewData["Title"] = "Tổng quan quản trị";
 }
 
-<section class="mb-4"><div class="page-kicker">Khu vực quản trị</div><h1 class="page-title">Vận hành hệ thống</h1><p class="page-description">Quản trị danh mục, kho, nguồn dữ liệu, audit và khả năng khôi phục.</p></section>
+<section class="workspace-heading mb-4"><div class="page-kicker"><span class="live-dot" aria-hidden="true"></span>Khu vực quản trị</div><h1 class="page-title">Vận hành hệ thống</h1><p class="page-description">Ưu tiên ngoại lệ kho, nguồn dữ liệu và nhật ký vận hành.</p></section>
 
 <section class="quick-action-grid quick-action-grid-admin mb-4" aria-label="Tác vụ quản trị">
     <a asp-controller="DrugCatalog" asp-action="Index" class="quick-action"><i data-lucide="library" class="quick-action-icon" aria-hidden="true"></i><span><strong>Danh mục thuốc</strong><small>Cập nhật dữ liệu chuẩn</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i></a>
@@ -19,4 +19,25 @@
     }
 </section>
 
-<section id="roles" class="app-surface role-boundary-note"><i data-lucide="shield-check" class="quick-action-icon" aria-hidden="true"></i><div><h2 class="h5">Phân quyền theo khu vực</h2><p class="muted-copy mb-0">Admin, Dược sĩ, Chuyên gia và Người dùng có shell nghiệp vụ riêng; server vẫn kiểm soát mọi quyền truy cập.</p></div></section>
+<section class="operations-grid mb-4" aria-label="Tình trạng vận hành">
+    <div class="app-surface operations-panel">
+        <div class="section-heading"><div><div class="section-eyebrow">Cần xử lý</div><h2 class="h5">Rủi ro tồn kho</h2></div><a asp-controller="Inventory" asp-action="Index">Mở kho</a></div>
+        <div class="compact-list">
+            @foreach (var risk in Model.StockRisks.Take(4))
+            {
+                <div class="compact-list-row"><span><strong>@risk.DrugName</strong><small>@risk.Strength</small></span><span class="status-badge @(risk.Quantity <= 0 ? "is-danger" : "is-warning")">@(risk.Quantity <= 0 ? "Hết hàng" : $"Còn {risk.Quantity}")</span></div>
+            }
+        </div>
+    </div>
+    <div class="app-surface operations-panel">
+        <div class="section-heading"><div><div class="section-eyebrow">Gần đây</div><h2 class="h5">Nhật ký hệ thống</h2></div><a asp-controller="Reports" asp-action="Index">Xem audit</a></div>
+        <div class="compact-list">
+            @foreach (var entry in Model.AuditLogs.Take(4))
+            {
+                <div class="compact-list-row"><span><strong>@entry.Action</strong><small>@entry.Actor · @entry.Entity</small></span><time datetime="@entry.CreatedAt.ToString("O")">@entry.CreatedAt.ToLocalTime().ToString("dd/MM HH:mm")</time></div>
+            }
+        </div>
+    </div>
+</section>
+
+<section id="roles" class="app-surface role-boundary-note"><i data-lucide="shield-check" class="quick-action-icon" aria-hidden="true"></i><div><h2 class="h5">Ranh giới phân quyền</h2><p class="muted-copy mb-0">Máy chủ kiểm soát quyền truy cập theo từng khu vực nghiệp vụ.</p></div></section>
