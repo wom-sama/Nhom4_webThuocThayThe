@@ -1,5 +1,8 @@
 # Somee deployment runbook
 
+Incident severity, ownership and escalation are defined in
+[`support-escalation-runbook.md`](support-escalation-runbook.md).
+
 This runbook deploys the published ASP.NET Core package without storing credentials in Git, Jira,
 shell history or the generated archive.
 
