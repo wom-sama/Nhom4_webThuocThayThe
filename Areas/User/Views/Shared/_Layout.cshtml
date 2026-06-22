@@ -13,14 +13,14 @@
         <aside class="role-sidebar" aria-label="Điều hướng người dùng">
             <a class="role-brand" asp-area="User" asp-controller="Home" asp-action="Index"><span>Rx</span><strong>Người dùng</strong></a>
             <nav class="role-nav">
-                <a asp-area="User" asp-controller="Home" asp-action="Index">Tổng quan</a>
-                <a asp-area="" asp-controller="Drugs" asp-action="Index">Tra cứu thuốc</a>
-                <a asp-area="User" asp-controller="Home" asp-action="History">Lịch sử tra cứu</a>
-                <a asp-area="User" asp-controller="Home" asp-action="Saved">Thuốc đã lưu</a>
+                <a asp-area="User" asp-controller="Home" asp-action="Index"><i data-lucide="layout-dashboard" class="app-icon" aria-hidden="true"></i>Tổng quan</a>
+                <a asp-area="" asp-controller="Drugs" asp-action="Index"><i data-lucide="search" class="app-icon" aria-hidden="true"></i>Tra cứu thuốc</a>
+                <a asp-area="User" asp-controller="Home" asp-action="History"><i data-lucide="history" class="app-icon" aria-hidden="true"></i>Lịch sử tra cứu</a>
+                <a asp-area="User" asp-controller="Home" asp-action="Saved"><i data-lucide="bookmark" class="app-icon" aria-hidden="true"></i>Thuốc đã lưu</a>
             </nav>
             <div class="role-user-panel">
                 <strong>@User.Identity?.Name</strong><span>Người dùng tiêu chuẩn</span>
-                <form asp-area="" asp-controller="Auth" asp-action="Logout" method="post"><button type="submit">Đăng xuất</button></form>
+                <form asp-area="" asp-controller="Auth" asp-action="Logout" method="post"><button type="submit"><i data-lucide="log-out" class="app-icon" aria-hidden="true"></i>Đăng xuất</button></form>
             </div>
         </aside>
         <div class="role-content">
@@ -30,6 +30,7 @@
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/lucide/lucide.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

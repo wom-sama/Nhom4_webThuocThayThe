@@ -27,10 +27,10 @@
                 <div class="navbar-collapse collapse">
                     <ul class="navbar-nav app-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">@T["Navigation.Overview"]</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index"><i data-lucide="layout-dashboard" class="app-icon" aria-hidden="true"></i>@T["Navigation.Overview"]</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Drugs" asp-action="Index">@T["Navigation.DrugSearch"]</a>
+                            <a class="nav-link" asp-area="" asp-controller="Drugs" asp-action="Index"><i data-lucide="search" class="app-icon" aria-hidden="true"></i>@T["Navigation.DrugSearch"]</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav app-user-nav">
@@ -59,14 +59,14 @@
                             </li>
                             <li class="nav-item">
                                 <form asp-area="" asp-controller="Auth" asp-action="Logout" method="post">
-                                    <button type="submit" class="btn btn-outline-secondary btn-sm">@T["Common.SignOut"]</button>
+                                    <button type="submit" class="btn btn-outline-secondary btn-sm icon-button-label"><i data-lucide="log-out" class="app-icon" aria-hidden="true"></i><span>@T["Common.SignOut"]</span></button>
                                 </form>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="btn btn-primary btn-sm" asp-area="" asp-controller="Auth" asp-action="Login">@T["Common.SignIn"]</a>
+                                <a class="btn btn-primary btn-sm icon-button-label" asp-area="" asp-controller="Auth" asp-action="Login"><i data-lucide="log-in" class="app-icon" aria-hidden="true"></i><span>@T["Common.SignIn"]</span></a>
                             </li>
                         }
                     </ul>
@@ -87,6 +87,7 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/lucide/lucide.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

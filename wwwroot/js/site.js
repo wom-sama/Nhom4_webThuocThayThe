@@ -3,6 +3,14 @@
 
 // Write your JavaScript code.
 
+if (window.lucide) {
+  window.lucide.createIcons({
+    attrs: {
+      "stroke-width": 1.75
+    }
+  });
+}
+
 document.addEventListener("click", async (event) => {
   const button = event.target.closest(".js-ai-explanation");
   if (!button) {
@@ -19,7 +27,7 @@ document.addEventListener("click", async (event) => {
   }
 
   button.disabled = true;
-  button.textContent = "Đang giải thích...";
+  setButtonLabel(button, "Đang giải thích...");
   panel.hidden = false;
   panel.setAttribute("aria-busy", "true");
   panel.replaceChildren(createText("p", "Đang kết nối dịch vụ giải thích..."));
@@ -54,7 +62,7 @@ document.addEventListener("click", async (event) => {
   } finally {
     panel.removeAttribute("aria-busy");
     button.disabled = false;
-    button.textContent = "Giải thích lại";
+    setButtonLabel(button, "Giải thích lại");
   }
 });
 
@@ -98,4 +106,14 @@ function createText(tagName, value, className) {
   }
 
   return element;
+}
+
+function setButtonLabel(button, value) {
+  const label = button.querySelector("span");
+  if (label) {
+    label.textContent = value;
+    return;
+  }
+
+  button.textContent = value;
 }

@@ -13,19 +13,19 @@
         <aside class="role-sidebar" aria-label="Điều hướng dược sĩ">
             <a class="role-brand" asp-area="Pharmacist" asp-controller="Home" asp-action="Index"><span>Rx</span><strong>Dược sĩ</strong></a>
             <nav class="role-nav">
-                <a asp-area="Pharmacist" asp-controller="Home" asp-action="Index">Tổng quan</a>
-                <a asp-area="Pharmacist" asp-controller="Workspace" asp-action="Index">Bàn tra cứu</a>
-                <a asp-area="Pharmacist" asp-controller="Workspace" asp-action="Index">Thuốc thay thế</a>
-                <a asp-area="Pharmacist" asp-controller="Inventory" asp-action="Index">Kho rủi ro</a>
+                <a asp-area="Pharmacist" asp-controller="Home" asp-action="Index"><i data-lucide="layout-dashboard" class="app-icon" aria-hidden="true"></i>Tổng quan</a>
+                <a asp-area="Pharmacist" asp-controller="Workspace" asp-action="Index"><i data-lucide="search" class="app-icon" aria-hidden="true"></i>Bàn tra cứu</a>
+                <a asp-area="Pharmacist" asp-controller="Workspace" asp-action="Index"><i data-lucide="git-compare-arrows" class="app-icon" aria-hidden="true"></i>Thuốc thay thế</a>
+                <a asp-area="Pharmacist" asp-controller="Inventory" asp-action="Index"><i data-lucide="warehouse" class="app-icon" aria-hidden="true"></i>Kho rủi ro</a>
             </nav>
-            <div class="role-user-panel"><strong>@User.Identity?.Name</strong><span>Dược sĩ</span><form asp-area="" asp-controller="Auth" asp-action="Logout" method="post"><button type="submit">Đăng xuất</button></form></div>
+            <div class="role-user-panel"><strong>@User.Identity?.Name</strong><span>Dược sĩ</span><form asp-area="" asp-controller="Auth" asp-action="Logout" method="post"><button type="submit"><i data-lucide="log-out" class="app-icon" aria-hidden="true"></i>Đăng xuất</button></form></div>
         </aside>
         <div class="role-content">
             <header class="role-topbar"><span>Bàn làm việc dược sĩ</span><a asp-area="" asp-controller="Drugs" asp-action="Index">Tra cứu công khai</a></header>
             <main id="main-content" class="role-main">@RenderBody()</main>
         </div>
     </div>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script><script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script><script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script><script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script><script src="~/lib/lucide/lucide.min.js"></script><script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

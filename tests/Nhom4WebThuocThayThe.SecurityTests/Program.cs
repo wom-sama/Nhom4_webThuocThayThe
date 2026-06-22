@@ -203,7 +203,7 @@ internal static class SecurityTests
             {
                 using var client = runtime.CreateClient();
                 var html = await LoginAsync(client, "admin@nhom4.local", "Admin@123", followRedirects: true);
-                Expect(html.Contains("Tổng quan vận hành"), "login with hashed credentials failed");
+                Expect(html.Contains("role-admin", StringComparison.OrdinalIgnoreCase), "login with hashed credentials failed");
             }),
             new("SEC03", "Auth", "Invalid login does not set auth cookie", async () =>
             {
