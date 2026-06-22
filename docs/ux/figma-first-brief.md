@@ -10,7 +10,8 @@ acceptance criteria; they do not replace the approved Figma frames.
 - Figma Design file: [N4WTT – S8 UI Design](https://www.figma.com/design/fu43wNGxTFRMghHrlH9lhI/N4WTT-%E2%80%93-S8-UI-Design)
 - File key: `fu43wNGxTFRMghHrlH9lhI`
 - Authoring method: manual Figma Design; no Figma AI credits or Make generation.
-- Owner approval: pending `N4WTT-212`; this candidate does not authorize implementation yet.
+- Owner approval: approved in `N4WTT-212` for Manual V1 on 22/06/2026.
+- Implementation status: released through `v1.1.0`; production hotfix line currently `v1.1.4`.
 - Interactive reference only: [Pharmacy Web App UI Design](https://www.figma.com/make/UOQ4LcUQnhG6yArGXS9aYS/Pharmacy-Web-App-UI-Design)
 - Repository handoff: `docs/ux/figma-s8/`
 
@@ -51,8 +52,8 @@ authoritative.
 9. `08 Prototype`
 10. `09 Dev handoff`
 
-The Figma version URL and review date must be recorded in `N4WTT-212`. Implementation tickets remain
-blocked until Nam comments `APPROVED` with the exact version link.
+The Figma version URL and review date are recorded in `N4WTT-212`. Implementation tickets were
+unblocked only after Nam approved the exact file key and Manual V1 candidate.
 
 ## Required frames
 

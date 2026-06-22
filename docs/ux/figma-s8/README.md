@@ -72,3 +72,8 @@ shared dashboard or a menu containing inaccessible modules.
   records `APPROVED` against the exact file key and Manual V1 candidate.
 - Visual changes after approval require a Jira-linked change request and a new Figma candidate label.
 - Vũ validates desktop/mobile output against these frames, not against the old shared-shell UI.
+
+Gate status: Nam approved Manual V1 in `N4WTT-212`. The implementation was delivered in PR #37,
+released in `v1.1.0`, and revalidated through `v1.1.4`. Evidence includes
+`artifacts/browser-visual-s8/visual-qa-summary.json`, acceptance `TC35` to `TC40`, security `SEC16`
+and the production `/health` smoke for both HTTP and HTTPS.
