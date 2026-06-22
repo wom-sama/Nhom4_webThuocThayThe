@@ -53,6 +53,11 @@ Invoke-WebRequest http://localhost:8080/health
 
 The compose stack runs the web image as a non-root user and persists SQL Server data in a named volume.
 
+The compose file falls back to a locked smoke account so the Production-mode container can start for
+CI and health checks without exposing a usable password. Replace `AUTHENTICATION_ENCODED_ACCOUNTS`
+in `.env` with real encoded accounts for any authenticated Production-like run; do not use the
+sample account payload for a live deployment.
+
 Gemini explanation is optional and disabled by default. To enable it, set `AI_GEMINI_ENABLED=true`
 and provide `GEMINI_API_KEY` only in the untracked `.env` file. The rule-based score and safety alerts
 remain authoritative when AI is enabled or unavailable.
