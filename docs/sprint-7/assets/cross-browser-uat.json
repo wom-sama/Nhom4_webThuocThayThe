@@ -1,0 +1,562 @@
+{
+  "generatedAt": "2026-06-22T04:35:06.974Z",
+  "baseUrl": "https://nnhom4web.somee.com",
+  "browserRuns": [
+    {
+      "browser": "chrome",
+      "version": "149.0.7827.115",
+      "viewport": {
+        "name": "desktop",
+        "width": 1440,
+        "height": 900
+      },
+      "elapsedMilliseconds": 6570,
+      "statuses": {
+        "home": 200,
+        "search": 200,
+        "detail": 200
+      },
+      "home": {
+        "title": "Tong quan - Web Thuoc Thay The",
+        "htmlLang": "en",
+        "horizontalOverflow": false,
+        "mainPresent": true,
+        "skipLinkPresent": true,
+        "searchHasExplicitLabel": true,
+        "mobileTogglePresent": true,
+        "mobileToggleName": "Toggle navigation"
+      },
+      "mobileMenuExpanded": null,
+      "searchHorizontalOverflow": false,
+      "detailHorizontalOverflow": false,
+      "firstEightTabStops": [
+        {
+          "tag": "A",
+          "id": "",
+          "href": "#main-content",
+          "name": "Bo qua dieu huong"
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "href": "/",
+          "name": "Rx\n                    \n                        Web Thuoc Th"
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "href": "/",
+          "name": "Tong quan"
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "href": "/Drugs",
+          "name": "Tra cuu"
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "href": "/Auth/Login",
+          "name": "Dang nhap"
+        },
+        {
+          "tag": "INPUT",
+          "id": "homeKeyword",
+          "href": null,
+          "name": ""
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "href": null,
+          "name": "Tim"
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "href": "/Drugs",
+          "name": "Mo tra cuu"
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "browser": "chrome",
+      "version": "149.0.7827.115",
+      "viewport": {
+        "name": "mobile",
+        "width": 390,
+        "height": 844
+      },
+      "elapsedMilliseconds": 6639,
+      "statuses": {
+        "home": 200,
+        "search": 200,
+        "detail": 200
+      },
+      "home": {
+        "title": "Tong quan - Web Thuoc Thay The",
+        "htmlLang": "en",
+        "horizontalOverflow": false,
+        "mainPresent": true,
+        "skipLinkPresent": true,
+        "searchHasExplicitLabel": true,
+        "mobileTogglePresent": true,
+        "mobileToggleName": "Toggle navigation"
+      },
+      "mobileMenuExpanded": true,
+      "searchHorizontalOverflow": false,
+      "detailHorizontalOverflow": false,
+      "firstEightTabStops": [
+        {
+          "tag": "A",
+          "id": "",
+          "href": "#main-content",
+          "name": "Bo qua dieu huong"
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "href": "/",
+          "name": "Rx\n                    \n                        Web Thuoc Th"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "href": null,
+          "name": "Toggle navigation"
+        },
+        {
+          "tag": "INPUT",
+          "id": "homeKeyword",
+          "href": null,
+          "name": ""
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "href": null,
+          "name": "Tim"
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "href": "/Drugs",
+          "name": "Mo tra cuu"
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "href": "/DrugCatalog",
+          "name": "Mo danh muc"
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "href": "/Inventory",
+          "name": "Mo kho"
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "browser": "edge",
+      "version": "149.0.4022.80",
+      "viewport": {
+        "name": "desktop",
+        "width": 1440,
+        "height": 900
+      },
+      "elapsedMilliseconds": 5559,
+      "statuses": {
+        "home": 200,
+        "search": 200,
+        "detail": 200
+      },
+      "home": {
+        "title": "Tong quan - Web Thuoc Thay The",
+        "htmlLang": "en",
+        "horizontalOverflow": false,
+        "mainPresent": true,
+        "skipLinkPresent": true,
+        "searchHasExplicitLabel": true,
+        "mobileTogglePresent": true,
+        "mobileToggleName": "Toggle navigation"
+      },
+      "mobileMenuExpanded": null,
+      "searchHorizontalOverflow": false,
+      "detailHorizontalOverflow": false,
+      "firstEightTabStops": [
+        {
+          "tag": "A",
+          "id": "",
+          "href": "#main-content",
+          "name": "Bo qua dieu huong"
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "href": "/",
+          "name": "Rx\n                    \n                        Web Thuoc Th"
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "href": "/",
+          "name": "Tong quan"
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "href": "/Drugs",
+          "name": "Tra cuu"
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "href": "/Auth/Login",
+          "name": "Dang nhap"
+        },
+        {
+          "tag": "INPUT",
+          "id": "homeKeyword",
+          "href": null,
+          "name": ""
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "href": null,
+          "name": "Tim"
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "href": "/Drugs",
+          "name": "Mo tra cuu"
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "browser": "edge",
+      "version": "149.0.4022.80",
+      "viewport": {
+        "name": "mobile",
+        "width": 390,
+        "height": 844
+      },
+      "elapsedMilliseconds": 6574,
+      "statuses": {
+        "home": 200,
+        "search": 200,
+        "detail": 200
+      },
+      "home": {
+        "title": "Tong quan - Web Thuoc Thay The",
+        "htmlLang": "en",
+        "horizontalOverflow": false,
+        "mainPresent": true,
+        "skipLinkPresent": true,
+        "searchHasExplicitLabel": true,
+        "mobileTogglePresent": true,
+        "mobileToggleName": "Toggle navigation"
+      },
+      "mobileMenuExpanded": true,
+      "searchHorizontalOverflow": false,
+      "detailHorizontalOverflow": false,
+      "firstEightTabStops": [
+        {
+          "tag": "A",
+          "id": "",
+          "href": "#main-content",
+          "name": "Bo qua dieu huong"
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "href": "/",
+          "name": "Rx\n                    \n                        Web Thuoc Th"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "href": null,
+          "name": "Toggle navigation"
+        },
+        {
+          "tag": "INPUT",
+          "id": "homeKeyword",
+          "href": null,
+          "name": ""
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "href": null,
+          "name": "Tim"
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "href": "/Drugs",
+          "name": "Mo tra cuu"
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "href": "/DrugCatalog",
+          "name": "Mo danh muc"
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "href": "/Inventory",
+          "name": "Mo kho"
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "browser": "firefox",
+      "version": "151.0",
+      "viewport": {
+        "name": "desktop",
+        "width": 1440,
+        "height": 900
+      },
+      "elapsedMilliseconds": 5690,
+      "statuses": {
+        "home": 200,
+        "search": 200,
+        "detail": 200
+      },
+      "home": {
+        "title": "Tong quan - Web Thuoc Thay The",
+        "htmlLang": "en",
+        "horizontalOverflow": false,
+        "mainPresent": true,
+        "skipLinkPresent": true,
+        "searchHasExplicitLabel": true,
+        "mobileTogglePresent": true,
+        "mobileToggleName": "Toggle navigation"
+      },
+      "mobileMenuExpanded": null,
+      "searchHorizontalOverflow": false,
+      "detailHorizontalOverflow": false,
+      "firstEightTabStops": [
+        {
+          "tag": "A",
+          "id": "",
+          "href": "#main-content",
+          "name": "Bo qua dieu huong"
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "href": "/",
+          "name": "Rx\n                    \n                        Web Thuoc Th"
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "href": "/",
+          "name": "Tong quan"
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "href": "/Drugs",
+          "name": "Tra cuu"
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "href": "/Auth/Login",
+          "name": "Dang nhap"
+        },
+        {
+          "tag": "INPUT",
+          "id": "homeKeyword",
+          "href": null,
+          "name": ""
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "href": null,
+          "name": "Tim"
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "href": "/Drugs",
+          "name": "Mo tra cuu"
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "browser": "firefox",
+      "version": "151.0",
+      "viewport": {
+        "name": "mobile",
+        "width": 390,
+        "height": 844
+      },
+      "elapsedMilliseconds": 6395,
+      "statuses": {
+        "home": 200,
+        "search": 200,
+        "detail": 200
+      },
+      "home": {
+        "title": "Tong quan - Web Thuoc Thay The",
+        "htmlLang": "en",
+        "horizontalOverflow": false,
+        "mainPresent": true,
+        "skipLinkPresent": true,
+        "searchHasExplicitLabel": true,
+        "mobileTogglePresent": true,
+        "mobileToggleName": "Toggle navigation"
+      },
+      "mobileMenuExpanded": true,
+      "searchHorizontalOverflow": false,
+      "detailHorizontalOverflow": false,
+      "firstEightTabStops": [
+        {
+          "tag": "A",
+          "id": "",
+          "href": "#main-content",
+          "name": "Bo qua dieu huong"
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "href": "/",
+          "name": "Rx\n                    \n                        Web Thuoc Th"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "href": null,
+          "name": "Toggle navigation"
+        },
+        {
+          "tag": "INPUT",
+          "id": "homeKeyword",
+          "href": null,
+          "name": ""
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "href": null,
+          "name": "Tim"
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "href": "/Drugs",
+          "name": "Mo tra cuu"
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "href": "/DrugCatalog",
+          "name": "Mo danh muc"
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "href": "/Inventory",
+          "name": "Mo kho"
+        }
+      ],
+      "consoleErrors": []
+    }
+  ],
+  "roleMatrix": [
+    {
+      "browser": "chrome",
+      "role": "Anonymous",
+      "route": "/DrugCatalog",
+      "status": 200,
+      "finalUrl": "https://nnhom4web.somee.com/Auth/Login?ReturnUrl=%2FDrugCatalog",
+      "passed": true
+    },
+    {
+      "browser": "chrome",
+      "role": "User",
+      "route": "/DrugCatalog",
+      "status": 200,
+      "finalUrl": "https://nnhom4web.somee.com/Auth/AccessDenied?ReturnUrl=%2FDrugCatalog",
+      "passed": true
+    },
+    {
+      "browser": "chrome",
+      "role": "Admin",
+      "route": "/DrugCatalog",
+      "status": 200,
+      "finalUrl": "https://nnhom4web.somee.com/DrugCatalog",
+      "passed": true
+    },
+    {
+      "browser": "edge",
+      "role": "Anonymous",
+      "route": "/DrugCatalog",
+      "status": 200,
+      "finalUrl": "https://nnhom4web.somee.com/Auth/Login?ReturnUrl=%2FDrugCatalog",
+      "passed": true
+    },
+    {
+      "browser": "edge",
+      "role": "User",
+      "route": "/DrugCatalog",
+      "status": 200,
+      "finalUrl": "https://nnhom4web.somee.com/Auth/AccessDenied?ReturnUrl=%2FDrugCatalog",
+      "passed": true
+    },
+    {
+      "browser": "edge",
+      "role": "Admin",
+      "route": "/DrugCatalog",
+      "status": 200,
+      "finalUrl": "https://nnhom4web.somee.com/DrugCatalog",
+      "passed": true
+    },
+    {
+      "browser": "firefox",
+      "role": "Anonymous",
+      "route": "/DrugCatalog",
+      "status": 200,
+      "finalUrl": "https://nnhom4web.somee.com/Auth/Login?ReturnUrl=%2FDrugCatalog",
+      "passed": true
+    },
+    {
+      "browser": "firefox",
+      "role": "User",
+      "route": "/DrugCatalog",
+      "status": 200,
+      "finalUrl": "https://nnhom4web.somee.com/Auth/AccessDenied?ReturnUrl=%2FDrugCatalog",
+      "passed": true
+    },
+    {
+      "browser": "firefox",
+      "role": "Admin",
+      "route": "/DrugCatalog",
+      "status": 200,
+      "finalUrl": "https://nnhom4web.somee.com/DrugCatalog",
+      "passed": true
+    }
+  ],
+  "findings": [
+    {
+      "severity": "P3",
+      "title": "Thuộc tính html lang chưa dùng vi",
+      "expected": "lang=\"vi\" sau sprint bản địa hóa",
+      "actual": "en"
+    }
+  ]
+}
