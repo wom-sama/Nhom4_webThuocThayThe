@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+  <title id="title">S17 Motion States Board</title>
+  <desc id="desc">Figma-ready board for public search, role workspace, decision state and reduced motion UI animation.</desc>
+  <rect width="1440" height="900" fill="#f6faf9"/>
+  <text x="72" y="78" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="800" fill="#0b2430">S17 Motion Polish</text>
+  <text x="72" y="112" font-family="Inter, Arial, sans-serif" font-size="16" fill="#5c6f78">Short, functional, accessible motion for production pharmacy workflows</text>
+
+  <g transform="translate(72 160)">
+    <rect width="388" height="250" rx="16" fill="#ffffff" stroke="#d5e4e1"/>
+    <text x="28" y="44" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800" fill="#0b2430">Public Search Flow</text>
+    <rect x="28" y="70" width="332" height="52" rx="12" fill="#f7fbfa" stroke="#cbdedb"/>
+    <text x="48" y="102" font-family="Inter, Arial, sans-serif" font-size="14" fill="#63777f">Focus ring 160ms + surface lift</text>
+    <rect x="28" y="148" width="332" height="68" rx="14" fill="#ffffff" stroke="#cbdedb"/>
+    <rect x="28" y="148" width="5" height="68" rx="3" fill="#0f7f72"/>
+    <text x="50" y="180" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#0b2430">Result card hover</text>
+    <text x="50" y="204" font-family="Inter, Arial, sans-serif" font-size="13" fill="#63777f">translateY(-3px), shadow token</text>
+  </g>
+
+  <g transform="translate(526 160)">
+    <rect width="388" height="250" rx="16" fill="#ffffff" stroke="#d5e4e1"/>
+    <text x="28" y="44" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800" fill="#0b2430">Role Workspace</text>
+    <rect x="28" y="72" width="92" height="136" rx="14" fill="#0b3037"/>
+    <rect x="46" y="96" width="58" height="12" rx="6" fill="#87d5c6"/>
+    <rect x="46" y="126" width="58" height="12" rx="6" fill="#d9efea"/>
+    <rect x="46" y="156" width="58" height="12" rx="6" fill="#d9efea"/>
+    <rect x="146" y="72" width="214" height="52" rx="14" fill="#f4fbf9" stroke="#cbdedb"/>
+    <rect x="146" y="144" width="214" height="52" rx="14" fill="#f4fbf9" stroke="#cbdedb"/>
+    <text x="166" y="104" font-family="Inter, Arial, sans-serif" font-size="13" fill="#0b2430">Quick action hover lift</text>
+    <text x="166" y="176" font-family="Inter, Arial, sans-serif" font-size="13" fill="#0b2430">Arrow slide 120ms</text>
+  </g>
+
+  <g transform="translate(980 160)">
+    <rect width="388" height="250" rx="16" fill="#ffffff" stroke="#d5e4e1"/>
+    <text x="28" y="44" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800" fill="#0b2430">Decision States</text>
+    <circle cx="58" cy="92" r="8" fill="#0f7f72"/>
+    <circle cx="58" cy="92" r="18" fill="none" stroke="#0f7f72" stroke-opacity=".25"/>
+    <text x="84" y="98" font-family="Inter, Arial, sans-serif" font-size="13" fill="#0b2430">Live-dot pulse for active work only</text>
+    <rect x="28" y="132" width="332" height="70" rx="14" fill="#fff" stroke="#cbdedb"/>
+    <text x="50" y="164" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700" fill="#0b2430">Review / evidence cards</text>
+    <text x="50" y="188" font-family="Inter, Arial, sans-serif" font-size="13" fill="#63777f">entry: opacity + translateY(10px)</text>
+  </g>
+
+  <g transform="translate(72 470)">
+    <rect width="1296" height="260" rx="18" fill="#0b3037"/>
+    <text x="32" y="50" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="800" fill="#ffffff">Reduced Motion Contract</text>
+    <text x="32" y="82" font-family="Inter, Arial, sans-serif" font-size="15" fill="#cfe8e3">When the user chooses reduced motion, transforms, keyframes and hover movement are disabled. Focus outlines and color contrast remain.</text>
+    <g transform="translate(32 120)">
+      <rect width="280" height="86" rx="14" fill="#123f47" stroke="#2f6770"/>
+      <text x="22" y="36" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#ffffff">No layout shift</text>
+      <text x="22" y="60" font-family="Inter, Arial, sans-serif" font-size="13" fill="#cfe8e3">transform-only animations</text>
+    </g>
+    <g transform="translate(348 120)">
+      <rect width="280" height="86" rx="14" fill="#123f47" stroke="#2f6770"/>
+      <text x="22" y="36" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#ffffff">No dependency bloat</text>
+      <text x="22" y="60" font-family="Inter, Arial, sans-serif" font-size="13" fill="#cfe8e3">CSS only, Bootstrap stays</text>
+    </g>
+    <g transform="translate(664 120)">
+      <rect width="280" height="86" rx="14" fill="#123f47" stroke="#2f6770"/>
+      <text x="22" y="36" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#ffffff">Keyboard visible</text>
+      <text x="22" y="60" font-family="Inter, Arial, sans-serif" font-size="13" fill="#cfe8e3">focus ring preserved</text>
+    </g>
+    <g transform="translate(980 120)">
+      <rect width="280" height="86" rx="14" fill="#123f47" stroke="#2f6770"/>
+      <text x="22" y="36" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#ffffff">Production verified</text>
+      <text x="22" y="60" font-family="Inter, Arial, sans-serif" font-size="13" fill="#cfe8e3">browser QA + tests</text>
+    </g>
+  </g>
+</svg>
