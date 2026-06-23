@@ -25,6 +25,19 @@ public sealed class AuthController(IUserAccountService userAccountService) : Con
         return View(new LoginViewModel { ReturnUrl = returnUrl });
     }
 
+    [HttpGet]
+    [AllowAnonymous]
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Register(string? returnUrl = null)
+    {
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            return RedirectToRole(User.FindFirstValue(ClaimTypes.Role), returnUrl);
+        }
+
+        return View(new RegisterViewModel { ReturnUrl = returnUrl });
+    }
+
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
@@ -43,20 +56,36 @@ public sealed class AuthController(IUserAccountService userAccountService) : Con
             return View(model);
         }
 
-        var claims = new List<Claim>
+        await SignInUser(user);
+
+        return RedirectToRole(user.Role, model.ReturnUrl);
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    [ValidateAntiForgeryToken]
+    [EnableRateLimiting("login")]
+    public async Task<IActionResult> Register(RegisterViewModel model)
+    {
+        if (!ModelState.IsValid)
         {
-            new(ClaimTypes.NameIdentifier, user.Email),
-            new(ClaimTypes.Name, user.DisplayName),
-            new(ClaimTypes.Email, user.Email),
-            new(ClaimTypes.Role, user.Role)
-        };
+            return View(model);
+        }
 
-        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        await HttpContext.SignInAsync(
-            CookieAuthenticationDefaults.AuthenticationScheme,
-            new ClaimsPrincipal(identity),
-            new AuthenticationProperties { IsPersistent = false });
+        var result = userAccountService.RegisterUser(model.DisplayName, model.Email, model.Password);
+        if (!result.IsSuccess)
+        {
+            ModelState.AddModelError(string.Empty, result.Message);
+            return View(model);
+        }
 
+        var user = userAccountService.ValidateCredentials(model.Email, model.Password);
+        if (user is null)
+        {
+            return RedirectToAction(nameof(Login), new { returnUrl = model.ReturnUrl });
+        }
+
+        await SignInUser(user);
         return RedirectToRole(user.Role, model.ReturnUrl);
     }
 
@@ -93,6 +122,23 @@ public sealed class AuthController(IUserAccountService userAccountService) : Con
             AppRoles.User => RedirectToAction("Index", "Home", new { area = "User" }),
             _ => RedirectToAction("Index", "Home", new { area = string.Empty })
         };
+    }
+
+    private async Task SignInUser(AppUser user)
+    {
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.NameIdentifier, user.Email),
+            new(ClaimTypes.Name, user.DisplayName),
+            new(ClaimTypes.Email, user.Email),
+            new(ClaimTypes.Role, user.Role)
+        };
+
+        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        await HttpContext.SignInAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme,
+            new ClaimsPrincipal(identity),
+            new AuthenticationProperties { IsPersistent = false });
     }
 
     private static bool IsReturnUrlAllowed(string? role, string returnUrl)

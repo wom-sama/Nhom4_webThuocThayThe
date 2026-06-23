@@ -1,0 +1,52 @@
+@model Nhom4WebThuocThayThe.ViewModels.Auth.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Đăng ký tài khoản";
+}
+
+<section class="auth-layout auth-layout-v3">
+    <div class="auth-intro auth-trust-panel">
+        <div class="auth-trust-icon" aria-hidden="true"><i data-lucide="user-plus"></i></div>
+        <div class="page-kicker">Tài khoản cá nhân</div>
+        <h1 class="page-title">Đăng ký để lưu lịch sử và thuốc cần theo dõi</h1>
+    </div>
+
+    <form asp-action="Register" method="post" class="app-surface auth-panel">
+        <input type="hidden" asp-for="ReturnUrl" />
+        <div class="auth-form-heading">
+            <h2>Tạo tài khoản người dùng</h2>
+        </div>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="DisplayName" class="form-label"></label>
+            <input asp-for="DisplayName" class="form-control" autocomplete="name" placeholder="Nguyễn Văn A" />
+            <span asp-validation-for="DisplayName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" autocomplete="username" placeholder="ten@example.com" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Password" class="form-label"></label>
+            <input asp-for="Password" class="form-control" autocomplete="new-password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ConfirmPassword" class="form-label"></label>
+            <input asp-for="ConfirmPassword" class="form-control" autocomplete="new-password" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg w-100 icon-button-label"><i data-lucide="user-plus" class="app-icon" aria-hidden="true"></i><span>Đăng ký</span></button>
+        <p class="auth-security-note mt-3">Đã có tài khoản? <a asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl">Đăng nhập</a>.</p>
+    </form>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,9 +1,58 @@
+@model IReadOnlyCollection<Nhom4WebThuocThayThe.ViewModels.User.SavedDrugItemViewModel>
+
 @{
     ViewData["Title"] = "Thuốc đã lưu";
 }
 
-<section class="mb-4">
-    <div class="page-kicker">Người dùng</div>
+<section class="workspace-heading mb-4">
+    <div class="page-kicker"><span class="live-dot" aria-hidden="true"></span>Người dùng</div>
     <h1 class="page-title">Thuốc đã lưu</h1>
 </section>
-<div class="empty-state">Bạn chưa lưu thuốc nào. <a asp-area="" asp-controller="Drugs" asp-action="Index">Mở tra cứu thuốc</a>.</div>
+
+@if (TempData["StatusMessage"] is string statusMessage)
+{
+    <div class="alert alert-success">@statusMessage</div>
+}
+
+@if (!Model.Any())
+{
+    <div class="empty-state">Bạn chưa lưu thuốc nào. <a asp-area="" asp-controller="Drugs" asp-action="Index">Mở tra cứu thuốc</a>.</div>
+}
+else
+{
+    <div class="result-grid result-list-v3">
+        @foreach (var item in Model)
+        {
+            <article class="drug-card drug-result-row @(item.StockQuantity <= 0 ? "is-stockout" : "is-available")">
+                <div class="drug-result-status" aria-hidden="true"><i data-lucide="@(item.StockQuantity <= 0 ? "package-x" : "package-check")"></i></div>
+                <div class="drug-result-main">
+                    <h2 class="drug-title">@item.Name</h2>
+                    <div class="drug-meta">
+                        <span>@item.Strength</span>
+                        <span>@item.Category</span>
+                        <span>Lưu lúc @item.SavedAt.ToLocalTime().ToString("dd/MM HH:mm")</span>
+                    </div>
+                    <div class="drug-meta">
+                        @if (item.PrescriptionRequired)
+                        {
+                            <span class="status-badge is-warning">Cần kê đơn</span>
+                        }
+                        else
+                        {
+                            <span class="status-badge is-info">Không kê đơn</span>
+                        }
+                    </div>
+                </div>
+                <div class="drug-result-decision">
+                    <span class="status-badge @(item.StockQuantity <= 0 ? "is-danger" : "is-success")">@(item.StockQuantity <= 0 ? "Hết hàng" : $"{item.StockQuantity} trong kho")</span>
+                    <strong class="drug-result-price">@item.Price.ToString("N0") VND</strong>
+                    <a asp-area="" asp-controller="Drugs" asp-action="Details" asp-route-id="@item.DrugId" class="btn btn-sm btn-outline-primary">Chi tiết</a>
+                    <form asp-action="RemoveSaved" method="post">
+                        <input type="hidden" name="drugId" value="@item.DrugId" />
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">Bỏ lưu</button>
+                    </form>
+                </div>
+            </article>
+        }
+    </div>
+}

@@ -116,7 +116,7 @@ var encodedAccounts = builder.Configuration["Authentication:EncodedAccounts"];
 if (!string.IsNullOrWhiteSpace(encodedAccounts))
 {
     var accounts = ConfiguredUserAccountLoader.Load(encodedAccounts);
-    builder.Services.AddSingleton<IUserAccountService>(new InMemoryUserAccountService(accounts));
+    builder.Services.AddSingleton(new SeedUserAccountStore(accounts));
 }
 else if (builder.Environment.IsProduction())
 {
@@ -125,10 +125,12 @@ else if (builder.Environment.IsProduction())
 }
 else
 {
-    builder.Services.AddSingleton<IUserAccountService>(new InMemoryUserAccountService());
+    builder.Services.AddSingleton(new SeedUserAccountStore(InMemoryUserAccountService.CreateDemoUsers()));
 }
 builder.Services.AddDbContext<PharmacyDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("PharmacyDatabase")));
+builder.Services.AddScoped<IUserAccountService, UserAccountService>();
+builder.Services.AddScoped<IUserLibraryService, UserLibraryService>();
 builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddScoped<IDrugCatalogService, DrugCatalogService>();
 builder.Services.AddScoped<IDrugSearchService, DrugSearchService>();

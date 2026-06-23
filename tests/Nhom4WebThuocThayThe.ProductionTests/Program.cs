@@ -537,7 +537,54 @@ await Run("PROD29", "AI Area", "Pharmacist AI endpoint is area-bound and protect
     Expect(missingToken.StatusCode == HttpStatusCode.BadRequest, $"area AI missing token status={(int)missingToken.StatusCode}");
 });
 
-await Run("PROD30", "Attack: brute force", "Login endpoint rate limits repeated invalid attempts", async () =>
+await Run("PROD30", "User accounts", "Registration, user library and admin account list work on production", async () =>
+{
+    EnsureCredentials();
+    var email = $"prod-s22-{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}@example.test";
+    const string password = "ProdS22@12345";
+
+    using (var userClient = CreateClient())
+    {
+        var registerHtml = await userClient.GetStringAsync(new Uri(new Uri(baseUrl), "/Auth/Register"));
+        var registerToken = GetAntiForgeryToken(registerHtml);
+        using var register = await userClient.PostAsync(
+            new Uri(new Uri(baseUrl), "/Auth/Register"),
+            Form(new Dictionary<string, string>
+            {
+                ["DisplayName"] = "Production S22 User",
+                ["Email"] = email,
+                ["Password"] = password,
+                ["ConfirmPassword"] = password,
+                ["ReturnUrl"] = string.Empty,
+                ["__RequestVerificationToken"] = registerToken
+            }));
+        Expect(register.StatusCode == HttpStatusCode.Redirect, $"register status={(int)register.StatusCode}");
+        Expect(register.Headers.Location?.ToString().Contains("/User", StringComparison.OrdinalIgnoreCase) == true,
+            "registration did not redirect to user workspace");
+
+        await GetOk(userClient, "/Drugs?keyword=Panadol");
+        var history = await GetOk(userClient, "/User/Home/History");
+        Expect(history.Contains("Panadol", StringComparison.OrdinalIgnoreCase), "registered user search history missing");
+
+        var details = await GetOk(userClient, "/Drugs/Details/1");
+        var saveToken = GetAntiForgeryToken(details);
+        using var save = await userClient.PostAsync(
+            new Uri(new Uri(baseUrl), "/Drugs/Save/1"),
+            Form(new Dictionary<string, string> { ["__RequestVerificationToken"] = saveToken }));
+        Expect(save.StatusCode == HttpStatusCode.Redirect, $"save drug status={(int)save.StatusCode}");
+
+        var saved = await GetOk(userClient, "/User/Home/Saved");
+        Expect(saved.Contains("Panadol", StringComparison.OrdinalIgnoreCase), "saved drug missing for registered user");
+    }
+
+    using var adminClient = CreateClient();
+    await Login(adminClient, credentials["Admin"]);
+    var accounts = await GetOk(adminClient, "/Admin/Accounts");
+    Expect(accounts.Contains(email, StringComparison.OrdinalIgnoreCase), "admin account list missing registered production user");
+    Expect(accounts.Contains("Database", StringComparison.OrdinalIgnoreCase), "admin account list missing database source marker");
+});
+
+await Run("PROD31", "Attack: brute force", "Login endpoint rate limits repeated invalid attempts", async () =>
 {
     using var client = CreateClient();
     var sawRateLimit = false;

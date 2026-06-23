@@ -78,6 +78,52 @@ public sealed class SqlServerPersistenceTests : IClassFixture<SqlServerFixture>
         Assert.Equal(4, dashboard.Metrics.Count);
         Assert.NotEmpty(dashboard.StockRisks);
     }
+
+    [Fact]
+    public void ManagedAccount_CanRegisterLockUnlockAndResetPassword()
+    {
+        using var db = _fixture.CreateContext();
+        var service = new UserAccountService(
+            db,
+            new SeedUserAccountStore(InMemoryUserAccountService.CreateDemoUsers()),
+            new AuditLogService(db));
+        var email = $"integration-{Guid.NewGuid():N}@example.test";
+
+        var created = service.RegisterUser("Integration User", email, "Initial@123");
+        Assert.True(created.IsSuccess, created.Message);
+        Assert.Equal(AppRoles.User, service.ValidateCredentials(email, "Initial@123")?.Role);
+
+        Assert.True(service.SetLocked(email, true, "integration").IsSuccess);
+        Assert.Null(service.ValidateCredentials(email, "Initial@123"));
+
+        Assert.True(service.SetLocked(email, false, "integration").IsSuccess);
+        Assert.True(service.ResetPassword(email, "Changed@123", "integration").IsSuccess);
+        Assert.Null(service.ValidateCredentials(email, "Initial@123"));
+        Assert.Equal(AppRoles.User, service.ValidateCredentials(email, "Changed@123")?.Role);
+    }
+
+    [Fact]
+    public async Task UserLibrary_PersistsSearchHistoryAndSavedDrug()
+    {
+        await using var db = _fixture.CreateContext();
+        var service = new UserLibraryService(db);
+        var email = $"library-{Guid.NewGuid():N}@example.test";
+
+        await service.RecordSearchAsync(email, "Panadol", categoryId: null, resultCount: 2);
+        await service.SaveDrugAsync(email, drugId: 1);
+
+        var summary = await service.GetSummaryAsync(email);
+        var history = await service.GetHistoryAsync(email);
+        var saved = await service.GetSavedDrugsAsync(email);
+
+        Assert.Equal(1, summary.SearchCount);
+        Assert.Equal(1, summary.SavedDrugCount);
+        Assert.Contains(history, item => item.Keyword == "Panadol" && item.ResultCount == 2);
+        Assert.Contains(saved, item => item.DrugId == 1);
+
+        await service.RemoveSavedDrugAsync(email, drugId: 1);
+        Assert.False(await service.IsSavedAsync(email, drugId: 1));
+    }
 }
 
 public sealed class SqlServerFixture : IAsyncLifetime

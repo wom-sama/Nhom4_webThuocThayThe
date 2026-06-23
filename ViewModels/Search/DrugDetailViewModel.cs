@@ -36,5 +36,7 @@ public sealed class DrugDetailViewModel
 
     public string? SafetyProfileNote { get; set; }
 
+    public bool IsSaved { get; set; }
+
     public IReadOnlyCollection<DrugRecommendationViewModel> Alternatives { get; set; } = [];
 }

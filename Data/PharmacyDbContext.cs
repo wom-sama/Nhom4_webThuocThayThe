@@ -31,6 +31,12 @@ public sealed class PharmacyDbContext(DbContextOptions<PharmacyDbContext> option
 
     public DbSet<ExpertReviewItem> ExpertReviews => Set<ExpertReviewItem>();
 
+    public DbSet<RegisteredUserAccount> RegisteredUserAccounts => Set<RegisteredUserAccount>();
+
+    public DbSet<UserSearchHistory> UserSearchHistories => Set<UserSearchHistory>();
+
+    public DbSet<SavedDrug> SavedDrugs => Set<SavedDrug>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<DrugCategory>().Property(item => item.Id).ValueGeneratedNever();
@@ -48,11 +54,15 @@ public sealed class PharmacyDbContext(DbContextOptions<PharmacyDbContext> option
         modelBuilder.Entity<DrugActiveIngredient>()
             .HasKey(item => new { item.DrugId, item.ActiveIngredientId });
         modelBuilder.Entity<PatientSafetyProfile>().HasKey(item => item.Email);
+        modelBuilder.Entity<RegisteredUserAccount>().HasKey(item => item.Email);
 
         modelBuilder.Entity<Drug>().Property(item => item.Price).HasPrecision(18, 2);
         modelBuilder.Entity<Drug>().HasIndex(item => item.Name);
         modelBuilder.Entity<DrugBatch>().HasIndex(item => new { item.DrugId, item.ExpiryDate });
         modelBuilder.Entity<AuditLogEntry>().HasIndex(item => item.CreatedAt);
+        modelBuilder.Entity<RegisteredUserAccount>().HasIndex(item => item.Role);
+        modelBuilder.Entity<UserSearchHistory>().HasIndex(item => new { item.UserEmail, item.SearchedAt });
+        modelBuilder.Entity<SavedDrug>().HasIndex(item => new { item.UserEmail, item.DrugId }).IsUnique();
 
         modelBuilder.Entity<DrugActiveIngredient>()
             .HasOne<Drug>()
@@ -84,5 +94,10 @@ public sealed class PharmacyDbContext(DbContextOptions<PharmacyDbContext> option
             .WithMany()
             .HasForeignKey(item => item.RecommendedDrugId)
             .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<SavedDrug>()
+            .HasOne<Drug>()
+            .WithMany()
+            .HasForeignKey(item => item.DrugId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

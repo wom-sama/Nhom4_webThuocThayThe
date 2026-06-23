@@ -95,6 +95,8 @@ public sealed class DrugSearchService(
         var manufacturer = await dbContext.Manufacturers.AsNoTracking().FirstAsync(item => item.Id == drug.ManufacturerId);
         var stockQuantity = await inventoryService.GetAvailableQuantityAsync(drug.Id);
         var alternatives = await recommendationService.GetRecommendationsAsync(drug.Id, userEmail);
+        var isSaved = !string.IsNullOrWhiteSpace(userEmail) &&
+            await dbContext.SavedDrugs.AsNoTracking().AnyAsync(item => item.UserEmail == userEmail.Trim().ToLower() && item.DrugId == drug.Id);
 
         return new DrugDetailViewModel
         {
@@ -115,6 +117,7 @@ public sealed class DrugSearchService(
             Contraindications = drug.Contraindications,
             SafetyProfileName = profile?.DisplayName,
             SafetyProfileNote = profile?.ClinicalNote,
+            IsSaved = isSaved,
             Alternatives = alternatives
         };
     }

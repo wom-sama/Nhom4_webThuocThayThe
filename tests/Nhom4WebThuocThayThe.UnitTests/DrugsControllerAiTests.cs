@@ -16,7 +16,7 @@ public sealed class DrugsControllerAiTests
     {
         var search = new FakeSearchService { Detail = CreateDetail() };
         var ai = new CapturingAiService();
-        var controller = new DrugsController(search, ai);
+        var controller = new DrugsController(search, ai, new FakeUserLibraryService());
 
         var result = await controller.ExplainAlternative(1, 2, CancellationToken.None);
 
@@ -34,7 +34,8 @@ public sealed class DrugsControllerAiTests
     {
         var controller = new DrugsController(
             new FakeSearchService { Detail = CreateDetail() },
-            new CapturingAiService());
+            new CapturingAiService(),
+            new FakeUserLibraryService());
 
         var result = await controller.ExplainAlternative(1, 999, CancellationToken.None);
 
@@ -117,5 +118,29 @@ public sealed class DrugsControllerAiTests
                 "Fake",
                 "fake-model"));
         }
+    }
+
+    private sealed class FakeUserLibraryService : IUserLibraryService
+    {
+        public Task<Nhom4WebThuocThayThe.ViewModels.User.UserLibrarySummaryViewModel> GetSummaryAsync(string userEmail) =>
+            Task.FromResult(new Nhom4WebThuocThayThe.ViewModels.User.UserLibrarySummaryViewModel(0, 0, null));
+
+        public Task RecordSearchAsync(string userEmail, string? keyword, int? categoryId, int resultCount) =>
+            Task.CompletedTask;
+
+        public Task<IReadOnlyCollection<Nhom4WebThuocThayThe.ViewModels.User.UserSearchHistoryItemViewModel>> GetHistoryAsync(string userEmail) =>
+            Task.FromResult<IReadOnlyCollection<Nhom4WebThuocThayThe.ViewModels.User.UserSearchHistoryItemViewModel>>([]);
+
+        public Task<IReadOnlyCollection<Nhom4WebThuocThayThe.ViewModels.User.SavedDrugItemViewModel>> GetSavedDrugsAsync(string userEmail) =>
+            Task.FromResult<IReadOnlyCollection<Nhom4WebThuocThayThe.ViewModels.User.SavedDrugItemViewModel>>([]);
+
+        public Task<bool> IsSavedAsync(string userEmail, int drugId) =>
+            Task.FromResult(false);
+
+        public Task SaveDrugAsync(string userEmail, int drugId) =>
+            Task.CompletedTask;
+
+        public Task RemoveSavedDrugAsync(string userEmail, int drugId) =>
+            Task.CompletedTask;
     }
 }

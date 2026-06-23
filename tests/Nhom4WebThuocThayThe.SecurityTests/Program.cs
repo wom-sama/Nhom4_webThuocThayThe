@@ -192,12 +192,13 @@ internal static class SecurityTests
             {
                 var appUser = await File.ReadAllTextAsync(Path.Combine(runtime.RepoRoot.FullName, "Models", "AppUser.cs"));
                 var accountService = await File.ReadAllTextAsync(Path.Combine(runtime.RepoRoot.FullName, "Services", "InMemoryUserAccountService.cs"));
+                var passwordHasher = await File.ReadAllTextAsync(Path.Combine(runtime.RepoRoot.FullName, "Services", "PasswordHasher.cs"));
 
                 Expect(appUser.Contains("PasswordHash"), "AppUser should expose PasswordHash");
                 Expect(appUser.Contains("PasswordSalt"), "AppUser should expose PasswordSalt");
                 Expect(!Regex.IsMatch(appUser, @"required\\s+string\\s+Password\\s*\\{"), "AppUser still exposes plaintext Password");
                 Expect(!accountService.Contains("Admin@123"), "admin plaintext password stored in account service");
-                Expect(accountService.Contains("Rfc2898DeriveBytes.Pbkdf2"), "PBKDF2 verification missing");
+                Expect(passwordHasher.Contains("Rfc2898DeriveBytes.Pbkdf2"), "PBKDF2 verification missing");
             }),
             new("SEC02", "Auth", "Valid hashed password still authenticates", async () =>
             {

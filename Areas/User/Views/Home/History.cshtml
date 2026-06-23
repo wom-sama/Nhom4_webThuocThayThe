@@ -1,9 +1,33 @@
+@model IReadOnlyCollection<Nhom4WebThuocThayThe.ViewModels.User.UserSearchHistoryItemViewModel>
+
 @{
     ViewData["Title"] = "Lịch sử tra cứu";
 }
 
-<section class="mb-4">
-    <div class="page-kicker">Người dùng</div>
+<section class="workspace-heading mb-4">
+    <div class="page-kicker"><span class="live-dot" aria-hidden="true"></span>Người dùng</div>
     <h1 class="page-title">Lịch sử tra cứu</h1>
 </section>
-<div class="empty-state">Chưa có lượt tra cứu nào được lưu. <a asp-area="" asp-controller="Drugs" asp-action="Index">Bắt đầu tra cứu thuốc</a>.</div>
+
+@if (!Model.Any())
+{
+    <div class="empty-state">Chưa có lượt tra cứu nào được lưu. <a asp-area="" asp-controller="Drugs" asp-action="Index">Bắt đầu tra cứu thuốc</a>.</div>
+}
+else
+{
+    <div class="timeline-list user-history-list">
+        @foreach (var item in Model)
+        {
+            <article class="history-item">
+                <div>
+                    <strong>@(string.IsNullOrWhiteSpace(item.Keyword) ? "Tất cả thuốc" : item.Keyword)</strong>
+                    <span class="muted-copy">@(string.IsNullOrWhiteSpace(item.CategoryName) ? "Không lọc danh mục" : item.CategoryName) · @item.ResultCount kết quả</span>
+                </div>
+                <div class="history-meta">
+                    <time datetime="@item.SearchedAt.ToString("O")">@item.SearchedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</time>
+                    <a class="btn btn-sm btn-outline-primary" asp-area="" asp-controller="Drugs" asp-action="Index" asp-route-keyword="@item.Keyword" asp-route-categoryId="@item.CategoryId">Mở lại</a>
+                </div>
+            </article>
+        }
+    </div>
+}

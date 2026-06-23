@@ -1,13 +1,9 @@
-using System.Security.Cryptography;
 using Nhom4WebThuocThayThe.Models;
 
 namespace Nhom4WebThuocThayThe.Services;
 
 public sealed class InMemoryUserAccountService : IUserAccountService
 {
-    private const int PasswordHashIterations = 100_000;
-    private const int PasswordHashBytes = 32;
-
     private readonly List<AppUser> _users;
 
     public InMemoryUserAccountService()
@@ -24,7 +20,7 @@ public sealed class InMemoryUserAccountService : IUserAccountService
         }
     }
 
-    private static IReadOnlyCollection<AppUser> CreateDemoUsers() =>
+    public static IReadOnlyCollection<AppUser> CreateDemoUsers() =>
     [
         new()
         {
@@ -65,7 +61,7 @@ public sealed class InMemoryUserAccountService : IUserAccountService
         return _users.FirstOrDefault(user =>
             !user.IsLocked &&
             string.Equals(user.Email, email.Trim(), StringComparison.OrdinalIgnoreCase) &&
-            VerifyPassword(password, user.PasswordSalt, user.PasswordHash));
+            PasswordHasher.Verify(password, user.PasswordSalt, user.PasswordHash));
     }
 
     public IReadOnlyCollection<AppUser> GetSeedUsers()
@@ -73,17 +69,44 @@ public sealed class InMemoryUserAccountService : IUserAccountService
         return _users.AsReadOnly();
     }
 
-    private static bool VerifyPassword(string password, string salt, string expectedHash)
-    {
-        var saltBytes = Convert.FromBase64String(salt);
-        var expectedBytes = Convert.FromBase64String(expectedHash);
-        var actualBytes = Rfc2898DeriveBytes.Pbkdf2(
-            password,
-            saltBytes,
-            PasswordHashIterations,
-            HashAlgorithmName.SHA256,
-            PasswordHashBytes);
+    public IReadOnlyCollection<UserAccountRecord> GetAccounts() =>
+        _users
+            .OrderBy(user => user.Role)
+            .ThenBy(user => user.Email)
+            .Select(user => UserAccountRecord.FromSeed(user))
+            .ToList();
 
-        return CryptographicOperations.FixedTimeEquals(actualBytes, expectedBytes);
+    public UserAccountOperationResult CreateAccount(
+        string displayName,
+        string email,
+        string role,
+        string password,
+        string actor)
+    {
+        var normalizedEmail = UserAccountService.NormalizeEmail(email);
+        if (_users.Any(user => string.Equals(user.Email, normalizedEmail, StringComparison.OrdinalIgnoreCase)))
+        {
+            return UserAccountOperationResult.Failure("Email này đã tồn tại.");
+        }
+
+        var (salt, hash) = PasswordHasher.Hash(password);
+        _users.Add(new AppUser
+        {
+            Email = normalizedEmail,
+            DisplayName = displayName.Trim(),
+            Role = role,
+            PasswordSalt = salt,
+            PasswordHash = hash
+        });
+        return UserAccountOperationResult.Success("Đã tạo tài khoản.");
     }
+
+    public UserAccountOperationResult RegisterUser(string displayName, string email, string password) =>
+        CreateAccount(displayName, email, AppRoles.User, password, email);
+
+    public UserAccountOperationResult SetLocked(string email, bool isLocked, string actor) =>
+        UserAccountOperationResult.Failure("Tài khoản seed không hỗ trợ khóa trạng thái trong bộ nhớ.");
+
+    public UserAccountOperationResult ResetPassword(string email, string newPassword, string actor) =>
+        UserAccountOperationResult.Failure("Tài khoản seed không hỗ trợ đặt lại mật khẩu trong bộ nhớ.");
 }

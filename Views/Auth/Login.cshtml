@@ -31,6 +31,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary btn-lg w-100 icon-button-label"><i data-lucide="log-in" class="app-icon" aria-hidden="true"></i><span>@T["Common.SignIn"]</span></button>
+        <p class="auth-security-note mt-3">Chưa có tài khoản? <a asp-action="Register" asp-route-returnUrl="@Model.ReturnUrl">Đăng ký người dùng</a>.</p>
     </form>
 </section>
 

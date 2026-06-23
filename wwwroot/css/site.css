@@ -571,6 +571,23 @@ details[open] > summary .disclosure-chevron { transform: rotate(180deg); }
   margin-bottom: 1rem;
 }
 
+.detail-action-stack,
+.account-action-stack,
+.account-reset-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.account-management-grid {
+  grid-template-columns: minmax(18rem, 0.42fr) minmax(0, 1fr);
+}
+
+.account-reset-form .form-control {
+  width: 10rem;
+}
+
 .btn {
   border-radius: var(--app-radius);
   font-weight: 700;

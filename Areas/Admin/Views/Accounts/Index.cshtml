@@ -1,0 +1,122 @@
+@model Nhom4WebThuocThayThe.ViewModels.Admin.AccountManagementViewModel
+
+@{
+    ViewData["Title"] = "Người dùng và vai trò";
+}
+
+<section class="workspace-heading mb-4">
+    <div class="page-kicker"><span class="live-dot" aria-hidden="true"></span>Quản trị truy cập</div>
+    <h1 class="page-title">Người dùng và vai trò</h1>
+</section>
+
+@if (TempData["StatusMessage"] is string statusMessage)
+{
+    <div class="alert alert-success">@statusMessage</div>
+}
+@if (TempData["ErrorMessage"] is string errorMessage)
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+
+<section class="operations-grid account-management-grid">
+    <form asp-action="Create" method="post" class="app-surface account-create-panel">
+        <div class="section-heading">
+            <div>
+                <div class="section-eyebrow">Tạo tài khoản</div>
+                <h2 class="h5">Cấp quyền theo vai trò</h2>
+            </div>
+        </div>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="mb-3">
+            <label asp-for="Create.DisplayName" class="form-label"></label>
+            <input asp-for="Create.DisplayName" class="form-control" autocomplete="off" />
+            <span asp-validation-for="Create.DisplayName" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Create.Email" class="form-label"></label>
+            <input asp-for="Create.Email" class="form-control" autocomplete="off" />
+            <span asp-validation-for="Create.Email" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Create.Role" class="form-label"></label>
+            <select asp-for="Create.Role" asp-items="Model.RoleOptions" class="form-select"></select>
+            <span asp-validation-for="Create.Role" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Create.Password" class="form-label"></label>
+            <input asp-for="Create.Password" class="form-control" autocomplete="new-password" />
+            <span asp-validation-for="Create.Password" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Create.ConfirmPassword" class="form-label"></label>
+            <input asp-for="Create.ConfirmPassword" class="form-control" autocomplete="new-password" />
+            <span asp-validation-for="Create.ConfirmPassword" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary w-100 icon-button-label"><i data-lucide="user-plus" class="app-icon" aria-hidden="true"></i><span>Tạo tài khoản</span></button>
+    </form>
+
+    <div class="app-surface accounts-table-panel">
+        <div class="section-heading">
+            <div>
+                <div class="section-eyebrow">Danh sách truy cập</div>
+                <h2 class="h5">@Model.Accounts.Count tài khoản</h2>
+            </div>
+        </div>
+        <div class="table-shell">
+            <table class="table align-middle">
+                <thead>
+                <tr>
+                    <th>Người dùng</th>
+                    <th>Vai trò</th>
+                    <th>Nguồn</th>
+                    <th>Trạng thái</th>
+                    <th>Cập nhật</th>
+                    <th>Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var account in Model.Accounts)
+                {
+                    <tr>
+                        <td>
+                            <strong>@account.DisplayName</strong>
+                            <div class="muted-copy">@account.Email</div>
+                        </td>
+                        <td><span class="status-badge is-info">@account.Role</span></td>
+                        <td>@account.Source</td>
+                        <td>
+                            <span class="status-badge @(account.IsLocked ? "is-danger" : "is-success")">@(account.IsLocked ? "Đã khóa" : "Hoạt động")</span>
+                        </td>
+                        <td>@(account.UpdatedAt?.ToLocalTime().ToString("dd/MM HH:mm") ?? "Theo cấu hình")</td>
+                        <td>
+                            @if (account.CanManage)
+                            {
+                                <div class="account-action-stack">
+                                    <form asp-action="SetLocked" method="post">
+                                        <input type="hidden" name="email" value="@account.Email" />
+                                        <input type="hidden" name="isLocked" value="@(!account.IsLocked)" />
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary">@(account.IsLocked ? "Mở khóa" : "Khóa")</button>
+                                    </form>
+                                    <form asp-action="ResetPassword" method="post" class="account-reset-form">
+                                        <input type="hidden" name="Email" value="@account.Email" />
+                                        <input class="form-control form-control-sm" type="password" name="NewPassword" minlength="8" placeholder="Mật khẩu mới" />
+                                        <button type="submit" class="btn btn-sm btn-outline-primary">Đặt lại</button>
+                                    </form>
+                                </div>
+                            }
+                            else
+                            {
+                                <span class="muted-copy">Seed account chỉ đọc</span>
+                            }
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

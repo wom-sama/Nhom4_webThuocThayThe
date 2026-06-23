@@ -11,10 +11,36 @@
         <h1 class="page-title">@Model.Name</h1>
         <p class="page-description">@Model.Strength · @Model.DosageForm · @Model.Manufacturer</p>
     </div>
-    <a asp-action="Index" class="btn btn-outline-secondary icon-button-label">
-        <i data-lucide="arrow-left" class="app-icon" aria-hidden="true"></i><span>Quay lại</span>
-    </a>
+    <div class="detail-action-stack">
+        @if (User.IsInRole(AppRoles.User))
+        {
+            @if (Model.IsSaved)
+            {
+                <form asp-action="Unsave" asp-route-id="@Model.Id" method="post">
+                    <button type="submit" class="btn btn-outline-secondary icon-button-label"><i data-lucide="bookmark-x" class="app-icon" aria-hidden="true"></i><span>Bỏ lưu</span></button>
+                </form>
+            }
+            else
+            {
+                <form asp-action="Save" asp-route-id="@Model.Id" method="post">
+                    <button type="submit" class="btn btn-primary icon-button-label"><i data-lucide="bookmark-plus" class="app-icon" aria-hidden="true"></i><span>Lưu thuốc</span></button>
+                </form>
+            }
+        }
+        else if (User.Identity?.IsAuthenticated != true)
+        {
+            <a asp-controller="Auth" asp-action="Login" asp-route-returnUrl="@Context.Request.Path" class="btn btn-primary icon-button-label"><i data-lucide="log-in" class="app-icon" aria-hidden="true"></i><span>Đăng nhập để lưu</span></a>
+        }
+        <a asp-action="Index" class="btn btn-outline-secondary icon-button-label">
+            <i data-lucide="arrow-left" class="app-icon" aria-hidden="true"></i><span>Quay lại</span>
+        </a>
+    </div>
 </section>
+
+@if (TempData["StatusMessage"] is string statusMessage)
+{
+    <div class="alert alert-success">@statusMessage</div>
+}
 
 <section class="decision-summary @(Model.StockQuantity <= 0 ? "is-stockout" : "is-available")" aria-labelledby="availability-heading">
     <div class="decision-summary-icon" aria-hidden="true">

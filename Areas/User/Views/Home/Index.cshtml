@@ -13,20 +13,20 @@
 
 <section class="quick-action-grid mb-4" aria-label="Bắt đầu nhanh">
     <a asp-area="" asp-controller="Drugs" asp-action="Index" class="quick-action">
-        <i data-lucide="search" class="quick-action-icon" aria-hidden="true"></i><span><strong>Tra cứu thuốc</strong><small>Tìm theo tên hoặc hoạt chất</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i>
+        <i data-lucide="search" class="quick-action-icon" aria-hidden="true"></i><span><strong>Tra cứu thuốc</strong><small>Tìm theo tên, hoạt chất hoặc nhóm điều trị</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i>
     </a>
     <a asp-action="History" class="quick-action">
-        <i data-lucide="history" class="quick-action-icon" aria-hidden="true"></i><span><strong>Lịch sử tra cứu</strong><small>Xem lại kết quả trước đây</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i>
+        <i data-lucide="history" class="quick-action-icon" aria-hidden="true"></i><span><strong>Lịch sử tra cứu</strong><small>Mở lại các lần tìm kiếm đã thực hiện</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i>
     </a>
     <a asp-action="Saved" class="quick-action">
-        <i data-lucide="bookmark" class="quick-action-icon" aria-hidden="true"></i><span><strong>Thuốc đã lưu</strong><small>Theo dõi danh sách cá nhân</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i>
+        <i data-lucide="bookmark" class="quick-action-icon" aria-hidden="true"></i><span><strong>Thuốc đã lưu</strong><small>Theo dõi thuốc cần xem lại sau</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i>
     </a>
 </section>
 
 <section class="metric-grid" aria-label="Tổng quan cá nhân">
-    <article class="metric-card"><div class="metric-label"><i data-lucide="clock-3" class="app-icon" aria-hidden="true"></i><span>Lượt tra cứu</span></div><strong>0</strong><span>Chưa có lịch sử trong phiên bản này</span></article>
-    <article class="metric-card"><div class="metric-label"><i data-lucide="bookmark-check" class="app-icon" aria-hidden="true"></i><span>Thuốc đã lưu</span></div><strong>0</strong><span>Sẵn sàng cho dữ liệu cá nhân</span></article>
-    <article class="metric-card"><div class="metric-label"><i data-lucide="bell" class="app-icon" aria-hidden="true"></i><span>Thông báo tồn kho</span></div><strong>0</strong><span>Không có thông báo mới</span></article>
+    <article class="metric-card"><div class="metric-label"><i data-lucide="clock-3" class="app-icon" aria-hidden="true"></i><span>Lượt tra cứu</span></div><strong>@Model.LibrarySummary.SearchCount</strong><span>Lưu tự động khi bạn tìm thuốc</span></article>
+    <article class="metric-card"><div class="metric-label"><i data-lucide="bookmark-check" class="app-icon" aria-hidden="true"></i><span>Thuốc đã lưu</span></div><strong>@Model.LibrarySummary.SavedDrugCount</strong><span>Quản lý trong danh sách cá nhân</span></article>
+    <article class="metric-card"><div class="metric-label"><i data-lucide="bell" class="app-icon" aria-hidden="true"></i><span>Lần tra gần nhất</span></div><strong>@(Model.LibrarySummary.LatestSearchAt?.ToLocalTime().ToString("dd/MM") ?? "Chưa có")</strong><span>@(Model.LibrarySummary.LatestSearchAt?.ToLocalTime().ToString("HH:mm") ?? "Hãy bắt đầu bằng tra cứu thuốc")</span></article>
     <article class="metric-card"><div class="metric-label"><i data-lucide="shield-check" class="app-icon" aria-hidden="true"></i><span>Phiên hiện tại</span></div><strong>Đang hoạt động</strong><span>Tự hết hạn khi không hoạt động</span></article>
 </section>
 

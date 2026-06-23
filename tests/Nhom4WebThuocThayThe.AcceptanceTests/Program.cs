@@ -967,6 +967,46 @@ internal static class AcceptanceTests
                 Expect(html.Contains("Ranh giới AI"), "privacy AI boundary section missing");
                 Expect(html.Contains("Sự cố và liên hệ"), "privacy incident section missing");
                 Expect(!html.Contains("Use this page", StringComparison.OrdinalIgnoreCase), "privacy page still contains template copy");
+            }),
+            new("TC50", "User account library", "Registration creates a persistent user with history and saved drugs", async () =>
+            {
+                var email = $"acceptance-{Guid.NewGuid():N}@example.test";
+                const string password = "Accept@12345";
+
+                using (var userClient = runtime.CreateClient())
+                {
+                    var register = await GetStringAsync(userClient, "/Auth/Register");
+                    var registerToken = ExtractAntiforgeryToken(register);
+                    await PostFormStringAsync(userClient, "/Auth/Register", new Dictionary<string, string>
+                    {
+                        ["DisplayName"] = "Acceptance User",
+                        ["Email"] = email,
+                        ["Password"] = password,
+                        ["ConfirmPassword"] = password,
+                        ["ReturnUrl"] = "",
+                        ["__RequestVerificationToken"] = registerToken
+                    });
+
+                    await GetStringAsync(userClient, "/Drugs?keyword=Panadol");
+                    var details = await GetStringAsync(userClient, "/Drugs/Details/1");
+                    var saveToken = ExtractAntiforgeryToken(details);
+                    await PostFormStringAsync(userClient, "/Drugs/Save/1", new Dictionary<string, string>
+                    {
+                        ["__RequestVerificationToken"] = saveToken
+                    });
+
+                    var history = await GetStringAsync(userClient, "/User/Home/History");
+                    var saved = await GetStringAsync(userClient, "/User/Home/Saved");
+                    Expect(history.Contains("Panadol", StringComparison.OrdinalIgnoreCase), "registered search was not saved to history");
+                    Expect(saved.Contains("Panadol", StringComparison.OrdinalIgnoreCase), "saved drug list did not include saved medicine");
+                }
+
+                using var adminClient = runtime.CreateClient();
+                await LoginAsync(adminClient, "admin@nhom4.local", "Admin@123", followRedirects: true);
+                var accounts = await GetStringAsync(adminClient, "/Admin/Accounts");
+                Expect(accounts.Contains(email, StringComparison.OrdinalIgnoreCase), "admin account page does not list registered user");
+                Expect(accounts.Contains("SetLocked", StringComparison.OrdinalIgnoreCase), "admin account page lacks lock action");
+                Expect(accounts.Contains("ResetPassword", StringComparison.OrdinalIgnoreCase), "admin account page lacks reset action");
             })
         ];
     }
