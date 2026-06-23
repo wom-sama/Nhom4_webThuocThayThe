@@ -68,28 +68,12 @@ namespace Nhom4WebThuocThayThe.Data.Migrations
                 onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_SavedDrugs_RegisteredUserAccounts_UserEmail",
-                table: "SavedDrugs",
-                column: "UserEmail",
-                principalTable: "RegisteredUserAccounts",
-                principalColumn: "Email",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
                 name: "FK_UserSearchHistories_Categories_CategoryId",
                 table: "UserSearchHistories",
                 column: "CategoryId",
                 principalTable: "Categories",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.SetNull);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_UserSearchHistories_RegisteredUserAccounts_UserEmail",
-                table: "UserSearchHistories",
-                column: "UserEmail",
-                principalTable: "RegisteredUserAccounts",
-                principalColumn: "Email",
-                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
@@ -112,15 +96,7 @@ namespace Nhom4WebThuocThayThe.Data.Migrations
                 table: "Drugs");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_SavedDrugs_RegisteredUserAccounts_UserEmail",
-                table: "SavedDrugs");
-
-            migrationBuilder.DropForeignKey(
                 name: "FK_UserSearchHistories_Categories_CategoryId",
-                table: "UserSearchHistories");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_UserSearchHistories_RegisteredUserAccounts_UserEmail",
                 table: "UserSearchHistories");
 
             migrationBuilder.DropIndex(

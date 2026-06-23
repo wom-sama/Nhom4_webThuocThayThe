@@ -119,16 +119,6 @@ public sealed class PharmacyDbContext(DbContextOptions<PharmacyDbContext> option
             .WithMany()
             .HasForeignKey(item => item.DrugId)
             .OnDelete(DeleteBehavior.Cascade);
-        modelBuilder.Entity<SavedDrug>()
-            .HasOne<RegisteredUserAccount>()
-            .WithMany()
-            .HasForeignKey(item => item.UserEmail)
-            .OnDelete(DeleteBehavior.Cascade);
-        modelBuilder.Entity<UserSearchHistory>()
-            .HasOne<RegisteredUserAccount>()
-            .WithMany()
-            .HasForeignKey(item => item.UserEmail)
-            .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<UserSearchHistory>()
             .HasOne<DrugCategory>()
             .WithMany()

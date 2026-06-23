@@ -51,12 +51,13 @@ public sealed class GeminiAiRecommendationExplanationServiceTests
 
         Assert.True(result.IsAiGenerated);
         Assert.Equal("Google Gemini", result.Provider);
-        Assert.Equal("gemini-2.5-flash-lite", result.Model);
+        Assert.Equal("gemini-2.5-flash", result.Model);
         Assert.Equal(2, result.Checkpoints.Count);
         Assert.Equal(1, handler.CallCount);
         Assert.DoesNotContain("x-goog-api-key", handler.LastRequestHeaders, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal("application/json", handler.LastRequestContentType);
         Assert.Equal(
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=test-api-key",
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=test-api-key",
             handler.LastRequestUri);
     }
 
@@ -183,7 +184,8 @@ public sealed class GeminiAiRecommendationExplanationServiceTests
         Assert.True(generationConfig.TryGetProperty("responseSchema", out var responseSchema));
         Assert.Equal("object", responseSchema.GetProperty("type").GetString());
         Assert.False(generationConfig.TryGetProperty("responseFormat", out _));
-        Assert.False(generationConfig.TryGetProperty("thinkingConfig", out _));
+        Assert.True(generationConfig.TryGetProperty("thinkingConfig", out var thinkingConfig));
+        Assert.Equal(0, thinkingConfig.GetProperty("thinkingBudget").GetInt32());
         Assert.DoesNotContain("email", body, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("patient", body, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("profile", body, StringComparison.OrdinalIgnoreCase);
@@ -208,7 +210,7 @@ public sealed class GeminiAiRecommendationExplanationServiceTests
     {
         Enabled = true,
         ApiKey = "test-api-key",
-        Model = "gemini-2.5-flash-lite",
+        Model = "gemini-2.5-flash",
         MaxAttempts = 1,
         RetryBaseMilliseconds = 1
     };
@@ -232,6 +234,8 @@ public sealed class GeminiAiRecommendationExplanationServiceTests
 
         public string LastRequestHeaders { get; private set; } = string.Empty;
 
+        public string? LastRequestContentType { get; private set; }
+
         public string? LastRequestUri { get; private set; }
 
         protected override Task<HttpResponseMessage> SendAsync(
@@ -240,6 +244,7 @@ public sealed class GeminiAiRecommendationExplanationServiceTests
         {
             CallCount++;
             LastRequestHeaders = request.Headers.ToString();
+            LastRequestContentType = request.Content?.Headers.ContentType?.MediaType;
             LastRequestUri = request.RequestUri?.ToString();
             return Task.FromResult(respond(request));
         }

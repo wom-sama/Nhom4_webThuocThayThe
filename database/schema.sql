@@ -505,23 +505,7 @@ IF NOT EXISTS (
     WHERE [MigrationId] = N'20260623170727_AddDatabaseForeignKeyConstraints'
 )
 BEGIN
-    ALTER TABLE [SavedDrugs] ADD CONSTRAINT [FK_SavedDrugs_RegisteredUserAccounts_UserEmail] FOREIGN KEY ([UserEmail]) REFERENCES [RegisteredUserAccounts] ([Email]) ON DELETE CASCADE;
-END;
-
-IF NOT EXISTS (
-    SELECT * FROM [__EFMigrationsHistory]
-    WHERE [MigrationId] = N'20260623170727_AddDatabaseForeignKeyConstraints'
-)
-BEGIN
     ALTER TABLE [UserSearchHistories] ADD CONSTRAINT [FK_UserSearchHistories_Categories_CategoryId] FOREIGN KEY ([CategoryId]) REFERENCES [Categories] ([Id]) ON DELETE SET NULL;
-END;
-
-IF NOT EXISTS (
-    SELECT * FROM [__EFMigrationsHistory]
-    WHERE [MigrationId] = N'20260623170727_AddDatabaseForeignKeyConstraints'
-)
-BEGIN
-    ALTER TABLE [UserSearchHistories] ADD CONSTRAINT [FK_UserSearchHistories_RegisteredUserAccounts_UserEmail] FOREIGN KEY ([UserEmail]) REFERENCES [RegisteredUserAccounts] ([Email]) ON DELETE CASCADE;
 END;
 
 IF NOT EXISTS (

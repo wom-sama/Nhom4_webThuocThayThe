@@ -195,6 +195,10 @@ public sealed class GeminiAiRecommendationExplanationService(
             {
                 temperature = 0.1,
                 maxOutputTokens = Math.Clamp(_options.MaxOutputTokens, 128, 400),
+                thinkingConfig = new
+                {
+                    thinkingBudget = 0
+                },
                 responseMimeType = "application/json",
                 responseSchema = new
                 {

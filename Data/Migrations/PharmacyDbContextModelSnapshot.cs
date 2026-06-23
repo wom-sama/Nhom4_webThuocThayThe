@@ -528,12 +528,6 @@ namespace Nhom4WebThuocThayThe.Data.Migrations
                         .HasForeignKey("DrugId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Nhom4WebThuocThayThe.Models.RegisteredUserAccount", null)
-                        .WithMany()
-                        .HasForeignKey("UserEmail")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Nhom4WebThuocThayThe.Models.UserSearchHistory", b =>
@@ -542,12 +536,6 @@ namespace Nhom4WebThuocThayThe.Data.Migrations
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("Nhom4WebThuocThayThe.Models.RegisteredUserAccount", null)
-                        .WithMany()
-                        .HasForeignKey("UserEmail")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
