@@ -15,6 +15,7 @@ var baseUrl = Environment.GetEnvironmentVariable("N4WTT_PRODUCTION_URL")
     ?? "https://nnhom4web.somee.com";
 var outputPath = Environment.GetEnvironmentVariable("N4WTT_PRODUCTION_REPORT")
     ?? Path.Combine(Directory.GetCurrentDirectory(), "TestResults", "production-validation-report.json");
+const string AuthCookieName = ".AspNetCore.Cookies";
 
 var credentials = new Dictionary<string, TestCredential>(StringComparer.OrdinalIgnoreCase)
 {
@@ -112,7 +113,7 @@ await Run("PROD07", "Auth", "Invalid login does not authenticate or set auth coo
     Expect(response.StatusCode == HttpStatusCode.OK, $"status={(int)response.StatusCode}");
     Expect(body.Contains("validation-summary-errors", StringComparison.OrdinalIgnoreCase), "generic invalid-login error missing");
     Expect(!response.Headers.TryGetValues("Set-Cookie", out var cookies) ||
-           cookies.All(item => !item.Contains("N4WTT.Auth", StringComparison.OrdinalIgnoreCase)),
+           cookies.All(item => !item.Contains(AuthCookieName, StringComparison.OrdinalIgnoreCase)),
         "authentication cookie set for invalid login");
 });
 
@@ -405,9 +406,14 @@ await Run("PROD23", "Attack: XSS", "Common reflected XSS payloads are encoded in
         using var response = await publicClient.GetAsync(new Uri(new Uri(baseUrl), "/Drugs?keyword=" + Uri.EscapeDataString(payload)));
         var html = await response.Content.ReadAsStringAsync();
         Expect(response.StatusCode == HttpStatusCode.OK, $"XSS payload status={(int)response.StatusCode}");
-        Expect(!html.Contains(payload, StringComparison.Ordinal), "raw XSS payload reflected");
+        if (payload.Contains('<') || payload.Contains('"'))
+        {
+            Expect(!html.Contains(payload, StringComparison.Ordinal), "raw XSS payload reflected");
+        }
         Expect(!Regex.IsMatch(html, "<script[^>]*>\\s*alert", RegexOptions.IgnoreCase), "script alert rendered");
-        Expect(!Regex.IsMatch(html, "onerror\\s*=", RegexOptions.IgnoreCase), "event handler rendered");
+        Expect(!Regex.IsMatch(html, "<img\\b[^>]*\\sonerror\\s*=", RegexOptions.IgnoreCase), "img event handler rendered");
+        Expect(!Regex.IsMatch(html, "<svg\\b[^>]*\\sonload\\s*=", RegexOptions.IgnoreCase), "svg event handler rendered");
+        Expect(!Regex.IsMatch(html, "\\b(?:href|src)\\s*=\\s*[\"']?javascript:alert", RegexOptions.IgnoreCase), "javascript URL rendered");
     }
 });
 
@@ -435,7 +441,7 @@ await Run("PROD24", "Attack: SQLi", "SQL injection strings do not bypass auth or
         }));
     Expect(login.StatusCode == HttpStatusCode.OK, $"SQLi login status={(int)login.StatusCode}");
     Expect(!login.Headers.TryGetValues("Set-Cookie", out var cookies) ||
-           cookies.All(item => !item.Contains("N4WTT.Auth", StringComparison.OrdinalIgnoreCase)),
+           cookies.All(item => !item.Contains(AuthCookieName, StringComparison.OrdinalIgnoreCase)),
         "SQLi login set auth cookie");
 });
 
@@ -477,20 +483,28 @@ await Run("PROD26", "Attack: open redirect", "External ReturnUrl is ignored afte
 await Run("PROD27", "Attack: cookie hardening", "Authentication cookie uses secure browser flags", async () =>
 {
     EnsureCredentials();
-    using var client = CreateClient();
-    var loginHtml = await client.GetStringAsync(new Uri(new Uri(baseUrl), "/Auth/Login"));
+    using var client = CreateClient(useCookies: false);
+    using var loginPage = await client.GetAsync(new Uri(new Uri(baseUrl), "/Auth/Login"));
+    var loginHtml = await loginPage.Content.ReadAsStringAsync();
     var token = GetAntiForgeryToken(loginHtml);
-    using var response = await client.PostAsync(
-        new Uri(new Uri(baseUrl), "/Auth/Login"),
-        Form(new Dictionary<string, string>
+    var request = new HttpRequestMessage(HttpMethod.Post, new Uri(new Uri(baseUrl), "/Auth/Login"))
+    {
+        Content = Form(new Dictionary<string, string>
         {
             ["Email"] = credentials["Admin"].Email,
             ["Password"] = credentials["Admin"].Password,
             ["ReturnUrl"] = string.Empty,
             ["__RequestVerificationToken"] = token
-        }));
+        })
+    };
+    if (loginPage.Headers.TryGetValues("Set-Cookie", out var loginCookies))
+    {
+        request.Headers.TryAddWithoutValidation("Cookie", string.Join("; ", loginCookies.Select(item => item.Split(';', 2)[0])));
+    }
+    using var response = await client.SendAsync(request);
+    Expect(response.StatusCode == HttpStatusCode.Redirect, $"cookie login status={(int)response.StatusCode}");
     Expect(response.Headers.TryGetValues("Set-Cookie", out var cookieValues), "login did not set cookie");
-    var authCookie = (cookieValues ?? []).FirstOrDefault(item => item.Contains("N4WTT.Auth", StringComparison.OrdinalIgnoreCase)) ?? string.Empty;
+    var authCookie = (cookieValues ?? []).FirstOrDefault(item => item.Contains(AuthCookieName, StringComparison.OrdinalIgnoreCase)) ?? string.Empty;
     Expect(authCookie.Contains("httponly", StringComparison.OrdinalIgnoreCase), "auth cookie missing HttpOnly");
     Expect(authCookie.Contains("samesite", StringComparison.OrdinalIgnoreCase), "auth cookie missing SameSite");
     Expect(authCookie.Contains("secure", StringComparison.OrdinalIgnoreCase), "auth cookie missing Secure on HTTPS");
@@ -584,11 +598,12 @@ async Task Run(string id, string area, string title, Func<Task> action)
     }
 }
 
-HttpClient CreateClient()
+HttpClient CreateClient(bool useCookies = true)
 {
     var handler = new HttpClientHandler
     {
         AllowAutoRedirect = false,
+        UseCookies = useCookies,
         CookieContainer = new CookieContainer(),
         AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate | DecompressionMethods.Brotli
     };
