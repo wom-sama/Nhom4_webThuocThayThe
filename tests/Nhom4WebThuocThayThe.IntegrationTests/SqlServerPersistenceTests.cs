@@ -108,6 +108,19 @@ public sealed class SqlServerPersistenceTests : IClassFixture<SqlServerFixture>
         await using var db = _fixture.CreateContext();
         var service = new UserLibraryService(db);
         var email = $"library-{Guid.NewGuid():N}@example.test";
+        var now = DateTimeOffset.UtcNow;
+
+        db.RegisteredUserAccounts.Add(new RegisteredUserAccount
+        {
+            Email = email,
+            DisplayName = "Library Integration User",
+            Role = AppRoles.User,
+            PasswordSalt = "integration-test",
+            PasswordHash = "integration-test",
+            CreatedAt = now,
+            UpdatedAt = now
+        });
+        await db.SaveChangesAsync();
 
         await service.RecordSearchAsync(email, "Panadol", categoryId: null, resultCount: 2);
         await service.SaveDrugAsync(email, drugId: 1);

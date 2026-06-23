@@ -64,6 +64,26 @@ public sealed class PharmacyDbContext(DbContextOptions<PharmacyDbContext> option
         modelBuilder.Entity<UserSearchHistory>().HasIndex(item => new { item.UserEmail, item.SearchedAt });
         modelBuilder.Entity<SavedDrug>().HasIndex(item => new { item.UserEmail, item.DrugId }).IsUnique();
 
+        modelBuilder.Entity<Drug>()
+            .HasOne<DrugCategory>()
+            .WithMany()
+            .HasForeignKey(item => item.CategoryId)
+            .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<Drug>()
+            .HasOne<DosageForm>()
+            .WithMany()
+            .HasForeignKey(item => item.DosageFormId)
+            .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<Drug>()
+            .HasOne<MeasurementUnit>()
+            .WithMany()
+            .HasForeignKey(item => item.UnitId)
+            .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<Drug>()
+            .HasOne<Manufacturer>()
+            .WithMany()
+            .HasForeignKey(item => item.ManufacturerId)
+            .OnDelete(DeleteBehavior.Restrict);
         modelBuilder.Entity<DrugActiveIngredient>()
             .HasOne<Drug>()
             .WithMany()
@@ -99,5 +119,20 @@ public sealed class PharmacyDbContext(DbContextOptions<PharmacyDbContext> option
             .WithMany()
             .HasForeignKey(item => item.DrugId)
             .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<SavedDrug>()
+            .HasOne<RegisteredUserAccount>()
+            .WithMany()
+            .HasForeignKey(item => item.UserEmail)
+            .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<UserSearchHistory>()
+            .HasOne<RegisteredUserAccount>()
+            .WithMany()
+            .HasForeignKey(item => item.UserEmail)
+            .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<UserSearchHistory>()
+            .HasOne<DrugCategory>()
+            .WithMany()
+            .HasForeignKey(item => item.CategoryId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }
