@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1300" viewBox="0 0 2400 1300">
+  <rect width="2400" height="1300" fill="#EEF4F6"/>
+  <g font-family="Inter, Arial, sans-serif">
+    <text x="56" y="66" fill="#102A33" font-size="30" font-weight="800">S16 Data, AI and Privacy States</text>
+    <text x="56" y="100" fill="#5C7078" font-size="16">Richer demo data, deterministic role assistant, and real policy sections.</text>
+
+    <g transform="translate(56,150)">
+      <rect width="680" height="420" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/>
+      <text x="32" y="48" fill="#0F766E" font-size="13" font-weight="800">DATA-RICH SEARCH</text>
+      <text x="32" y="88" fill="#102A33" font-size="26" font-weight="800">More drugs, categories and stock states</text>
+      <rect x="32" y="130" width="280" height="44" rx="7" fill="#F5F8F9" stroke="#AFC0C7"/>
+      <text x="52" y="158" fill="#344A53" font-size="13">Paracetamol, PPI, antibiotic...</text>
+      <rect x="330" y="130" width="150" height="44" rx="7" fill="#F5F8F9" stroke="#AFC0C7"/>
+      <text x="350" y="158" fill="#344A53" font-size="13">All categories</text>
+      <rect x="500" y="130" width="126" height="44" rx="7" fill="#0F766E"/>
+      <text x="536" y="158" fill="#FFFFFF" font-size="13" font-weight="700">Search</text>
+      <rect x="32" y="210" width="596" height="56" rx="7" fill="#EAF7EF" stroke="#91CDBF"/>
+      <text x="56" y="244" fill="#1D7A46" font-size="14" font-weight="700">Available alternative · 480 units</text>
+      <rect x="32" y="282" width="596" height="56" rx="7" fill="#FFF7E5" stroke="#E8C77C"/>
+      <text x="56" y="316" fill="#A15C00" font-size="14" font-weight="700">Near expiry · review before dispense</text>
+      <rect x="32" y="354" width="596" height="40" rx="7" fill="#FDECEC" stroke="#E8B8B3"/>
+      <text x="56" y="380" fill="#B42318" font-size="14" font-weight="700">Out of stock · show ranked alternatives</text>
+    </g>
+
+    <g transform="translate(860,150)">
+      <rect width="680" height="420" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/>
+      <text x="32" y="48" fill="#1769AA" font-size="13" font-weight="800">ROLE AI SUPPORT</text>
+      <text x="32" y="88" fill="#102A33" font-size="26" font-weight="800">Deterministic assistant panel</text>
+      <rect x="32" y="126" width="596" height="76" rx="8" fill="#EAF4FF" stroke="#AFD1F0"/>
+      <text x="56" y="158" fill="#1769AA" font-size="14" font-weight="800">Admin</text>
+      <text x="132" y="158" fill="#344A53" font-size="13">Prioritize stockouts, stale external sources and backup checks.</text>
+      <rect x="32" y="218" width="596" height="76" rx="8" fill="#EAF7EF" stroke="#91CDBF"/>
+      <text x="56" y="250" fill="#1D7A46" font-size="14" font-weight="800">Pharmacist</text>
+      <text x="160" y="250" fill="#344A53" font-size="13">Suggest alternatives with stock and safety signal.</text>
+      <rect x="32" y="310" width="596" height="76" rx="8" fill="#FFF7E5" stroke="#E8C77C"/>
+      <text x="56" y="342" fill="#A15C00" font-size="14" font-weight="800">Expert</text>
+      <text x="132" y="342" fill="#344A53" font-size="13">Highlight low evidence, stale decisions and high-risk review items.</text>
+    </g>
+
+    <g transform="translate(1664,150)">
+      <rect width="680" height="420" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/>
+      <text x="32" y="48" fill="#102A33" font-size="13" font-weight="800">PRIVACY POLICY</text>
+      <text x="32" y="88" fill="#102A33" font-size="26" font-weight="800">Real content, not placeholder</text>
+      <text x="32" y="136" fill="#344A53" font-size="14">1. Data scope and purpose</text>
+      <text x="32" y="176" fill="#344A53" font-size="14">2. Role-based access</text>
+      <text x="32" y="216" fill="#344A53" font-size="14">3. AI processing boundary</text>
+      <text x="32" y="256" fill="#344A53" font-size="14">4. Audit log retention</text>
+      <text x="32" y="296" fill="#344A53" font-size="14">5. User responsibilities</text>
+      <text x="32" y="336" fill="#344A53" font-size="14">6. Incident and contact process</text>
+      <rect x="32" y="366" width="596" height="1" fill="#CBD7DC"/>
+      <text x="32" y="394" fill="#5C7078" font-size="12">No personal medical record is sent to Gemini.</text>
+    </g>
+
+    <g transform="translate(56,650)">
+      <rect width="2288" height="420" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/>
+      <text x="32" y="52" fill="#102A33" font-size="24" font-weight="800">Mobile and production QA contract</text>
+      <text x="32" y="92" fill="#344A53" font-size="14">All new S16 flows require browser validation on production, not only local tests.</text>
+      <rect x="32" y="138" width="390" height="220" rx="22" fill="#F5F8F9" stroke="#AFC0C7"/>
+      <text x="56" y="180" fill="#102A33" font-size="16" font-weight="800">Expert evidence mobile</text>
+      <text x="56" y="218" fill="#344A53" font-size="13">Score and signal cards stack cleanly.</text>
+      <text x="56" y="252" fill="#344A53" font-size="13">No horizontal overflow at 390px.</text>
+      <rect x="470" y="138" width="390" height="220" rx="22" fill="#F5F8F9" stroke="#AFC0C7"/>
+      <text x="494" y="180" fill="#102A33" font-size="16" font-weight="800">Privacy mobile</text>
+      <text x="494" y="218" fill="#344A53" font-size="13">Policy sections use readable cards.</text>
+      <text x="494" y="252" fill="#344A53" font-size="13">Links remain keyboard accessible.</text>
+      <rect x="908" y="138" width="390" height="220" rx="22" fill="#F5F8F9" stroke="#AFC0C7"/>
+      <text x="932" y="180" fill="#102A33" font-size="16" font-weight="800">AI assistant mobile</text>
+      <text x="932" y="218" fill="#344A53" font-size="13">Role-specific suggestions are visible.</text>
+      <text x="932" y="252" fill="#344A53" font-size="13">No unsafe direct prescribing copy.</text>
+      <rect x="1420" y="138" width="760" height="220" rx="8" fill="#F7FAFB" stroke="#CBD7DC"/>
+      <text x="1450" y="180" fill="#102A33" font-size="16" font-weight="800">QA evidence checklist</text>
+      <text x="1450" y="220" fill="#344A53" font-size="13">Build, unit, integration, acceptance, security, performance</text>
+      <text x="1450" y="255" fill="#344A53" font-size="13">Browser UAT: Expert pending/evidence/history, privacy, AI panels</text>
+      <text x="1450" y="290" fill="#344A53" font-size="13">Production validation, seed login, Somee health, Jira comments</text>
+    </g>
+  </g>
+</svg>

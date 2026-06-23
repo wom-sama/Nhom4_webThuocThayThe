@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1300" viewBox="0 0 2400 1300">
+  <rect width="2400" height="1300" fill="#E7EEF1"/>
+  <g font-family="Inter, Arial, sans-serif">
+    <text x="56" y="66" fill="#102A33" font-size="30" font-weight="800">S16 Expert Role Flows</text>
+    <text x="56" y="100" fill="#5C7078" font-size="16">Pending review, evidence, and decision history are separate task screens.</text>
+
+    <g transform="translate(56,140)">
+      <rect width="700" height="920" rx="8" fill="#F7FAFB" stroke="#B8C8CE"/>
+      <rect width="172" height="920" fill="#102A33"/>
+      <rect x="24" y="30" width="42" height="40" rx="8" fill="#AD4C7C"/>
+      <text x="34" y="56" fill="#FFFFFF" font-size="16" font-weight="800">Rx</text>
+      <text x="82" y="56" fill="#FFFFFF" font-size="15" font-weight="800">Expert</text>
+      <rect x="16" y="130" width="140" height="42" rx="7" fill="#163A45"/>
+      <text x="44" y="156" fill="#FFFFFF" font-size="13" font-weight="700">Pending</text>
+      <text x="44" y="214" fill="#D7E4E8" font-size="13">Evidence</text>
+      <text x="44" y="268" fill="#D7E4E8" font-size="13">History</text>
+      <rect x="172" width="528" height="64" fill="#FFFFFF"/>
+      <text x="204" y="40" fill="#102A33" font-size="15" font-weight="700">Pending review queue</text>
+      <text x="204" y="118" fill="#0F766E" font-size="12" font-weight="800">ACTIONABLE</text>
+      <text x="204" y="158" fill="#102A33" font-size="26" font-weight="800">Review alternatives</text>
+      <rect x="204" y="200" width="460" height="210" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/>
+      <text x="228" y="236" fill="#0F766E" font-size="12" font-weight="800">#12 NEEDS REVIEW</text>
+      <text x="228" y="272" fill="#102A33" font-size="18" font-weight="800">Panadol 500mg -> Efferalgan 500mg</text>
+      <rect x="228" y="304" width="132" height="42" rx="7" fill="#F5F8F9" stroke="#AFC0C7"/>
+      <text x="248" y="331" fill="#102A33" font-size="13">Can xem xet</text>
+      <rect x="382" y="304" width="246" height="42" rx="7" fill="#FFFFFF" stroke="#AFC0C7"/>
+      <text x="402" y="331" fill="#5C7078" font-size="13">Expert note...</text>
+      <rect x="514" y="360" width="114" height="34" rx="7" fill="#0F766E"/>
+      <text x="540" y="382" fill="#FFFFFF" font-size="12" font-weight="700">Save</text>
+      <rect x="204" y="438" width="460" height="210" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/>
+      <text x="228" y="474" fill="#0F766E" font-size="12" font-weight="800">#11 WAITING</text>
+      <text x="228" y="510" fill="#102A33" font-size="18" font-weight="800">Amoxicillin 500mg -> Augmentin 625mg</text>
+      <text x="228" y="548" fill="#5C7078" font-size="13">Stock, warning and same-category signals are visible.</text>
+    </g>
+
+    <g transform="translate(848,140)">
+      <rect width="700" height="920" rx="8" fill="#F7FAFB" stroke="#B8C8CE"/>
+      <rect width="172" height="920" fill="#102A33"/>
+      <text x="44" y="156" fill="#D7E4E8" font-size="13">Pending</text>
+      <rect x="16" y="188" width="140" height="42" rx="7" fill="#163A45"/>
+      <text x="44" y="214" fill="#FFFFFF" font-size="13" font-weight="700">Evidence</text>
+      <text x="44" y="268" fill="#D7E4E8" font-size="13">History</text>
+      <rect x="172" width="528" height="64" fill="#FFFFFF"/>
+      <text x="204" y="40" fill="#102A33" font-size="15" font-weight="700">Evidence board</text>
+      <text x="204" y="118" fill="#1769AA" font-size="12" font-weight="800">READ ONLY</text>
+      <text x="204" y="158" fill="#102A33" font-size="26" font-weight="800">Why this score?</text>
+      <rect x="204" y="204" width="460" height="140" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/>
+      <text x="228" y="244" fill="#102A33" font-size="18" font-weight="800">Paracetamol DHG 500mg</text>
+      <rect x="544" y="224" width="84" height="74" rx="8" fill="#E7F7F3"/>
+      <text x="568" y="258" fill="#0F766E" font-size="26" font-weight="800">100</text>
+      <text x="558" y="282" fill="#344A53" font-size="10">Strong</text>
+      <rect x="204" y="370" width="214" height="120" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/>
+      <text x="228" y="406" fill="#1D7A46" font-size="13" font-weight="800">Stock signal</text>
+      <text x="228" y="438" fill="#102A33" font-size="14">Available 120 units</text>
+      <rect x="450" y="370" width="214" height="120" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/>
+      <text x="474" y="406" fill="#A15C00" font-size="13" font-weight="800">Safety signal</text>
+      <text x="474" y="438" fill="#102A33" font-size="14">No high-risk alert</text>
+      <rect x="204" y="520" width="460" height="190" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/>
+      <text x="228" y="558" fill="#102A33" font-size="17" font-weight="800">Evidence checklist</text>
+      <text x="228" y="596" fill="#344A53" font-size="13">1. Same active ingredient</text>
+      <text x="228" y="626" fill="#344A53" font-size="13">2. Matching strength</text>
+      <text x="228" y="656" fill="#344A53" font-size="13">3. Same category and in stock</text>
+    </g>
+
+    <g transform="translate(1640,140)">
+      <rect width="700" height="920" rx="8" fill="#F7FAFB" stroke="#B8C8CE"/>
+      <rect width="172" height="920" fill="#102A33"/>
+      <text x="44" y="156" fill="#D7E4E8" font-size="13">Pending</text>
+      <text x="44" y="214" fill="#D7E4E8" font-size="13">Evidence</text>
+      <rect x="16" y="242" width="140" height="42" rx="7" fill="#163A45"/>
+      <text x="44" y="268" fill="#FFFFFF" font-size="13" font-weight="700">History</text>
+      <rect x="172" width="528" height="64" fill="#FFFFFF"/>
+      <text x="204" y="40" fill="#102A33" font-size="15" font-weight="700">Decision history</text>
+      <text x="204" y="118" fill="#5C7078" font-size="12" font-weight="800">AUDIT</text>
+      <text x="204" y="158" fill="#102A33" font-size="26" font-weight="800">Completed decisions</text>
+      <rect x="204" y="206" width="460" height="90" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/>
+      <text x="228" y="242" fill="#102A33" font-size="16" font-weight="800">Accepted: Paracetamol DHG</text>
+      <text x="228" y="270" fill="#5C7078" font-size="12">Expert · 23/06 09:12 · score 100</text>
+      <rect x="204" y="316" width="460" height="90" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/>
+      <text x="228" y="352" fill="#102A33" font-size="16" font-weight="800">Need review: Efferalgan</text>
+      <text x="228" y="380" fill="#5C7078" font-size="12">Expert · 23/06 08:48 · score 80</text>
+      <rect x="204" y="450" width="460" height="160" rx="8" fill="#FFFFFF" stroke="#CBD7DC"/>
+      <text x="228" y="488" fill="#102A33" font-size="17" font-weight="800">Sprint evidence</text>
+      <text x="228" y="526" fill="#344A53" font-size="13">Decisions link back to audit logs and release QA.</text>
+      <text x="228" y="558" fill="#344A53" font-size="13">No editable controls on history screen.</text>
+    </g>
+  </g>
+</svg>
