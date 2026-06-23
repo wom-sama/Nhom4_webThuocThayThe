@@ -306,6 +306,250 @@ await Run("PROD16", "Gemini", "Gemini explanation endpoint is live or safely rep
     }
 });
 
+await Run("PROD17", "UI motion", "Production CSS exposes motion tokens and reduced-motion fallback", async () =>
+{
+    var css = await publicClient.GetStringAsync(new Uri(new Uri(baseUrl), "/css/site.css"));
+    Expect(css.Contains("--motion-fast", StringComparison.Ordinal), "motion token missing");
+    Expect(css.Contains("@keyframes surface-enter", StringComparison.Ordinal), "surface enter animation missing");
+    Expect(css.Contains("prefers-reduced-motion", StringComparison.Ordinal), "reduced-motion contract missing");
+    Expect(css.Contains("live-pulse", StringComparison.Ordinal), "live pulse animation missing");
+});
+
+await Run("PROD18", "Public flows", "Public pages and invalid detail route remain clean", async () =>
+{
+    var login = await GetOk(publicClient, "/Auth/Login");
+    var home = await GetOk(publicClient, "/");
+    var privacy = await GetOk(publicClient, "/Home/Privacy");
+    Expect(login.Contains("auth-trust-panel"), "login trust panel missing");
+    Expect(home.Contains("metric-strip"), "home metric strip missing");
+    Expect(privacy.Contains("policy-grid"), "privacy policy grid missing");
+
+    using var missing = await publicClient.GetAsync(new Uri(new Uri(baseUrl), "/Drugs/Details/999999"));
+    var missingHtml = await missing.Content.ReadAsStringAsync();
+    Expect(missing.StatusCode == HttpStatusCode.NotFound, $"invalid detail status={(int)missing.StatusCode}");
+    Expect(!missingHtml.Contains("StackTrace", StringComparison.OrdinalIgnoreCase), "invalid detail leaked stack trace");
+});
+
+await Run("PROD19", "Admin", "Admin production workspace exposes management workflows", async () =>
+{
+    EnsureCredentials();
+    using var client = CreateClient();
+    await Login(client, credentials["Admin"]);
+    var dashboard = await GetOk(client, "/Admin");
+    var catalog = await GetOk(client, "/Admin/DrugCatalog");
+    var inventory = await GetOk(client, "/Admin/Inventory");
+    var external = await GetOk(client, "/Admin/ExternalData");
+    var reports = await GetOk(client, "/Admin/Reports");
+    Expect(dashboard.Contains("quick-action-grid"), "admin dashboard quick actions missing");
+    Expect(catalog.Contains("Danh mục", StringComparison.OrdinalIgnoreCase), "admin catalog missing");
+    Expect(inventory.Contains("Tồn kho", StringComparison.OrdinalIgnoreCase), "admin inventory missing");
+    Expect(external.Contains("DrugBank", StringComparison.OrdinalIgnoreCase), "admin external data missing");
+    Expect(reports.Contains("backup", StringComparison.OrdinalIgnoreCase) || reports.Contains("sao lưu", StringComparison.OrdinalIgnoreCase), "admin reports backup section missing");
+});
+
+await Run("PROD20", "Pharmacist", "Pharmacist production workflows cover dashboard, queue, search, compare and inventory", async () =>
+{
+    EnsureCredentials();
+    using var client = CreateClient();
+    await Login(client, credentials["Pharmacist"]);
+    var dashboard = await GetOk(client, "/Pharmacist");
+    var queue = await GetOk(client, "/Pharmacist/Workspace");
+    var search = await GetOk(client, "/Pharmacist/Workspace/Search?keyword=Paracetamol");
+    var compare = await GetOk(client, "/Pharmacist/Workspace/Compare");
+    var inventory = await GetOk(client, "/Pharmacist/Inventory");
+    Expect(dashboard.Contains("quick-action-grid"), "pharmacist dashboard quick actions missing");
+    Expect(queue.Contains("queue-card"), "pharmacist queue missing");
+    Expect(search.Contains("Paracetamol", StringComparison.OrdinalIgnoreCase), "pharmacist search missing");
+    Expect(compare.Contains("comparison-grid"), "pharmacist compare grid missing");
+    Expect(inventory.Contains("Tồn kho", StringComparison.OrdinalIgnoreCase), "pharmacist inventory missing");
+});
+
+await Run("PROD21", "Expert", "Expert production workflows cover dashboard, queue, evidence and history", async () =>
+{
+    EnsureCredentials();
+    using var client = CreateClient();
+    await Login(client, credentials["Expert"]);
+    var dashboard = await GetOk(client, "/Expert");
+    var queue = await GetOk(client, "/Expert/Reviews");
+    var evidence = await GetOk(client, "/Expert/Reviews/Evidence");
+    var history = await GetOk(client, "/Expert/Reviews/History");
+    Expect(dashboard.Contains("quick-action-grid"), "expert dashboard quick actions missing");
+    Expect(queue.Contains("review-form"), "expert queue review form missing");
+    Expect(evidence.Contains("evidence-card"), "expert evidence cards missing");
+    Expect(history.Contains("history-item"), "expert history items missing");
+});
+
+await Run("PROD22", "User", "User production workflows cover dashboard, history and saved pages", async () =>
+{
+    EnsureCredentials();
+    using var client = CreateClient();
+    await Login(client, credentials["User"]);
+    var dashboard = await GetOk(client, "/User");
+    var history = await GetOk(client, "/User/Home/History");
+    var saved = await GetOk(client, "/User/Home/Saved");
+    Expect(dashboard.Contains("quick-action-grid"), "user dashboard quick actions missing");
+    Expect(history.Contains("Lịch sử", StringComparison.OrdinalIgnoreCase), "user history missing");
+    Expect(saved.Contains("Đã lưu", StringComparison.OrdinalIgnoreCase) || saved.Contains("lưu", StringComparison.OrdinalIgnoreCase), "user saved page missing");
+});
+
+await Run("PROD23", "Attack: XSS", "Common reflected XSS payloads are encoded in search", async () =>
+{
+    var payloads = new[]
+    {
+        "<img src=x onerror=alert(1)>",
+        "\"><svg onload=alert(1)>",
+        "javascript:alert(1)"
+    };
+    foreach (var payload in payloads)
+    {
+        using var response = await publicClient.GetAsync(new Uri(new Uri(baseUrl), "/Drugs?keyword=" + Uri.EscapeDataString(payload)));
+        var html = await response.Content.ReadAsStringAsync();
+        Expect(response.StatusCode == HttpStatusCode.OK, $"XSS payload status={(int)response.StatusCode}");
+        Expect(!html.Contains(payload, StringComparison.Ordinal), "raw XSS payload reflected");
+        Expect(!Regex.IsMatch(html, "<script[^>]*>\\s*alert", RegexOptions.IgnoreCase), "script alert rendered");
+        Expect(!Regex.IsMatch(html, "onerror\\s*=", RegexOptions.IgnoreCase), "event handler rendered");
+    }
+});
+
+await Run("PROD24", "Attack: SQLi", "SQL injection strings do not bypass auth or break search", async () =>
+{
+    var sqli = "' OR '1'='1";
+    using (var search = await publicClient.GetAsync(new Uri(new Uri(baseUrl), "/Drugs?keyword=" + Uri.EscapeDataString(sqli))))
+    {
+        var html = await search.Content.ReadAsStringAsync();
+        Expect(search.StatusCode == HttpStatusCode.OK, $"SQLi search status={(int)search.StatusCode}");
+        Expect(!html.Contains("SqlException", StringComparison.OrdinalIgnoreCase), "SQL exception leaked");
+    }
+
+    using var client = CreateClient();
+    var loginHtml = await client.GetStringAsync(new Uri(new Uri(baseUrl), "/Auth/Login"));
+    var token = GetAntiForgeryToken(loginHtml);
+    using var login = await client.PostAsync(
+        new Uri(new Uri(baseUrl), "/Auth/Login"),
+        Form(new Dictionary<string, string>
+        {
+            ["Email"] = sqli,
+            ["Password"] = sqli,
+            ["ReturnUrl"] = string.Empty,
+            ["__RequestVerificationToken"] = token
+        }));
+    Expect(login.StatusCode == HttpStatusCode.OK, $"SQLi login status={(int)login.StatusCode}");
+    Expect(!login.Headers.TryGetValues("Set-Cookie", out var cookies) ||
+           cookies.All(item => !item.Contains("N4WTT.Auth", StringComparison.OrdinalIgnoreCase)),
+        "SQLi login set auth cookie");
+});
+
+await Run("PROD25", "Attack: path traversal", "Traversal and config file probes do not expose secrets", async () =>
+{
+    foreach (var path in new[] { "/web.config", "/appsettings.json", "/..%2fweb.config", "/%2e%2e/appsettings.json" })
+    {
+        using var response = await publicClient.GetAsync(new Uri(new Uri(baseUrl), path));
+        var body = await response.Content.ReadAsStringAsync();
+        Expect(response.StatusCode is HttpStatusCode.NotFound or HttpStatusCode.Forbidden or HttpStatusCode.BadRequest,
+            $"{path} status={(int)response.StatusCode}");
+        Expect(!body.Contains("ConnectionStrings", StringComparison.OrdinalIgnoreCase), $"{path} leaked config");
+        Expect(!body.Contains("Authentication", StringComparison.OrdinalIgnoreCase), $"{path} leaked auth config");
+        Expect(!body.Contains("AIza", StringComparison.Ordinal), $"{path} leaked AI key");
+    }
+});
+
+await Run("PROD26", "Attack: open redirect", "External ReturnUrl is ignored after valid login", async () =>
+{
+    EnsureCredentials();
+    using var client = CreateClient();
+    var loginHtml = await client.GetStringAsync(new Uri(new Uri(baseUrl), "/Auth/Login?ReturnUrl=https%3A%2F%2Fevil.example"));
+    var token = GetAntiForgeryToken(loginHtml);
+    using var response = await client.PostAsync(
+        new Uri(new Uri(baseUrl), "/Auth/Login"),
+        Form(new Dictionary<string, string>
+        {
+            ["Email"] = credentials["User"].Email,
+            ["Password"] = credentials["User"].Password,
+            ["ReturnUrl"] = "https://evil.example",
+            ["__RequestVerificationToken"] = token
+        }));
+    Expect(response.StatusCode == HttpStatusCode.Redirect, $"open redirect login status={(int)response.StatusCode}");
+    var location = response.Headers.Location?.ToString() ?? string.Empty;
+    Expect(!location.StartsWith("https://evil.example", StringComparison.OrdinalIgnoreCase), "external redirect accepted");
+    Expect(location.Contains("/User", StringComparison.OrdinalIgnoreCase), $"unexpected safe redirect target: {location}");
+});
+
+await Run("PROD27", "Attack: cookie hardening", "Authentication cookie uses secure browser flags", async () =>
+{
+    EnsureCredentials();
+    using var client = CreateClient();
+    var loginHtml = await client.GetStringAsync(new Uri(new Uri(baseUrl), "/Auth/Login"));
+    var token = GetAntiForgeryToken(loginHtml);
+    using var response = await client.PostAsync(
+        new Uri(new Uri(baseUrl), "/Auth/Login"),
+        Form(new Dictionary<string, string>
+        {
+            ["Email"] = credentials["Admin"].Email,
+            ["Password"] = credentials["Admin"].Password,
+            ["ReturnUrl"] = string.Empty,
+            ["__RequestVerificationToken"] = token
+        }));
+    Expect(response.Headers.TryGetValues("Set-Cookie", out var cookieValues), "login did not set cookie");
+    var authCookie = (cookieValues ?? []).FirstOrDefault(item => item.Contains("N4WTT.Auth", StringComparison.OrdinalIgnoreCase)) ?? string.Empty;
+    Expect(authCookie.Contains("httponly", StringComparison.OrdinalIgnoreCase), "auth cookie missing HttpOnly");
+    Expect(authCookie.Contains("samesite", StringComparison.OrdinalIgnoreCase), "auth cookie missing SameSite");
+    Expect(authCookie.Contains("secure", StringComparison.OrdinalIgnoreCase), "auth cookie missing Secure on HTTPS");
+});
+
+await Run("PROD28", "Attack: method tampering", "Protected POST routes reject unsafe methods or missing tokens", async () =>
+{
+    EnsureCredentials();
+    using var client = CreateClient();
+    await Login(client, credentials["Admin"]);
+    using var backupGet = await client.GetAsync(new Uri(new Uri(baseUrl), "/Admin/Reports/DownloadBackup"));
+    Expect(backupGet.StatusCode is HttpStatusCode.MethodNotAllowed or HttpStatusCode.NotFound,
+        $"backup GET status={(int)backupGet.StatusCode}");
+    using var markSynced = await client.PostAsync(
+        new Uri(new Uri(baseUrl), "/Admin/ExternalData/MarkSynced"),
+        Form(new Dictionary<string, string> { ["id"] = "1" }));
+    Expect(markSynced.StatusCode == HttpStatusCode.BadRequest, $"missing CSRF status={(int)markSynced.StatusCode}");
+});
+
+await Run("PROD29", "AI Area", "Pharmacist AI endpoint is area-bound and protected", async () =>
+{
+    EnsureCredentials();
+    using var client = CreateClient();
+    await Login(client, credentials["Pharmacist"]);
+    var detail = await GetOk(client, "/Pharmacist/Workspace/Details/1");
+    Expect(detail.Contains("data-endpoint=\"/Pharmacist/Workspace/ExplainAlternative\""), "area AI endpoint binding missing");
+    using var missingToken = await client.PostAsync(
+        new Uri(new Uri(baseUrl), "/Pharmacist/Workspace/ExplainAlternative"),
+        Form(new Dictionary<string, string> { ["sourceId"] = "1", ["candidateId"] = "2" }));
+    Expect(missingToken.StatusCode == HttpStatusCode.BadRequest, $"area AI missing token status={(int)missingToken.StatusCode}");
+});
+
+await Run("PROD30", "Attack: brute force", "Login endpoint rate limits repeated invalid attempts", async () =>
+{
+    using var client = CreateClient();
+    var sawRateLimit = false;
+    for (var attempt = 0; attempt < 28; attempt++)
+    {
+        var loginHtml = await client.GetStringAsync(new Uri(new Uri(baseUrl), "/Auth/Login"));
+        var token = GetAntiForgeryToken(loginHtml);
+        using var response = await client.PostAsync(
+            new Uri(new Uri(baseUrl), "/Auth/Login"),
+            Form(new Dictionary<string, string>
+            {
+                ["Email"] = $"attack-{attempt}@example.test",
+                ["Password"] = "invalid-password",
+                ["ReturnUrl"] = string.Empty,
+                ["__RequestVerificationToken"] = token
+            }));
+        if (response.StatusCode == HttpStatusCode.TooManyRequests)
+        {
+            sawRateLimit = true;
+            break;
+        }
+    }
+
+    Expect(sawRateLimit, "login endpoint did not return 429 under repeated invalid attempts");
+});
+
 Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(outputPath))!);
 await File.WriteAllTextAsync(outputPath, JsonSerializer.Serialize(tests, new JsonSerializerOptions { WriteIndented = true }));
 
