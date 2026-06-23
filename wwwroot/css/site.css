@@ -1115,6 +1115,37 @@ details[open] > summary .disclosure-chevron { transform: rotate(180deg); }
   text-decoration: none;
 }
 
+.role-topbar-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.role-mobile-logout {
+  display: none;
+  margin: 0;
+}
+
+.role-mobile-logout button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.42rem 0.58rem;
+  color: var(--role-accent);
+  background: #fff;
+  border: 1px solid color-mix(in srgb, var(--role-accent) 42%, #ffffff);
+  border-radius: var(--app-radius);
+  font-weight: 800;
+}
+
+.role-mobile-logout button:hover,
+.role-mobile-logout button:focus-visible {
+  color: #fff;
+  background: var(--role-accent);
+}
+
 .role-main {
   width: min(100%, 90rem);
   margin: 0 auto;
@@ -1202,9 +1233,11 @@ details[open] > summary .disclosure-chevron { transform: rotate(180deg); }
     display: block;
     width: auto;
     height: auto;
-    padding: 0.4rem 0.5rem calc(0.4rem + env(safe-area-inset-bottom));
+    padding: 0.45rem 0.55rem calc(0.55rem + env(safe-area-inset-bottom));
     border-top: 3px solid var(--role-accent);
     border-right: 0;
+    box-shadow: 0 -10px 24px rgba(16, 42, 51, 0.16);
+    overflow: hidden;
   }
 
   .role-brand,
@@ -1214,21 +1247,37 @@ details[open] > summary .disclosure-chevron { transform: rotate(180deg); }
 
   .role-nav {
     display: flex;
-    gap: 0.25rem;
+    gap: 0.35rem;
     margin: 0;
     overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
     scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
   }
 
   .role-nav a {
-    flex: 1 0 8rem;
+    flex: 0 0 clamp(5.2rem, 23vw, 6.75rem);
+    flex-direction: column;
+    gap: 0.18rem;
     justify-content: center;
-    min-height: 2.75rem;
-    padding: 0.45rem 0.55rem;
+    min-height: 3.35rem;
+    padding: 0.42rem 0.35rem;
     border-left: 0;
     border-bottom: 3px solid transparent;
+    border-radius: 0.55rem;
+    font-size: 0.72rem;
+    line-height: 1.12;
+    overflow: hidden;
+    scroll-snap-align: start;
     text-align: center;
-    white-space: nowrap;
+    white-space: normal;
+  }
+
+  .role-nav .app-icon {
+    width: 1.05rem;
+    height: 1.05rem;
+    flex: 0 0 auto;
   }
 
   .role-nav a:hover,
@@ -1238,7 +1287,21 @@ details[open] > summary .disclosure-chevron { transform: rotate(180deg); }
   }
 
   .role-main {
-    padding-bottom: 6rem;
+    padding-bottom: calc(6.75rem + env(safe-area-inset-bottom));
+  }
+
+  .role-topbar {
+    align-items: flex-start;
+    gap: 0.65rem;
+  }
+
+  .role-topbar-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .role-mobile-logout {
+    display: block;
   }
 
   .role-summary-grid {
@@ -1729,6 +1792,8 @@ body.ui-v3 {
 
 .auth-trust-panel .page-title {
   color: #fff;
+  line-height: 1.08;
+  overflow-wrap: anywhere;
 }
 
 .auth-trust-panel > p {
@@ -2158,6 +2223,15 @@ body.ui-v3 {
   .auth-trust-panel,
   .auth-layout-v3 .auth-panel {
     padding: 1.4rem;
+  }
+
+  .auth-trust-panel {
+    min-height: 15.8rem;
+  }
+
+  .auth-trust-panel .page-title {
+    font-size: clamp(1.7rem, 7.2vw, 2rem);
+    line-height: 1.12;
   }
 
   .auth-trust-status {

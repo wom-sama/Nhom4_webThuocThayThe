@@ -14,6 +14,7 @@ public sealed class AuthController(IUserAccountService userAccountService) : Con
 {
     [HttpGet]
     [AllowAnonymous]
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Login(string? returnUrl = null)
     {
         if (User.Identity?.IsAuthenticated == true)

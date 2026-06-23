@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1050" viewBox="0 0 1800 1050">
+  <rect width="1800" height="1050" fill="#E7EEF1"/>
+  <g font-family="Inter, Arial, sans-serif">
+    <text x="64" y="72" fill="#102A33" font-size="30" font-weight="800">N4WTT · S18 Production Reconciliation</text>
+    <text x="64" y="108" fill="#5C7078" font-size="16">Mobile login, no-stale-CSRF state and role bottom navigation imported after Somee deploy</text>
+
+    <g transform="translate(72,150)">
+      <rect width="390" height="844" rx="24" fill="#F6FAFB" stroke="#AFC0C7" stroke-width="2"/>
+      <rect x="18" y="20" width="354" height="56" rx="12" fill="#FFFFFF"/>
+      <rect x="34" y="31" width="36" height="34" rx="7" fill="#0F766E"/>
+      <text x="42" y="54" fill="#FFFFFF" font-size="15" font-weight="800">Rx</text>
+      <text x="84" y="43" fill="#102A33" font-size="13" font-weight="800">Web thuốc thay thế</text>
+      <text x="84" y="61" fill="#71858D" font-size="11">Nhóm 4</text>
+      <rect x="302" y="34" width="44" height="28" rx="7" fill="#0F766E"/>
+      <text x="313" y="53" fill="#FFFFFF" font-size="11" font-weight="700">Vào</text>
+
+      <rect x="18" y="96" width="354" height="262" rx="18" fill="#0D3138"/>
+      <rect x="42" y="125" width="46" height="46" rx="10" fill="#0F766E"/>
+      <text x="56" y="154" fill="#FFFFFF" font-size="19" font-weight="800">✓</text>
+      <text x="42" y="205" fill="#8FE3D4" font-size="12" font-weight="800">PHIÊN LÀM VIỆC AN TOÀN</text>
+      <text x="42" y="247" fill="#FFFFFF" font-size="33" font-weight="800">Đăng nhập</text>
+      <text x="42" y="286" fill="#FFFFFF" font-size="33" font-weight="800">hệ thống</text>
+      <text x="42" y="322" fill="#CFE2E7" font-size="14">Vào đúng khu vực làm việc theo vai trò đã cấp.</text>
+
+      <rect x="18" y="382" width="354" height="318" rx="16" fill="#FFFFFF" stroke="#CBD7DC"/>
+      <text x="42" y="424" fill="#102A33" font-size="20" font-weight="800">Truy cập không gian làm việc</text>
+      <text x="42" y="468" fill="#344A53" font-size="13" font-weight="700">Email</text>
+      <rect x="42" y="482" width="306" height="44" rx="8" fill="#FFFFFF" stroke="#B8C8CE"/>
+      <text x="58" y="510" fill="#8A9AA1" font-size="13">ten@donvi.vn</text>
+      <text x="42" y="562" fill="#344A53" font-size="13" font-weight="700">Mật khẩu</text>
+      <rect x="42" y="576" width="306" height="44" rx="8" fill="#FFFFFF" stroke="#B8C8CE"/>
+      <rect x="42" y="644" width="306" height="48" rx="9" fill="#0F766E"/>
+      <text x="156" y="674" fill="#FFFFFF" font-size="15" font-weight="800">Đăng nhập</text>
+      <text x="40" y="736" fill="#71858D" font-size="11">FRAME A · Mobile login production after S18</text>
+    </g>
+
+    <g transform="translate(548,150)">
+      <rect width="390" height="844" rx="24" fill="#F6FAFB" stroke="#AFC0C7" stroke-width="2"/>
+      <rect width="390" height="844" rx="24" fill="#FFFFFF"/>
+      <rect width="390" height="92" fill="#0D3138"/>
+      <rect x="24" y="28" width="42" height="42" rx="9" fill="#0F766E"/>
+      <text x="34" y="55" fill="#FFFFFF" font-size="17" font-weight="800">Rx</text>
+      <text x="82" y="43" fill="#FFFFFF" font-size="16" font-weight="800">Chuyên gia</text>
+      <text x="82" y="64" fill="#CFE2E7" font-size="12">Không gian đánh giá</text>
+      <text x="26" y="146" fill="#0F766E" font-size="12" font-weight="800">KIỂM SOÁT ĐỀ XUẤT</text>
+      <text x="26" y="188" fill="#102A33" font-size="28" font-weight="800">Đánh giá đề xuất</text>
+      <rect x="26" y="222" width="338" height="126" rx="12" fill="#FFFFFF" stroke="#CBD7DC"/>
+      <text x="46" y="258" fill="#102A33" font-size="17" font-weight="800">Panadol 500mg</text>
+      <text x="46" y="286" fill="#344A53" font-size="13">Đề xuất: Efferalgan 500mg</text>
+      <rect x="46" y="306" width="98" height="28" rx="7" fill="#FFF3DB"/>
+      <text x="62" y="325" fill="#A15C00" font-size="12" font-weight="700">Cần xem xét</text>
+      <rect x="26" y="372" width="338" height="126" rx="12" fill="#FFFFFF" stroke="#CBD7DC"/>
+      <text x="46" y="408" fill="#102A33" font-size="17" font-weight="800">Bằng chứng</text>
+      <text x="46" y="438" fill="#5C7078" font-size="13">Hoạt chất, hàm lượng, tồn kho, cảnh báo.</text>
+      <rect x="26" y="522" width="338" height="126" rx="12" fill="#FFFFFF" stroke="#CBD7DC"/>
+      <text x="46" y="558" fill="#102A33" font-size="17" font-weight="800">Lịch sử quyết định</text>
+      <text x="46" y="588" fill="#5C7078" font-size="13">Timeline audit và trạng thái duyệt.</text>
+
+      <rect x="0" y="746" width="390" height="98" fill="#0D3138"/>
+      <g transform="translate(12,760)">
+        <rect width="76" height="58" rx="10" fill="#113E47" stroke="#49727A"/>
+        <text x="26" y="23" fill="#FFFFFF" font-size="18">⌂</text><text x="14" y="45" fill="#FFFFFF" font-size="10" font-weight="700">Tổng quan</text>
+        <rect x="86" width="76" height="58" rx="10" fill="#0F766E"/>
+        <text x="116" y="23" fill="#FFFFFF" font-size="18">□</text><text x="100" y="45" fill="#FFFFFF" font-size="10" font-weight="700">Hàng chờ</text>
+        <rect x="172" width="76" height="58" rx="10" fill="#113E47" stroke="#49727A"/>
+        <text x="202" y="23" fill="#FFFFFF" font-size="18">↯</text><text x="188" y="45" fill="#FFFFFF" font-size="10" font-weight="700">Bằng chứng</text>
+        <rect x="258" width="76" height="58" rx="10" fill="#113E47" stroke="#49727A"/>
+        <text x="288" y="23" fill="#FFFFFF" font-size="18">↺</text><text x="274" y="45" fill="#FFFFFF" font-size="10" font-weight="700">Lịch sử</text>
+      </g>
+      <text x="26" y="736" fill="#71858D" font-size="11">FRAME B · Role bottom navigation production after S18</text>
+    </g>
+
+    <g transform="translate(1024,150)">
+      <rect width="700" height="450" rx="16" fill="#FFFFFF" stroke="#CBD7DC"/>
+      <text x="32" y="54" fill="#102A33" font-size="22" font-weight="800">Production fingerprint after deploy</text>
+      <text x="32" y="96" fill="#5C7078" font-size="15">These checks prevent the Figma board and production implementation from drifting silently.</text>
+      <g font-size="15">
+        <rect x="32" y="132" width="636" height="58" rx="9" fill="#EAF7EF"/>
+        <text x="56" y="167" fill="#1D7A46" font-weight="800">/health = healthy/database connected</text>
+        <rect x="32" y="210" width="636" height="58" rx="9" fill="#EAF4FF"/>
+        <text x="56" y="245" fill="#1769AA" font-weight="800">site.css contains mobile nav and auth wrapping rules</text>
+        <rect x="32" y="288" width="636" height="58" rx="9" fill="#FFF3DB"/>
+        <text x="56" y="323" fill="#A15C00" font-weight="800">Login uses no-store and secure SameSite=Lax anti-forgery cookie</text>
+      </g>
+      <text x="32" y="400" fill="#71858D" font-size="12">Import this SVG into the Figma board when direct Figma editing access is not available.</text>
+    </g>
+  </g>
+</svg>

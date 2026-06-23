@@ -24,7 +24,7 @@
             </div>
         </aside>
         <div class="role-content">
-            <header class="role-topbar"><span>Không gian cá nhân</span><a asp-area="" asp-controller="Drugs" asp-action="Index">Tra cứu công khai</a></header>
+            <header class="role-topbar"><span>Không gian cá nhân</span><div class="role-topbar-actions"><a asp-area="" asp-controller="Drugs" asp-action="Index">Tra cứu công khai</a><form class="role-mobile-logout" asp-area="" asp-controller="Auth" asp-action="Logout" method="post"><button type="submit" aria-label="Đăng xuất"><i data-lucide="log-out" class="app-icon" aria-hidden="true"></i><span>Đăng xuất</span></button></form></div></header>
             <main id="main-content" class="role-main">@RenderBody()</main>
         </div>
     </div>
