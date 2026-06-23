@@ -1,0 +1,48 @@
+@model Nhom4WebThuocThayThe.ViewModels.Pharmacist.PharmacistQueueViewModel
+
+@{
+    ViewData["Title"] = "Hàng đợi hết hàng";
+}
+
+<section class="workspace-heading mb-4">
+    <div class="page-kicker"><span class="live-dot" aria-hidden="true"></span>Hàng đợi dược sĩ</div>
+    <h1 class="page-title">Thuốc cần phương án thay thế</h1>
+</section>
+
+@if (!Model.OutOfStockDrugs.Any() && !Model.LowStockDrugs.Any())
+{
+    <div class="empty-state">Không có thuốc hết hàng hoặc sắp hết trong dữ liệu hiện tại.</div>
+}
+else
+{
+    <div class="stack-list">
+        @foreach (var item in Model.OutOfStockDrugs)
+        {
+            <article class="app-surface queue-card is-stockout">
+                <div>
+                    <span class="status-badge is-danger">Hết hàng</span>
+                    <h2 class="h5">@item.Name</h2>
+                    <p class="mb-0">@item.Strength · @item.DosageForm · @item.Manufacturer</p>
+                </div>
+                <div class="queue-card-actions">
+                    <strong>@item.Alternatives.Count phương án</strong>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Xem đề xuất</a>
+                </div>
+            </article>
+        }
+        @foreach (var item in Model.LowStockDrugs)
+        {
+            <article class="app-surface queue-card">
+                <div>
+                    <span class="status-badge is-warning">Sắp hết: @item.StockQuantity</span>
+                    <h2 class="h5">@item.Name</h2>
+                    <p class="mb-0">@item.Strength · @item.DosageForm · @item.Manufacturer</p>
+                </div>
+                <div class="queue-card-actions">
+                    <strong>@item.Alternatives.Count phương án</strong>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">So sánh</a>
+                </div>
+            </article>
+        }
+    </div>
+}

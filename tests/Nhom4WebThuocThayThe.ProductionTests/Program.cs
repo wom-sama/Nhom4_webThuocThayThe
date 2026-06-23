@@ -239,6 +239,73 @@ await Run("PROD13", "Performance", "Paced production reads stay within the Somee
     tests.LastOrDefault()?.Metrics.Add("maxMs", Math.Round(max, 2));
 });
 
+await Run("PROD14", "Role UI", "Expert and Pharmacist production routes render distinct usable screens", async () =>
+{
+    EnsureCredentials();
+    using var expertClient = CreateClient();
+    await Login(expertClient, credentials["Expert"]);
+    var pending = await GetOk(expertClient, "/Expert/Reviews");
+    var evidence = await GetOk(expertClient, "/Expert/Reviews/Evidence");
+    var history = await GetOk(expertClient, "/Expert/Reviews/History");
+    Expect(pending.Contains("Hồ sơ cần quyết định"), "expert pending title missing");
+    Expect(pending.Contains("review-form"), "expert pending form missing");
+    Expect(evidence.Contains("Cơ sở xếp hạng đề xuất"), "expert evidence title missing");
+    Expect(evidence.Contains("evidence-grid"), "expert evidence grid missing");
+    Expect(history.Contains("Lịch sử quyết định"), "expert history title missing");
+    Expect(history.Contains("timeline-list"), "expert history timeline missing");
+
+    using var pharmacistClient = CreateClient();
+    await Login(pharmacistClient, credentials["Pharmacist"]);
+    var queue = await GetOk(pharmacistClient, "/Pharmacist/Workspace");
+    var search = await GetOk(pharmacistClient, "/Pharmacist/Workspace/Search?keyword=Loratadine");
+    var compare = await GetOk(pharmacistClient, "/Pharmacist/Workspace/Compare");
+    Expect(queue.Contains("Thuốc cần phương án thay thế"), "pharmacist queue title missing");
+    Expect(queue.Contains("queue-card"), "pharmacist queue cards missing");
+    Expect(search.Contains("Loratadine 10mg"), "pharmacist search seed result missing");
+    Expect(compare.Contains("Ứng viên theo điểm, tồn kho và cảnh báo"), "pharmacist compare title missing");
+    Expect(compare.Contains("comparison-grid"), "pharmacist compare grid missing");
+});
+
+await Run("PROD15", "Content", "Production has expanded data and concrete privacy policy", async () =>
+{
+    var stomach = await GetOk(publicClient, "/Drugs?keyword=Omeprazole");
+    var respiratory = await GetOk(publicClient, "/Drugs?keyword=Ventolin");
+    var cardio = await GetOk(publicClient, "/Drugs?keyword=Amlodipine");
+    var privacy = await GetOk(publicClient, "/Home/Privacy");
+
+    Expect(stomach.Contains("Omeprazole STADA 20mg"), "Omeprazole seed missing on production");
+    Expect(respiratory.Contains("Ventolin Inhaler 100mcg"), "Ventolin seed missing on production");
+    Expect(cardio.Contains("Amlodipine 5mg"), "Amlodipine seed missing on production");
+    Expect(privacy.Contains("Phạm vi dữ liệu"), "privacy data scope missing");
+    Expect(privacy.Contains("Ranh giới AI"), "privacy AI boundary missing");
+    Expect(privacy.Contains("Sự cố và liên hệ"), "privacy incident policy missing");
+    Expect(!privacy.Contains("Use this page", StringComparison.OrdinalIgnoreCase), "privacy template copy still visible");
+});
+
+await Run("PROD16", "Gemini", "Gemini explanation endpoint is live or safely reported", async () =>
+{
+    var details = await GetOk(publicClient, "/Drugs/Details/1");
+    var token = GetAntiForgeryToken(details);
+    using var response = await publicClient.PostAsync(
+        new Uri(new Uri(baseUrl), "/Drugs/ExplainAlternative"),
+        Form(new Dictionary<string, string>
+        {
+            ["sourceId"] = "1",
+            ["candidateId"] = "2",
+            ["__RequestVerificationToken"] = token
+        }));
+    var json = await response.Content.ReadAsStringAsync();
+    Expect(response.StatusCode == HttpStatusCode.OK, $"AI POST status={(int)response.StatusCode}");
+    Expect(json.Contains("\"provider\"", StringComparison.OrdinalIgnoreCase), "AI response provider missing");
+    Expect(!json.Contains("AIza", StringComparison.Ordinal), "AI response leaked API key");
+
+    if (Environment.GetEnvironmentVariable("N4WTT_EXPECT_GEMINI_LIVE") == "1")
+    {
+        Expect(json.Contains("\"isAiGenerated\":true", StringComparison.OrdinalIgnoreCase), "Gemini did not return a live AI response");
+        Expect(json.Contains("Google Gemini", StringComparison.OrdinalIgnoreCase), "Gemini provider label missing");
+    }
+});
+
 Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(outputPath))!);
 await File.WriteAllTextAsync(outputPath, JsonSerializer.Serialize(tests, new JsonSerializerOptions { WriteIndented = true }));
 
@@ -282,6 +349,14 @@ HttpClient CreateClient()
         AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate | DecompressionMethods.Brotli
     };
     return new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(45) };
+}
+
+async Task<string> GetOk(HttpClient client, string path)
+{
+    using var response = await client.GetAsync(new Uri(new Uri(baseUrl), path));
+    var body = await response.Content.ReadAsStringAsync();
+    Expect(response.StatusCode == HttpStatusCode.OK, $"{path} status={(int)response.StatusCode}");
+    return WebUtility.HtmlDecode(body);
 }
 
 async Task Login(HttpClient client, TestCredential credential)

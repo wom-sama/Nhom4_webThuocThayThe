@@ -1,0 +1,46 @@
+@model IReadOnlyCollection<Nhom4WebThuocThayThe.ViewModels.RoleSupport.RoleInsightViewModel>
+
+@if (Model.Any())
+{
+    <section class="role-ai-panel mb-4" aria-label="AI hỗ trợ vai trò">
+        <div class="section-heading">
+            <div>
+                <div class="section-eyebrow">AI hỗ trợ vai trò</div>
+                <h2 class="h5">Gợi ý ưu tiên từ dữ liệu hiện tại</h2>
+            </div>
+            <span class="status-badge is-info">Deterministic</span>
+        </div>
+        <div class="insight-grid">
+            @foreach (var insight in Model)
+            {
+                var badgeClass = insight.Severity switch
+                {
+                    "danger" => "is-danger",
+                    "warning" => "is-warning",
+                    "success" => "is-success",
+                    _ => "is-info"
+                };
+                <article class="insight-card @badgeClass">
+                    <div>
+                        <span class="status-badge @badgeClass">@insight.Severity</span>
+                        <h3 class="h6">@insight.Title</h3>
+                        <p>@insight.Summary</p>
+                    </div>
+                    @if (insight.Signals.Any())
+                    {
+                        <ul>
+                            @foreach (var signal in insight.Signals)
+                            {
+                                <li>@signal</li>
+                            }
+                        </ul>
+                    }
+                    <a class="btn btn-sm btn-outline-primary icon-button-label" href="@insight.ActionUrl">
+                        <span>@insight.ActionLabel</span>
+                        <i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i>
+                    </a>
+                </article>
+            }
+        </div>
+    </section>
+}

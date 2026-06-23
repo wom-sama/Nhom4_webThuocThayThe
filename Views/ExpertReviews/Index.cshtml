@@ -5,8 +5,8 @@
 }
 
 <section class="mb-4">
-    <div class="page-kicker">Kiểm soát đề xuất</div>
-    <h1 class="page-title">Đánh giá đề xuất thuốc thay thế</h1>
+    <div class="page-kicker">Hàng chờ chuyên gia</div>
+    <h1 class="page-title">Hồ sơ cần quyết định</h1>
 </section>
 
 @if (TempData["SuccessMessage"] is string successMessage)
@@ -14,21 +14,38 @@
     <div class="alert alert-success">@successMessage</div>
 }
 
-<div class="review-list">
-    @foreach (var item in Model)
-    {
-        <article class="app-surface review-card">
+@if (!Model.Any())
+{
+    <div class="empty-state">Không còn hồ sơ chờ đánh giá. Mở <a asp-action="History">lịch sử quyết định</a> để xem các hồ sơ đã xử lý.</div>
+}
+else
+{
+    <div class="review-list">
+        @foreach (var item in Model)
+        {
+            <article class="app-surface review-card">
             <div class="review-summary">
                 <div>
-                    <span class="page-kicker">Đánh giá #@item.Id</span>
+                    <span class="page-kicker">Đánh giá #@item.Id · @item.StatusLabel</span>
                     <h2 class="h5">@item.SourceDrug</h2>
                     <p class="mb-0">Đề xuất: <strong>@item.RecommendedDrug</strong></p>
+                    <div class="drug-meta mt-2">
+                        <span>@item.StockSignal</span>
+                        <span>@item.EvidenceLevel</span>
+                        <span>@item.SafetySignal</span>
+                    </div>
                 </div>
                 <div class="score-chip">
                     <strong>@item.Score</strong>
-                    <span>Điểm quy tắc</span>
+                    <span>@item.ScoreLabel</span>
                 </div>
             </div>
+            <ul class="reason-list reason-list-primary">
+                @foreach (var signal in item.RuleSignals.Take(3))
+                {
+                    <li>@signal</li>
+                }
+            </ul>
             <form asp-action="Update" method="post" class="review-form">
                 <input type="hidden" name="id" value="@item.Id" />
                 <div>
@@ -46,9 +63,11 @@
                 </div>
                 <div class="review-actions">
                     <span class="muted-copy">Cập nhật: @item.UpdatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm") · @item.Reviewer</span>
+                    <a asp-action="Evidence" class="btn btn-outline-secondary">Xem bằng chứng</a>
                     <button type="submit" class="btn btn-primary">Lưu đánh giá</button>
                 </div>
             </form>
-        </article>
-    }
-</div>
+            </article>
+        }
+    </div>
+}

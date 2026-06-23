@@ -9,7 +9,11 @@ namespace Nhom4WebThuocThayThe.Areas.Expert.Controllers;
 [Authorize(Roles = AppRoles.Expert)]
 public sealed class ReviewsController(IExpertReviewService expertReviewService) : Controller
 {
-    public IActionResult Index() => AreaView("~/Views/ExpertReviews/Index.cshtml", expertReviewService.GetReviews());
+    public IActionResult Index() => AreaView("~/Views/ExpertReviews/Index.cshtml", expertReviewService.GetPendingReviews());
+
+    public IActionResult Evidence() => AreaView("~/Views/ExpertReviews/Evidence.cshtml", expertReviewService.GetEvidenceReviews());
+
+    public IActionResult History() => AreaView("~/Views/ExpertReviews/History.cshtml", expertReviewService.GetDecisionHistory());
 
     [HttpPost]
     [ValidateAntiForgeryToken]

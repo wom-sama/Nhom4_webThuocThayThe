@@ -1,0 +1,44 @@
+@model IReadOnlyCollection<Nhom4WebThuocThayThe.ViewModels.ExpertReviews.ExpertReviewListItemViewModel>
+
+@{
+    ViewData["Title"] = "Lịch sử quyết định";
+}
+
+<section class="mb-4">
+    <div class="page-kicker">Audit chuyên gia</div>
+    <h1 class="page-title">Lịch sử quyết định</h1>
+</section>
+
+@if (!Model.Any())
+{
+    <div class="empty-state">Chưa có quyết định chuyên gia nào được lưu.</div>
+}
+else
+{
+    <div class="timeline-list">
+        @foreach (var item in Model)
+        {
+            var statusClass = item.Status switch
+            {
+                "Chap nhan" => "is-success",
+                "Tu choi" => "is-danger",
+                "Can xem xet" => "is-warning",
+                _ => "is-info"
+            };
+            <article class="app-surface history-item">
+                <div>
+                    <span class="status-badge @statusClass">@item.StatusLabel</span>
+                    <h2 class="h5">@item.SourceDrug</h2>
+                    <p class="mb-1">Đề xuất: <strong>@item.RecommendedDrug</strong></p>
+                    <p class="muted-copy mb-0">@item.Note</p>
+                </div>
+                <div class="history-meta">
+                    <strong>@item.Score</strong>
+                    <span>@item.ScoreLabel</span>
+                    <time datetime="@item.UpdatedAt.ToString("O")">@item.UpdatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</time>
+                    <span>@item.Reviewer</span>
+                </div>
+            </article>
+        }
+    </div>
+}

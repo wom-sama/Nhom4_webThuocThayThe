@@ -1,20 +1,22 @@
-@model IReadOnlyCollection<Nhom4WebThuocThayThe.ViewModels.Inventory.StockSummaryViewModel>
+@model Nhom4WebThuocThayThe.ViewModels.Pharmacist.PharmacistHomeViewModel
 @{
     ViewData["Title"] = "Tổng quan dược sĩ";
-    var outOfStock = Model.Count(item => item.IsOutOfStock);
-    var lowStock = Model.Count(item => item.Quantity > 0 && item.Quantity <= 20);
+    var outOfStock = Model.StockSummaries.Count(item => item.IsOutOfStock);
+    var lowStock = Model.StockSummaries.Count(item => item.Quantity > 0 && item.Quantity <= 20);
 }
 
 <section class="workspace-heading mb-4"><div class="page-kicker"><span class="live-dot" aria-hidden="true"></span>Khu vực dược sĩ</div><h1 class="page-title">Bàn làm việc dược sĩ</h1></section>
 
+<partial name="_RoleInsights" model="Model.Insights" />
+
 <section class="quick-action-grid mb-4" aria-label="Tác vụ dược sĩ">
     <a asp-controller="Workspace" asp-action="Index" class="quick-action"><i data-lucide="package-x" class="quick-action-icon" aria-hidden="true"></i><span><strong>Hàng đợi hết hàng</strong><small>@outOfStock thuốc cần xử lý</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i></a>
-    <a asp-controller="Workspace" asp-action="Index" class="quick-action"><i data-lucide="git-compare-arrows" class="quick-action-icon" aria-hidden="true"></i><span><strong>So sánh thay thế</strong><small>Điểm, lý do và cảnh báo</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i></a>
+    <a asp-controller="Workspace" asp-action="Compare" class="quick-action"><i data-lucide="git-compare-arrows" class="quick-action-icon" aria-hidden="true"></i><span><strong>So sánh thay thế</strong><small>Điểm, lý do và cảnh báo</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i></a>
     <a asp-controller="Inventory" asp-action="Index" class="quick-action"><i data-lucide="warehouse" class="quick-action-icon" aria-hidden="true"></i><span><strong>Kho rủi ro</strong><small>@lowStock thuốc sắp hết</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i></a>
 </section>
 
 <section class="metric-grid" aria-label="Tổng quan kho">
-    <article class="metric-card"><div class="metric-label"><i data-lucide="pill" class="app-icon" aria-hidden="true"></i><span>Thuốc theo dõi</span></div><strong>@Model.Count</strong><span>Dữ liệu kho hiện tại</span></article>
+    <article class="metric-card"><div class="metric-label"><i data-lucide="pill" class="app-icon" aria-hidden="true"></i><span>Thuốc theo dõi</span></div><strong>@Model.StockSummaries.Count</strong><span>Dữ liệu kho hiện tại</span></article>
     <article class="metric-card metric-card-alert"><div class="metric-label"><i data-lucide="package-x" class="app-icon" aria-hidden="true"></i><span>Hết hàng</span></div><strong>@outOfStock</strong><span>Cần đề xuất thay thế</span></article>
     <article class="metric-card"><div class="metric-label"><i data-lucide="package-minus" class="app-icon" aria-hidden="true"></i><span>Sắp hết hàng</span></div><strong>@lowStock</strong><span>Tồn kho không quá 20</span></article>
     <article class="metric-card"><div class="metric-label"><i data-lucide="shield-check" class="app-icon" aria-hidden="true"></i><span>Ranh giới AI</span></div><strong>An toàn</strong><span>AI không sửa điểm hay cảnh báo</span></article>

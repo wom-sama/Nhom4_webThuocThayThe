@@ -1,9 +1,11 @@
-@model Nhom4WebThuocThayThe.ViewModels.Reports.DashboardViewModel
+@model Nhom4WebThuocThayThe.ViewModels.Admin.AdminHomeViewModel
 @{
     ViewData["Title"] = "Tổng quan quản trị";
 }
 
 <section class="workspace-heading mb-4"><div class="page-kicker"><span class="live-dot" aria-hidden="true"></span>Khu vực quản trị</div><h1 class="page-title">Vận hành hệ thống</h1></section>
+
+<partial name="_RoleInsights" model="Model.Insights" />
 
 <section class="quick-action-grid quick-action-grid-admin mb-4" aria-label="Tác vụ quản trị">
     <a asp-controller="DrugCatalog" asp-action="Index" class="quick-action"><i data-lucide="library" class="quick-action-icon" aria-hidden="true"></i><span><strong>Danh mục thuốc</strong><small>Cập nhật dữ liệu chuẩn</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i></a>
@@ -13,7 +15,7 @@
 </section>
 
 <section class="metric-grid mb-4" aria-label="Chỉ số quản trị">
-    @foreach (var metric in Model.Metrics)
+    @foreach (var metric in Model.Dashboard.Metrics)
     {
         <article class="metric-card"><div class="metric-label"><i data-lucide="activity" class="app-icon" aria-hidden="true"></i><span>@metric.Label</span></div><strong>@metric.Value</strong><span>@metric.Hint</span></article>
     }
@@ -23,7 +25,7 @@
     <div class="app-surface operations-panel">
         <div class="section-heading"><div><div class="section-eyebrow">Cần xử lý</div><h2 class="h5">Rủi ro tồn kho</h2></div><a asp-controller="Inventory" asp-action="Index">Mở kho</a></div>
         <div class="compact-list">
-            @foreach (var risk in Model.StockRisks.Take(4))
+            @foreach (var risk in Model.Dashboard.StockRisks.Take(4))
             {
                 <div class="compact-list-row"><span><strong>@risk.DrugName</strong><small>@risk.Strength</small></span><span class="status-badge @(risk.Quantity <= 0 ? "is-danger" : "is-warning")">@(risk.Quantity <= 0 ? "Hết hàng" : $"Còn {risk.Quantity}")</span></div>
             }
@@ -32,7 +34,7 @@
     <div class="app-surface operations-panel">
         <div class="section-heading"><div><div class="section-eyebrow">Gần đây</div><h2 class="h5">Nhật ký hệ thống</h2></div><a asp-controller="Reports" asp-action="Index">Xem audit</a></div>
         <div class="compact-list">
-            @foreach (var entry in Model.AuditLogs.Take(4))
+            @foreach (var entry in Model.Dashboard.AuditLogs.Take(4))
             {
                 <div class="compact-list-row"><span><strong>@entry.Action</strong><small>@entry.Actor · @entry.Entity</small></span><time datetime="@entry.CreatedAt.ToString("O")">@entry.CreatedAt.ToLocalTime().ToString("dd/MM HH:mm")</time></div>
             }

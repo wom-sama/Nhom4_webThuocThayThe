@@ -5,5 +5,32 @@
 <section class="app-surface access-panel">
     <div class="page-kicker">Dữ liệu và quyền riêng tư</div>
     <h1 class="page-title">Quyền riêng tư</h1>
-    <p class="page-description">Hệ thống chỉ xử lý dữ liệu cần thiết cho tra cứu thuốc, phân quyền và nhật ký vận hành. Không gửi hồ sơ cá nhân đến dịch vụ AI.</p>
+    <p class="page-description">Chính sách này mô tả dữ liệu được dùng trong phạm vi đồ án Web thuốc thay thế Nhóm 4.</p>
+</section>
+
+<section class="policy-grid mt-4" aria-label="Chính sách bảo mật">
+    <article class="app-surface policy-card">
+        <h2 class="h5">Phạm vi dữ liệu</h2>
+        <p>Hệ thống lưu dữ liệu thuốc, hoạt chất, tồn kho, nguồn tham chiếu, hồ sơ an toàn mẫu và nhật ký thao tác phục vụ demo nghiệp vụ. Không lưu đơn thuốc thật hoặc hồ sơ bệnh án cá nhân.</p>
+    </article>
+    <article class="app-surface policy-card">
+        <h2 class="h5">Phân quyền truy cập</h2>
+        <p>Tài khoản Admin, Dược sĩ, Chuyên gia và Người dùng được chuyển vào khu vực riêng. Máy chủ kiểm tra vai trò ở từng route, không chỉ ẩn hiện nút trên giao diện.</p>
+    </article>
+    <article class="app-surface policy-card">
+        <h2 class="h5">Ranh giới AI</h2>
+        <p>Gemini chỉ diễn giải đề xuất khi người dùng bấm yêu cầu. Thuật toán gợi ý vai trò là deterministic, không thay đổi điểm quy tắc, cảnh báo an toàn hoặc quyết định chuyên môn.</p>
+    </article>
+    <article class="app-surface policy-card">
+        <h2 class="h5">Nhật ký và lưu giữ</h2>
+        <p>Thao tác quản trị, cập nhật đánh giá và backup được ghi vào audit log để phục vụ kiểm thử Sprint Review. Dữ liệu demo có thể được reset theo kế hoạch release.</p>
+    </article>
+    <article class="app-surface policy-card">
+        <h2 class="h5">Trách nhiệm người dùng</h2>
+        <p>Không nhập thông tin bệnh án thật, OTP, khóa API hoặc dữ liệu cá nhân nhạy cảm vào ghi chú demo. Thông tin thay thế thuốc chỉ dùng để tham khảo và cần chuyên môn xác nhận.</p>
+    </article>
+    <article class="app-surface policy-card">
+        <h2 class="h5">Sự cố và liên hệ</h2>
+        <p>Khi phát hiện dữ liệu sai, lỗi phân quyền hoặc rò rỉ thông tin, nhóm ghi nhận vào Jira, đánh mức độ ưu tiên và phát hành bản vá production kèm báo cáo kiểm thử.</p>
+    </article>
 </section>

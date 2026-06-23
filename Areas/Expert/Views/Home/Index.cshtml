@@ -1,18 +1,20 @@
-@model IReadOnlyCollection<Nhom4WebThuocThayThe.ViewModels.ExpertReviews.ExpertReviewListItemViewModel>
+@model Nhom4WebThuocThayThe.ViewModels.ExpertReviews.ExpertHomeViewModel
 @{
     ViewData["Title"] = "Tổng quan chuyên gia";
-    var pending = Model.Count(item => item.Status == "Cho danh gia");
-    var accepted = Model.Count(item => item.Status == "Chap nhan");
-    var needsReview = Model.Count(item => item.Status == "Can xem xet");
-    var rejected = Model.Count(item => item.Status == "Tu choi");
+    var pending = Model.Reviews.Count(item => item.Status == "Cho danh gia");
+    var accepted = Model.Reviews.Count(item => item.Status == "Chap nhan");
+    var needsReview = Model.Reviews.Count(item => item.Status == "Can xem xet");
+    var rejected = Model.Reviews.Count(item => item.Status == "Tu choi");
 }
 
 <section class="workspace-heading mb-4"><div class="page-kicker"><span class="live-dot" aria-hidden="true"></span>Khu vực chuyên gia</div><h1 class="page-title">Hàng đợi thẩm định</h1></section>
 
+<partial name="_RoleInsights" model="Model.Insights" />
+
 <section class="quick-action-grid mb-4" aria-label="Tác vụ chuyên gia">
     <a asp-controller="Reviews" asp-action="Index" class="quick-action"><i data-lucide="clipboard-list" class="quick-action-icon" aria-hidden="true"></i><span><strong>Chờ thẩm định</strong><small>@pending hồ sơ cần xử lý</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i></a>
-    <a asp-controller="Reviews" asp-action="Index" class="quick-action"><i data-lucide="book-open-check" class="quick-action-icon" aria-hidden="true"></i><span><strong>Bằng chứng</strong><small>Điểm và lý do deterministic</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i></a>
-    <a asp-controller="Reviews" asp-action="Index" class="quick-action"><i data-lucide="history" class="quick-action-icon" aria-hidden="true"></i><span><strong>Lịch sử quyết định</strong><small>Audit actor và thời gian</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i></a>
+    <a asp-controller="Reviews" asp-action="Evidence" class="quick-action"><i data-lucide="book-open-check" class="quick-action-icon" aria-hidden="true"></i><span><strong>Bằng chứng</strong><small>Điểm và lý do deterministic</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i></a>
+    <a asp-controller="Reviews" asp-action="History" class="quick-action"><i data-lucide="history" class="quick-action-icon" aria-hidden="true"></i><span><strong>Lịch sử quyết định</strong><small>Audit actor và thời gian</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i></a>
 </section>
 
 <section class="metric-grid" aria-label="Tình trạng đánh giá">

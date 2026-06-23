@@ -1,11 +1,15 @@
+@model Nhom4WebThuocThayThe.ViewModels.User.UserHomeViewModel
+
 @{
     ViewData["Title"] = "Tổng quan cá nhân";
 }
 
 <section class="workspace-heading mb-4">
     <div class="page-kicker"><span class="live-dot" aria-hidden="true"></span>Khu vực người dùng</div>
-    <h1 class="page-title">Chào @User.Identity?.Name</h1>
+    <h1 class="page-title">Chào @Model.DisplayName</h1>
 </section>
+
+<partial name="_RoleInsights" model="Model.Insights" />
 
 <section class="quick-action-grid mb-4" aria-label="Bắt đầu nhanh">
     <a asp-area="" asp-controller="Drugs" asp-action="Index" class="quick-action">

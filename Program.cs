@@ -64,6 +64,11 @@ builder.Services
         options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
         options.SlidingExpiration = true;
     });
+var relaxLoginRateLimit = string.Equals(
+    builder.Configuration["Testing:RelaxLoginRateLimit"],
+    "true",
+    StringComparison.OrdinalIgnoreCase);
+var loginPermitLimit = relaxLoginRateLimit ? 200 : 20;
 builder.Services.AddRateLimiter(options =>
 {
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
@@ -74,7 +79,7 @@ builder.Services.AddRateLimiter(options =>
             partitionKey,
             _ => new FixedWindowRateLimiterOptions
             {
-                PermitLimit = 20,
+                PermitLimit = loginPermitLimit,
                 Window = TimeSpan.FromMinutes(1),
                 QueueLimit = 0,
                 AutoReplenishment = true
@@ -125,6 +130,7 @@ builder.Services.AddScoped<IRecommendationService, RecommendationService>();
 builder.Services.AddScoped<IAuditLogService, AuditLogService>();
 builder.Services.AddScoped<IReportingService, ReportingService>();
 builder.Services.AddScoped<IExpertReviewService, ExpertReviewService>();
+builder.Services.AddScoped<IRoleDecisionSupportService, RoleDecisionSupportService>();
 
 var app = builder.Build();
 

@@ -14,8 +14,8 @@
             <a class="role-brand" asp-area="Pharmacist" asp-controller="Home" asp-action="Index"><span>Rx</span><strong>Dược sĩ</strong></a>
             <nav class="role-nav">
                 <a asp-area="Pharmacist" asp-controller="Home" asp-action="Index"><i data-lucide="layout-dashboard" class="app-icon" aria-hidden="true"></i>Tổng quan</a>
-                <a asp-area="Pharmacist" asp-controller="Workspace" asp-action="Index"><i data-lucide="search" class="app-icon" aria-hidden="true"></i>Bàn tra cứu</a>
-                <a asp-area="Pharmacist" asp-controller="Workspace" asp-action="Index"><i data-lucide="git-compare-arrows" class="app-icon" aria-hidden="true"></i>Thuốc thay thế</a>
+                <a asp-area="Pharmacist" asp-controller="Workspace" asp-action="Search"><i data-lucide="search" class="app-icon" aria-hidden="true"></i>Bàn tra cứu</a>
+                <a asp-area="Pharmacist" asp-controller="Workspace" asp-action="Compare"><i data-lucide="git-compare-arrows" class="app-icon" aria-hidden="true"></i>Thuốc thay thế</a>
                 <a asp-area="Pharmacist" asp-controller="Inventory" asp-action="Index"><i data-lucide="warehouse" class="app-icon" aria-hidden="true"></i>Kho rủi ro</a>
             </nav>
             <div class="role-user-panel"><strong>@User.Identity?.Name</strong><span>Dược sĩ</span><form asp-area="" asp-controller="Auth" asp-action="Logout" method="post"><button type="submit"><i data-lucide="log-out" class="app-icon" aria-hidden="true"></i>Đăng xuất</button></form></div>

@@ -14,9 +14,19 @@ public sealed class WorkspaceController(
     IDrugSearchService drugSearchService,
     IAiRecommendationExplanationService aiExplanationService) : Controller
 {
-    public async Task<IActionResult> Index(string? keyword, int? categoryId)
+    public async Task<IActionResult> Index()
+    {
+        return AreaView("~/Areas/Pharmacist/Views/Workspace/Index.cshtml", await BuildQueueAsync());
+    }
+
+    public async Task<IActionResult> Search(string? keyword, int? categoryId)
     {
         return AreaView("~/Views/Drugs/Index.cshtml", await drugSearchService.SearchAsync(keyword, categoryId));
+    }
+
+    public async Task<IActionResult> Compare()
+    {
+        return AreaView("~/Areas/Pharmacist/Views/Workspace/Compare.cshtml", await BuildQueueAsync());
     }
 
     public async Task<IActionResult> Details(int id)
@@ -66,5 +76,40 @@ public sealed class WorkspaceController(
     {
         ViewData["Layout"] = "~/Areas/Pharmacist/Views/Shared/_Layout.cshtml";
         return View(path, model);
+    }
+
+    private async Task<ViewModels.Pharmacist.PharmacistQueueViewModel> BuildQueueAsync()
+    {
+        var search = await drugSearchService.SearchAsync(null, null);
+        var outOfStock = new List<ViewModels.Search.DrugDetailViewModel>();
+        var lowStock = new List<ViewModels.Search.DrugDetailViewModel>();
+        foreach (var item in search.Results.OrderBy(item => item.StockQuantity).ThenBy(item => item.Name))
+        {
+            if (item.StockQuantity > 30)
+            {
+                continue;
+            }
+
+            var detail = await drugSearchService.GetDetailAsync(item.Id, User.FindFirstValue(ClaimTypes.Email));
+            if (detail is null)
+            {
+                continue;
+            }
+
+            if (item.StockQuantity <= 0)
+            {
+                outOfStock.Add(detail);
+            }
+            else
+            {
+                lowStock.Add(detail);
+            }
+        }
+
+        return new ViewModels.Pharmacist.PharmacistQueueViewModel
+        {
+            OutOfStockDrugs = outOfStock,
+            LowStockDrugs = lowStock
+        };
     }
 }

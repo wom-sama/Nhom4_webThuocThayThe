@@ -1911,6 +1911,142 @@ body.ui-v3 {
   font-size: 0.78rem;
 }
 
+.role-ai-panel,
+.policy-grid,
+.evidence-grid,
+.comparison-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.role-ai-panel {
+  padding: 1rem;
+  background: #f7fafb;
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius);
+}
+
+.insight-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.insight-card,
+.policy-card,
+.evidence-card,
+.comparison-card,
+.queue-card,
+.history-item {
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius);
+}
+
+.insight-card {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem;
+  background: #fff;
+}
+
+.insight-card h3,
+.insight-card p,
+.insight-card ul {
+  margin-bottom: 0;
+}
+
+.insight-card ul {
+  padding-left: 1.1rem;
+  color: var(--app-muted);
+  font-size: 0.86rem;
+}
+
+.insight-card.is-danger {
+  border-left: 4px solid var(--app-danger);
+}
+
+.insight-card.is-warning {
+  border-left: 4px solid var(--app-warning);
+}
+
+.insight-card.is-success {
+  border-left: 4px solid var(--app-success);
+}
+
+.insight-card.is-info {
+  border-left: 4px solid var(--app-info);
+}
+
+.evidence-grid,
+.comparison-grid,
+.policy-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.evidence-card,
+.comparison-card,
+.policy-card {
+  padding: 1rem;
+}
+
+.signal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.signal-grid > div {
+  padding: 0.8rem;
+  background: #f5f8f9;
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius);
+}
+
+.signal-grid strong {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--app-ink);
+}
+
+.timeline-list,
+.stack-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.history-item,
+.queue-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.history-meta,
+.queue-card-actions {
+  display: grid;
+  gap: 0.3rem;
+  justify-items: end;
+  text-align: right;
+}
+
+.history-meta strong {
+  color: var(--app-ink);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.queue-card.is-stockout {
+  border-left: 4px solid var(--app-danger);
+}
+
+.policy-card p {
+  margin-bottom: 0;
+  color: var(--app-muted);
+}
+
 @media (max-width: 991.98px) {
   .public-command-heading {
     align-items: start;
@@ -1937,6 +2073,13 @@ body.ui-v3 {
   }
 
   .operations-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .insight-grid,
+  .evidence-grid,
+  .comparison-grid,
+  .policy-grid {
     grid-template-columns: 1fr;
   }
 
@@ -2024,5 +2167,21 @@ body.ui-v3 {
 
   .compact-list-row {
     align-items: flex-start;
+  }
+
+  .signal-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .history-item,
+  .queue-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .history-meta,
+  .queue-card-actions {
+    justify-items: start;
+    text-align: left;
   }
 }

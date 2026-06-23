@@ -336,6 +336,7 @@ internal sealed class WebAppRuntime : IAsyncDisposable
         };
 
         process.StartInfo.Environment["ASPNETCORE_ENVIRONMENT"] = "Testing";
+        process.StartInfo.Environment["Testing__RelaxLoginRateLimit"] = "true";
 
         process.OutputDataReceived += (_, args) =>
         {
@@ -646,7 +647,8 @@ internal static class AcceptanceTests
                 using var client = runtime.CreateClient();
                 await LoginAsync(client, "chuyengia@nhom4.local", "Chuyengia@123", followRedirects: true);
                 var html = await GetStringAsync(client, "/Expert/Reviews");
-                Expect(html.Contains("Đánh giá đề xuất thuốc thay thế"), "expert review page missing");
+                Expect(html.Contains("Hồ sơ cần quyết định"), "expert review page missing");
+                Expect(html.Contains("review-form"), "expert review form missing");
                 Expect(html.Contains("Panadol 500mg"), "review source drug missing");
             }),
             new("TC24", "RBAC", "Normal user cannot open reports dashboard", async () =>
@@ -793,8 +795,22 @@ internal static class AcceptanceTests
                         using var response = await client.GetAsync(target.Item3);
                         if (string.Equals(current.Item3, target.Item3, StringComparison.OrdinalIgnoreCase))
                         {
-                            Expect(response.IsSuccessStatusCode, $"{current.Item1} cannot open own Area {target.Item3}");
-                            var ownAreaHtml = await response.Content.ReadAsStringAsync();
+                            var ownAreaHtml = string.Empty;
+                            if (response.IsSuccessStatusCode)
+                            {
+                                ownAreaHtml = await response.Content.ReadAsStringAsync();
+                            }
+                            else if (IsRedirect(response.StatusCode) &&
+                                     response.Headers.Location?.ToString().StartsWith(target.Item3, StringComparison.OrdinalIgnoreCase) == true)
+                            {
+                                ownAreaHtml = await GetStringAsync(client, response.Headers.Location.ToString());
+                            }
+                            else
+                            {
+                                var location = response.Headers.Location?.ToString() ?? "(none)";
+                                throw new InvalidOperationException($"{current.Item1} cannot open own Area {target.Item3}; status={(int)response.StatusCode}; location={location}");
+                            }
+
                             Expect(ownAreaHtml.Contains("quick-action-grid"), $"quick actions missing for {target.Item3}");
                         }
                         else
@@ -895,6 +911,62 @@ internal static class AcceptanceTests
                 Expect(results.Contains("result-list-v3"), "V3 decision result list missing");
                 Expect(!results.Contains("Sắp xếp theo dữ liệu hiện có"), "results still render verbose sorting copy");
                 Expect(detail.Contains("is-primary-recommendation"), "primary recommendation is not highlighted");
+            }),
+            new("TC46", "Expert UI", "Expert queue, evidence and history are distinct usable screens", async () =>
+            {
+                using var client = runtime.CreateClient();
+                await LoginAsync(client, "chuyengia@nhom4.local", "Chuyengia@123", followRedirects: true);
+                var pending = await GetStringAsync(client, "/Expert/Reviews");
+                var evidence = await GetStringAsync(client, "/Expert/Reviews/Evidence");
+                var history = await GetStringAsync(client, "/Expert/Reviews/History");
+
+                Expect(pending.Contains("Hồ sơ cần quyết định"), "expert pending queue title missing");
+                Expect(pending.Contains("review-form"), "expert pending queue is not actionable");
+                Expect(evidence.Contains("Cơ sở xếp hạng đề xuất"), "expert evidence screen title missing");
+                Expect(evidence.Contains("evidence-grid"), "expert evidence cards missing");
+                Expect(history.Contains("Lịch sử quyết định"), "expert history screen title missing");
+                Expect(history.Contains("timeline-list"), "expert history timeline missing");
+                Expect(!string.Equals(pending, evidence, StringComparison.Ordinal), "pending and evidence screens render the same document");
+                Expect(!string.Equals(evidence, history, StringComparison.Ordinal), "evidence and history screens render the same document");
+            }),
+            new("TC47", "Pharmacist UI", "Pharmacist queue, search and comparison routes are distinct", async () =>
+            {
+                using var client = runtime.CreateClient();
+                await LoginAsync(client, "duocsi@nhom4.local", "Duocsi@123", followRedirects: true);
+                var queue = await GetStringAsync(client, "/Pharmacist/Workspace");
+                var search = await GetStringAsync(client, "/Pharmacist/Workspace/Search?keyword=Loratadine");
+                var compare = await GetStringAsync(client, "/Pharmacist/Workspace/Compare");
+
+                Expect(queue.Contains("Thuốc cần phương án thay thế"), "pharmacist replacement queue title missing");
+                Expect(queue.Contains("queue-card"), "pharmacist queue cards missing");
+                Expect(search.Contains("Loratadine 10mg"), "pharmacist search did not return seeded Loratadine data");
+                Expect(search.Contains("result-list-v3"), "pharmacist search should reuse public result list");
+                Expect(compare.Contains("Ứng viên theo điểm, tồn kho và cảnh báo"), "pharmacist comparison title missing");
+                Expect(compare.Contains("comparison-grid"), "pharmacist comparison grid missing");
+            }),
+            new("TC48", "Seed data", "Production-like seed covers diverse therapeutic groups", async () =>
+            {
+                using var client = runtime.CreateClient();
+                var stomach = await GetStringAsync(client, "/Drugs?keyword=Omeprazole");
+                var respiratory = await GetStringAsync(client, "/Drugs?keyword=Ventolin");
+                var cardio = await GetStringAsync(client, "/Drugs?keyword=Amlodipine");
+                var electrolyte = await GetStringAsync(client, "/Drugs?keyword=Oresol");
+
+                Expect(stomach.Contains("Omeprazole STADA 20mg"), "stomach seed drug missing");
+                Expect(respiratory.Contains("Ventolin Inhaler 100mcg"), "respiratory seed drug missing");
+                Expect(cardio.Contains("Amlodipine 5mg"), "cardiovascular seed drug missing");
+                Expect(electrolyte.Contains("Oresol gói"), "electrolyte seed drug missing");
+            }),
+            new("TC49", "Privacy policy", "Privacy page contains concrete policy sections", async () =>
+            {
+                using var client = runtime.CreateClient();
+                var html = await GetStringAsync(client, "/Home/Privacy");
+
+                Expect(html.Contains("Phạm vi dữ liệu"), "privacy data scope section missing");
+                Expect(html.Contains("Phân quyền truy cập"), "privacy access control section missing");
+                Expect(html.Contains("Ranh giới AI"), "privacy AI boundary section missing");
+                Expect(html.Contains("Sự cố và liên hệ"), "privacy incident section missing");
+                Expect(!html.Contains("Use this page", StringComparison.OrdinalIgnoreCase), "privacy page still contains template copy");
             })
         ];
     }

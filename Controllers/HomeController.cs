@@ -36,7 +36,7 @@ public class HomeController(PharmacyDbContext dbContext) : Controller
         return View(model);
     }
 
-    [Authorize]
+    [AllowAnonymous]
     public IActionResult Privacy()
     {
         return View();

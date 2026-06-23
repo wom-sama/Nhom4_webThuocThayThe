@@ -1,0 +1,49 @@
+@model Nhom4WebThuocThayThe.ViewModels.Pharmacist.PharmacistQueueViewModel
+
+@{
+    ViewData["Title"] = "So sánh thay thế";
+    var candidates = Model.OutOfStockDrugs.Concat(Model.LowStockDrugs).ToList();
+}
+
+<section class="workspace-heading mb-4">
+    <div class="page-kicker"><span class="live-dot" aria-hidden="true"></span>So sánh thay thế</div>
+    <h1 class="page-title">Ứng viên theo điểm, tồn kho và cảnh báo</h1>
+</section>
+
+@if (!candidates.Any())
+{
+    <div class="empty-state">Chưa có thuốc cần so sánh thay thế.</div>
+}
+else
+{
+    <div class="comparison-grid">
+        @foreach (var source in candidates)
+        {
+            <article class="app-surface comparison-card">
+                <div class="section-heading">
+                    <div>
+                        <span class="status-badge @(source.StockQuantity <= 0 ? "is-danger" : "is-warning")">@(source.StockQuantity <= 0 ? "Hết hàng" : $"Còn {source.StockQuantity}")</span>
+                        <h2 class="h5">@source.Name</h2>
+                    </div>
+                    <a asp-action="Details" asp-route-id="@source.Id">Chi tiết</a>
+                </div>
+                @if (!source.Alternatives.Any())
+                {
+                    <div class="empty-state">Chưa có ứng viên thay thế.</div>
+                }
+                else
+                {
+                    <div class="compact-list">
+                        @foreach (var alt in source.Alternatives.Take(3))
+                        {
+                            <div class="compact-list-row">
+                                <span><strong>@alt.Name</strong><small>@alt.ActiveIngredient · @alt.DosageForm</small></span>
+                                <span class="status-badge @(alt.HasHighRiskAlert ? "is-danger" : alt.StockQuantity > 0 ? "is-success" : "is-warning")">@alt.Score · @(alt.StockQuantity > 0 ? $"Còn {alt.StockQuantity}" : "Hết")</span>
+                            </div>
+                        }
+                    </div>
+                }
+            </article>
+        }
+    </div>
+}

@@ -1,0 +1,44 @@
+@model IReadOnlyCollection<Nhom4WebThuocThayThe.ViewModels.ExpertReviews.ExpertReviewListItemViewModel>
+
+@{
+    ViewData["Title"] = "Bằng chứng đánh giá";
+}
+
+<section class="mb-4">
+    <div class="page-kicker">Bằng chứng quy tắc</div>
+    <h1 class="page-title">Cơ sở xếp hạng đề xuất</h1>
+</section>
+
+<div class="evidence-grid">
+    @foreach (var item in Model)
+    {
+        <article class="app-surface evidence-card">
+            <div class="review-summary">
+                <div>
+                    <span class="page-kicker">Hồ sơ #@item.Id · @item.StatusLabel</span>
+                    <h2 class="h5">@item.SourceDrug</h2>
+                    <p class="mb-0">Ứng viên: <strong>@item.RecommendedDrug</strong></p>
+                </div>
+                <div class="score-chip">
+                    <strong>@item.Score</strong>
+                    <span>@item.ScoreLabel</span>
+                </div>
+            </div>
+            <div class="signal-grid">
+                <div><span class="section-eyebrow">Tồn kho</span><strong>@item.StockSignal</strong></div>
+                <div><span class="section-eyebrow">An toàn</span><strong>@item.SafetySignal</strong></div>
+                <div><span class="section-eyebrow">Mức bằng chứng</span><strong>@item.EvidenceLevel</strong></div>
+            </div>
+            <ul class="reason-list reason-list-primary">
+                @foreach (var signal in item.RuleSignals)
+                {
+                    <li>@signal</li>
+                }
+            </ul>
+            <div class="review-actions">
+                <a asp-action="Index" class="btn btn-sm btn-outline-primary">Mở hàng chờ</a>
+                <a asp-area="" asp-controller="Drugs" asp-action="Details" asp-route-id="@item.RecommendedDrugId" class="btn btn-sm btn-outline-secondary">Xem thuốc</a>
+            </div>
+        </article>
+    }
+</div>
