@@ -584,7 +584,58 @@ await Run("PROD30", "User accounts", "Registration, user library and admin accou
     Expect(accounts.Contains("Database", StringComparison.OrdinalIgnoreCase), "admin account list missing database source marker");
 });
 
-await Run("PROD31", "Attack: brute force", "Login endpoint rate limits repeated invalid attempts", async () =>
+await Run("PROD31", "UI encoding", "Primary production flows do not render Vietnamese mojibake", async () =>
+{
+    EnsureCredentials();
+    var publicPages = new[]
+    {
+        ("/", "public home"),
+        ("/Auth/Login", "login"),
+        ("/Drugs?keyword=Panadol", "public search"),
+        ("/Drugs/Details/1", "drug detail")
+    };
+    foreach (var (path, label) in publicPages)
+    {
+        AssertNoMojibake(await GetOk(publicClient, path), label);
+    }
+
+    using var adminClient = CreateClient();
+    await Login(adminClient, credentials["Admin"]);
+    foreach (var (path, label) in new[]
+             {
+                 ("/Admin", "admin dashboard"),
+                 ("/Admin/Accounts", "admin accounts"),
+                 ("/Admin/DrugCatalog", "admin catalog"),
+                 ("/Admin/Inventory", "admin inventory")
+             })
+    {
+        AssertNoMojibake(await GetOk(adminClient, path), label);
+    }
+
+    using var userClient = CreateClient();
+    await Login(userClient, credentials["User"]);
+    foreach (var (path, label) in new[]
+             {
+                 ("/User", "user dashboard"),
+                 ("/User/Home/History", "user history"),
+                 ("/User/Home/Saved", "user saved")
+             })
+    {
+        AssertNoMojibake(await GetOk(userClient, path), label);
+    }
+
+    using var pharmacistClient = CreateClient();
+    await Login(pharmacistClient, credentials["Pharmacist"]);
+    AssertNoMojibake(await GetOk(pharmacistClient, "/Pharmacist"), "pharmacist dashboard");
+    AssertNoMojibake(await GetOk(pharmacistClient, "/Pharmacist/Workspace"), "pharmacist queue");
+
+    using var expertClient = CreateClient();
+    await Login(expertClient, credentials["Expert"]);
+    AssertNoMojibake(await GetOk(expertClient, "/Expert"), "expert dashboard");
+    AssertNoMojibake(await GetOk(expertClient, "/Expert/Reviews"), "expert reviews");
+});
+
+await Run("PROD32", "Attack: brute force", "Login endpoint rate limits repeated invalid attempts", async () =>
 {
     using var client = CreateClient();
     var sawRateLimit = false;
@@ -718,6 +769,27 @@ static bool ContainsDemoCredential(string text) =>
     text.Contains("Duocsi@123", StringComparison.Ordinal) ||
     text.Contains("Chuyengia@123", StringComparison.Ordinal) ||
     text.Contains("User@123", StringComparison.Ordinal);
+
+static void AssertNoMojibake(string html, string label)
+{
+    var markers = new[]
+    {
+        "\u00C3",
+        "\u00C4",
+        "\u00C6",
+        "\u00E1\u00BA",
+        "\u00E1\u00BB",
+        "\u00C2\u00B7"
+    };
+    var marker = markers.FirstOrDefault(item => html.Contains(item, StringComparison.Ordinal));
+    if (marker is not null)
+    {
+        var index = html.IndexOf(marker, StringComparison.Ordinal);
+        var start = Math.Max(0, index - 40);
+        var length = Math.Min(120, html.Length - start);
+        throw new InvalidOperationException($"{label} contains mojibake marker near: {html.Substring(start, length)}");
+    }
+}
 
 static double Percentile(IReadOnlyList<double> sorted, double percentile)
 {

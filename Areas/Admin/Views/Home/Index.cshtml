@@ -1,46 +1,50 @@
 @model Nhom4WebThuocThayThe.ViewModels.Admin.AdminHomeViewModel
+
 @{
-    ViewData["Title"] = "Tá»•ng quan quáº£n trá»‹";
+    ViewData["Title"] = "Tổng quan quản trị";
 }
 
-<section class="workspace-heading mb-4"><div class="page-kicker"><span class="live-dot" aria-hidden="true"></span>Khu vá»±c quáº£n trá»‹</div><h1 class="page-title">Váº­n hÃ nh há»‡ thá»‘ng</h1></section>
+<section class="workspace-heading mb-4">
+    <div class="page-kicker"><span class="live-dot" aria-hidden="true"></span>Khu vực quản trị</div>
+    <h1 class="page-title">Vận hành hệ thống</h1>
+</section>
 
 <partial name="_RoleInsights" model="Model.Insights" />
 
-<section class="quick-action-grid quick-action-grid-admin mb-4" aria-label="TÃ¡c vá»¥ quáº£n trá»‹">
-    <a asp-controller="DrugCatalog" asp-action="Index" class="quick-action"><i data-lucide="library" class="quick-action-icon" aria-hidden="true"></i><span><strong>Danh má»¥c thuá»‘c</strong><small>Cáº­p nháº­t dá»¯ liá»‡u chuáº©n</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i></a>
-    <a asp-controller="Inventory" asp-action="Index" class="quick-action"><i data-lucide="warehouse" class="quick-action-icon" aria-hidden="true"></i><span><strong>Kho vÃ  lÃ´ thuá»‘c</strong><small>Xá»­ lÃ½ ngoáº¡i lá»‡ tá»“n kho</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i></a>
+<section class="quick-action-grid quick-action-grid-admin mb-4" aria-label="Tác vụ quản trị">
+    <a asp-controller="DrugCatalog" asp-action="Index" class="quick-action"><i data-lucide="library" class="quick-action-icon" aria-hidden="true"></i><span><strong>Danh mục thuốc</strong><small>Cập nhật dữ liệu chuẩn</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i></a>
+    <a asp-controller="Inventory" asp-action="Index" class="quick-action"><i data-lucide="warehouse" class="quick-action-icon" aria-hidden="true"></i><span><strong>Kho và lô thuốc</strong><small>Xử lý ngoại lệ tồn kho</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i></a>
     <a asp-controller="Accounts" asp-action="Index" class="quick-action"><i data-lucide="users" class="quick-action-icon" aria-hidden="true"></i><span><strong>Người dùng và vai trò</strong><small>Tạo, khóa và đặt lại mật khẩu</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i></a>
-    <a asp-controller="ExternalData" asp-action="Index" class="quick-action"><i data-lucide="database-zap" class="quick-action-icon" aria-hidden="true"></i><span><strong>Nguá»“n dá»¯ liá»‡u</strong><small>Kiá»ƒm tra tráº¡ng thÃ¡i Ä‘á»“ng bá»™</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i></a>
-    <a asp-controller="Reports" asp-action="Index" class="quick-action"><i data-lucide="history" class="quick-action-icon" aria-hidden="true"></i><span><strong>Backup vÃ  audit</strong><small>Snapshot vÃ  lá»‹ch sá»­ thao tÃ¡c</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i></a>
+    <a asp-controller="ExternalData" asp-action="Index" class="quick-action"><i data-lucide="database-zap" class="quick-action-icon" aria-hidden="true"></i><span><strong>Nguồn dữ liệu</strong><small>Kiểm tra trạng thái đồng bộ</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i></a>
+    <a asp-controller="Reports" asp-action="Index" class="quick-action"><i data-lucide="history" class="quick-action-icon" aria-hidden="true"></i><span><strong>Backup và audit</strong><small>Snapshot và lịch sử thao tác</small></span><i data-lucide="arrow-right" class="app-icon" aria-hidden="true"></i></a>
 </section>
 
-<section class="metric-grid mb-4" aria-label="Chá»‰ sá»‘ quáº£n trá»‹">
+<section class="metric-grid mb-4" aria-label="Chỉ số quản trị">
     @foreach (var metric in Model.Dashboard.Metrics)
     {
         <article class="metric-card"><div class="metric-label"><i data-lucide="activity" class="app-icon" aria-hidden="true"></i><span>@metric.Label</span></div><strong>@metric.Value</strong><span>@metric.Hint</span></article>
     }
 </section>
 
-<section class="operations-grid mb-4" aria-label="TÃ¬nh tráº¡ng váº­n hÃ nh">
+<section class="operations-grid mb-4" aria-label="Tình trạng vận hành">
     <div class="app-surface operations-panel">
-        <div class="section-heading"><div><div class="section-eyebrow">Cáº§n xá»­ lÃ½</div><h2 class="h5">Rá»§i ro tá»“n kho</h2></div><a asp-controller="Inventory" asp-action="Index">Má»Ÿ kho</a></div>
+        <div class="section-heading"><div><div class="section-eyebrow">Cần xử lý</div><h2 class="h5">Rủi ro tồn kho</h2></div><a asp-controller="Inventory" asp-action="Index">Mở kho</a></div>
         <div class="compact-list">
             @foreach (var risk in Model.Dashboard.StockRisks.Take(4))
             {
-                <div class="compact-list-row"><span><strong>@risk.DrugName</strong><small>@risk.Strength</small></span><span class="status-badge @(risk.Quantity <= 0 ? "is-danger" : "is-warning")">@(risk.Quantity <= 0 ? "Háº¿t hÃ ng" : $"CÃ²n {risk.Quantity}")</span></div>
+                <div class="compact-list-row"><span><strong>@risk.DrugName</strong><small>@risk.Strength</small></span><span class="status-badge @(risk.Quantity <= 0 ? "is-danger" : "is-warning")">@(risk.Quantity <= 0 ? "Hết hàng" : $"Còn {risk.Quantity}")</span></div>
             }
         </div>
     </div>
     <div class="app-surface operations-panel">
-        <div class="section-heading"><div><div class="section-eyebrow">Gáº§n Ä‘Ã¢y</div><h2 class="h5">Nháº­t kÃ½ há»‡ thá»‘ng</h2></div><a asp-controller="Reports" asp-action="Index">Xem audit</a></div>
+        <div class="section-heading"><div><div class="section-eyebrow">Gần đây</div><h2 class="h5">Nhật ký hệ thống</h2></div><a asp-controller="Reports" asp-action="Index">Xem audit</a></div>
         <div class="compact-list">
             @foreach (var entry in Model.Dashboard.AuditLogs.Take(4))
             {
-                <div class="compact-list-row"><span><strong>@entry.Action</strong><small>@entry.Actor Â· @entry.Entity</small></span><time datetime="@entry.CreatedAt.ToString("O")">@entry.CreatedAt.ToLocalTime().ToString("dd/MM HH:mm")</time></div>
+                <div class="compact-list-row"><span><strong>@entry.Action</strong><small>@entry.Actor · @entry.Entity</small></span><time datetime="@entry.CreatedAt.ToString("O")">@entry.CreatedAt.ToLocalTime().ToString("dd/MM HH:mm")</time></div>
             }
         </div>
     </div>
 </section>
 
-<section id="roles" class="app-surface role-boundary-note"><i data-lucide="shield-check" class="quick-action-icon" aria-hidden="true"></i><div><h2 class="h5">Ranh giá»›i phÃ¢n quyá»n</h2><p class="muted-copy mb-0">MÃ¡y chá»§ kiá»ƒm soÃ¡t quyá»n truy cáº­p theo tá»«ng khu vá»±c nghiá»‡p vá»¥.</p></div></section>
+<section id="roles" class="app-surface role-boundary-note"><i data-lucide="shield-check" class="quick-action-icon" aria-hidden="true"></i><div><h2 class="h5">Ranh giới phân quyền</h2><p class="muted-copy mb-0">Máy chủ kiểm soát quyền truy cập theo từng khu vực nghiệp vụ.</p></div></section>

@@ -194,6 +194,7 @@ a:hover {
 }
 
 .app-surface {
+  min-width: 0;
   padding: 1.25rem;
   background: var(--app-surface);
   border: 1px solid var(--app-border);
@@ -582,6 +583,16 @@ details[open] > summary .disclosure-chevron { transform: rotate(180deg); }
 
 .account-management-grid {
   grid-template-columns: minmax(18rem, 0.42fr) minmax(0, 1fr);
+}
+
+.account-create-panel,
+.accounts-table-panel {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.accounts-table-panel .table-shell {
+  max-width: 100%;
 }
 
 .account-reset-form .form-control {
